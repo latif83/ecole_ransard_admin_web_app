@@ -23,10 +23,10 @@ export default function Classes() {
         const response = await fetch("/api/classes");
         const responseData = await response.json();
         if (!response.ok) {
-          toast.error(responseData.error);
+          toast.error(responseData.message);
           return;
         }
-        setClasses(responseData.classes);
+        setClasses(responseData);
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -125,22 +125,22 @@ export default function Classes() {
                   <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                 </td>
               </tr>
-            ) : classes.length > 0 ? (
-              classes.map((classData) => (
+            ) : classes?.length > 0 ? (
+              classes?.map((classData) => (
                 <tr key={classData.id} className="bg-white border-b hover:bg-gray-50">
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
                   >
-                    {classData.name}
+                    {classData.className}
                   </th>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 flex justify-center items-center gap-1.5">
                     <span
                       onClick={() => {
                         setClassData(classData);
                         setEditClass(true);
                       }}
-                      className="font-medium text-blue-600 hover:underline mr-2 cursor-pointer"
+                      className="font-medium text-blue-600 hover:underline cursor-pointer"
                     >
                       Edit
                     </span>
