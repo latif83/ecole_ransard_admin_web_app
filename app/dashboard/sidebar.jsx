@@ -9,7 +9,7 @@ export const SideBar = () => {
     const pathname = usePathname();
 
     return (
-        <div>
+        <div className="relative z-50">
 
             <div className="my-5 logo text-[#f2f2f2] flex justify-center items-center gap-1 flex-col">
                 <Image src={'/logo.png'} width={80} height={80} className="p-0.2 border-2 border-[#f2f2f2] rounded-full" />
@@ -30,7 +30,7 @@ export const SideBar = () => {
                     </svg>
 
 
-                    Class
+                    Classes
                 </Link>
                 <Link href={'/'} className="text-[#f2f2f2] w-full text-center hover:font-bold hover:text-red-300 p-2 flex items-center pl-4 gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
