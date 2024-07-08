@@ -1,7 +1,13 @@
+"use client"
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname } from "next/navigation";
+import { Head } from "./head";
 
 export const SideBar = () => {
+
+    const pathname = usePathname();
+
     return (
         <div>
 
@@ -11,14 +17,14 @@ export const SideBar = () => {
             </div>
 
             <div className="flex flex-col ml-9 gap-4 justify-center items-center mt-8">
-                <Link href={'/'} className="text-gray-800 w-full text-center hover:font-bold hover:text-red-300 p-1.5 rounded-l bg-[#f2f2f2] flex items-center pl-4 gap-1.5">
+                <Link href={'/dashboard'} className={`w-full text-center p-1.5 rounded-l flex items-center pl-4 gap-1.5 ${pathname == '/dashboard' ? 'bg-[#f2f2f2] text-gray-800' : 'text-[#f2f2f2] hover:font-bold hover:text-red-300'}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3" />
                     </svg>
 
                     Overview
                 </Link>
-                <Link href={'/'} className="w-full text-center hover:font-bold hover:text-red-300 p-1.5 rounded-l text-[#f2f2f2] flex items-center pl-4 gap-1.5">
+                <Link href={'/dashboard/classes'} className={`w-full text-center p-1.5 rounded-l flex items-center pl-4 gap-1.5 ${pathname == '/dashboard/classes' ? 'bg-[#f2f2f2] text-gray-800' : 'text-[#f2f2f2] hover:font-bold hover:text-red-300'}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819" />
                     </svg>
@@ -42,18 +48,19 @@ export const SideBar = () => {
                 </Link>
                 <Link href={'/'} className="text-[#f2f2f2] w-full text-center hover:font-bold hover:text-red-300 p-2 flex items-center pl-4 gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                    </svg>
+
+                    Attendance
+                </Link>
+                <Link href={'/'} className="text-[#f2f2f2] w-full text-center hover:font-bold hover:text-red-300 p-2 flex items-center pl-4 gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5" />
                     </svg>
 
                     Notifications
                 </Link>
-                <Link href={'/'} className="text-[#f2f2f2] w-full text-center hover:font-bold hover:text-red-300 p-2 flex items-center pl-4 gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-                    </svg>
-
-                    Reports
-                </Link>
+                
             </div>
 
         </div>
