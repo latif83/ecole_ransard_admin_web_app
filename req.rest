@@ -2,3 +2,7 @@ http://localhost:3000/api/classes
 
 ###
 http://localhost:3000/api/students
+
+###
+
+http://localhost:3000/api/students/classes/clye2sp9i0005wsthdaxhv0qz

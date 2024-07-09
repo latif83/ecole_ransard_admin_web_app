@@ -25,9 +25,24 @@ model Students {
   lastName  String
   birthDate DateTime
   address   String?
+  parentId  String?
   classId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  class Classes @relation(fields: [classId], references: [id], name: "ClassStudents")
+  class   Classes  @relation(fields: [classId], references: [id], name: "ClassStudents")
+  parents Parents? @relation(fields: [parentId], name: "ParentStudents", references: [id])
+}
+
+model Parents {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  phone     String
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students Students[] @relation(name: "ParentStudents")
 }
