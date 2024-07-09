@@ -34,8 +34,8 @@ export default function NewClass({ setAddClass, setGData }) {
     };
 
     return (
-        <div className="fixed inset-0 flex justify-center z-50 bg-gray-900 bg-opacity-50">
-            <div className="bg-white w-full max-w-xl mx-auto p-6 mt-5 h-auto shrink-0 grow-0 rounded-t-lg shadow-lg">
+        <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-50">
+            <div className="bg-white w-full max-w-xl mx-auto p-6 mt-5 h-auto shrink-0 grow-0 rounded-md shadow-lg">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="font-bold">Add New Class</h2>
                     <FontAwesomeIcon

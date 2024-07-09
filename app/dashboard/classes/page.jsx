@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import NewClass from "./NewClass";
-// import EditClass from "./EditClass";
-// import DeleteClass from "./DeleteClass";
+import EditClass from "./EditClass";
+import DeleteClass from "./DeleteClass";
 
 export default function Classes() {
   const [addClass, setAddClass] = useState(false);
@@ -15,6 +15,8 @@ export default function Classes() {
   const [editClass, setEditClass] = useState(false);
   const [classData, setClassData] = useState();
   const [delClass, setDelClass] = useState(false);
+
+  const [classId,setClassId] = useState(0)
 
   useEffect(() => {
     const getClasses = async () => {
@@ -54,15 +56,15 @@ export default function Classes() {
         <DeleteClass
           setDelClass={setDelClass}
           setGData={setGData}
-          classId={classData.id}
+          classId={classId}
         />
       )}
 
       <div className="flex items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819" />
-                    </svg>
-      <h1>Available Classes</h1>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819" />
+        </svg>
+        <h1>Available Classes</h1>
       </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
@@ -146,7 +148,7 @@ export default function Classes() {
                     </span>
                     <span
                       onClick={() => {
-                        setClassData(classData);
+                        setClassId(classData.id);
                         setDelClass(true);
                       }}
                       className="font-medium hover:underline text-red-600 hover:underline cursor-pointer"
