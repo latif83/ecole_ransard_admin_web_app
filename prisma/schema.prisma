@@ -18,7 +18,8 @@ model Classes {
   updatedAt DateTime @updatedAt
 
   // Define relation to Students
-  students Students[] @relation(name: "ClassStudents")
+  students     Students[]     @relation(name: "ClassStudents")
+  Notification Notification[]
 }
 
 // Students model
@@ -39,23 +40,24 @@ model Students {
   parents Parents? @relation(fields: [parentId], name: "ParentStudents", references: [id])
 
   // Define relation to Attendance
-  attendance attendance[]
+  attendance   attendance[]
+  Notification Notification[]
 }
 
 // Parents model
 model Parents {
-  id         String    @id @default(cuid())
-  firstName  String
-  lastName   String
-  email      String    @unique
-  phone      String
-  address    String?
-  password   String    @default("ronsard@123")
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  phone     String
+  address   String?
+  password  String   @default("ronsard@123")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Define relation to Students
-  students   Students[] @relation(name: "ParentStudents")
+  students Students[] @relation(name: "ParentStudents")
 }
 
 // Attendance model
@@ -69,16 +71,16 @@ model attendance {
   updatedAt        DateTime  @updatedAt
 
   // Define relation to Students
-  student       Students  @relation(fields: [studentId], references: [id])
+  student        Students       @relation(fields: [studentId], references: [id])
   // Define relation to AttendanceCode
   AttendanceCode attendanceCode @relation(fields: [AttendanceCodeId], references: [id])
 }
 
 // AttendanceCode model
 model attendanceCode {
-  id          String      @id @default(cuid())
+  id          String   @id @default(cuid())
   code        String
-  createdAt   DateTime    @default(now())
+  createdAt   DateTime @default(now())
   createdById String
 
   // Define relation to Admins
@@ -91,13 +93,30 @@ model attendanceCode {
 // Admins model
 model admins {
   id        String   @id @default(cuid())
-  name  String
-  email      String    @unique
-  phone      String
-  password   String    @default("ronsard@123")
+  name      String
+  email     String   @unique
+  phone     String
+  password  String   @default("ronsard@123")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Define relation to AttendanceCode
   attendanceCodes attendanceCode[]
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  title     String
+  content   String
+  dateTime  DateTime?
+  studentId String?
+  classId   String?
+  sendToAll Boolean   @default(false)
+  createdBy String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  student Students? @relation(fields: [studentId], references: [id])
+  class   Classes?  @relation(fields: [classId], references: [id])
 }
