@@ -46,7 +46,7 @@ export const SideBar = () => {
 
                     Students
                 </Link>
-                <Link href={'/'} className="text-[#f2f2f2] w-full text-center hover:font-bold hover:text-red-300 p-2 flex items-center pl-4 gap-1.5">
+                <Link href={'/dashboard/attendance'} className={`w-full text-center p-1.5 rounded-l flex items-center pl-4 gap-1.5 ${pathname == '/dashboard/attendance' ? 'bg-[#f2f2f2] text-gray-800' : 'text-[#f2f2f2] hover:font-bold hover:text-red-300'}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
                     </svg>
