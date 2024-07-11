@@ -3,20 +3,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./newCode.module.css";
 import { faSpinner, faTimes, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export const StudentsAttendance = ({ setViewAttendance, attendanceCode }) => {
-  const [employees, setEmployees] = useState([]);
+  const [students, setStudents] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
   // const [gData, setGData] = useState(true);
 
+  const [selectedClassId,setSelectedClassId] = useState("")
+
   useEffect(() => {
-    const getEmployees = async () => {
+    const getStudents = async () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `/api/attendance/emp?attendanceCode=${attendanceCode}`
+          `/api/attendance/students?attendanceCode=${attendanceCode}&classId=${selectedClassId}`
         );
         const responseData = await response.json();
         if (!response.ok) {
@@ -24,11 +27,7 @@ export const StudentsAttendance = ({ setViewAttendance, attendanceCode }) => {
           return;
         }
 
-        // toast.success(responseData.message)
-
-        // console.log(responseData.employees)
-
-        setEmployees(responseData.employees);
+        setStudents(responseData.students);
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -36,7 +35,31 @@ export const StudentsAttendance = ({ setViewAttendance, attendanceCode }) => {
       }
     };
 
-    getEmployees();
+    getStudents();
+  }, [selectedClassId]);
+
+  const [classLoading, setClassLoading] = useState(false);
+  const [classes, setClasses] = useState([]);
+
+  useEffect(() => {
+    const getClasses = async () => {
+      try {
+        setClassLoading(true);
+        const response = await fetch("/api/classes");
+        const responseData = await response.json();
+        if (!response.ok) {
+          toast.error(responseData.message);
+          return;
+        }
+        setClasses(responseData);
+        setClassLoading(false);
+      } catch (err) {
+        console.log(err);
+        toast.error("Error retrieving data, please try again!");
+      }
+    };
+
+    getClasses();
   }, []);
 
   return (
@@ -46,13 +69,50 @@ export const StudentsAttendance = ({ setViewAttendance, attendanceCode }) => {
         style={{ flexGrow: 0, height: "max-content" }}
       >
         <div className="flex justify-between">
-          <h1 className="font-semibold">Employees</h1>
+          <h1 className="font-semibold">Students</h1>
           <FontAwesomeIcon
             icon={faTimes}
             onClick={() => setViewAttendance(false)}
             className="text-lg cursor-pointer p-2 hover:bg-gray-300 rounded"
             color="red"
           />
+        </div>
+
+        <div className="relative z-0 w-full group mb-5">
+          <label
+            htmlFor="dept"
+            className="block mb-2 text-sm font-medium text-gray-900"
+          >
+            Sort Class
+          </label>
+          <select
+            id="class"
+            name="class"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            required
+            value={selectedClassId}
+            onChange={(e) => setSelectedClassId(e.target.value)}
+          >
+            <option value="">Select Class</option>
+            {classLoading ? (
+              <option>
+                {" "}
+                <FontAwesomeIcon
+                  icon={faSpinner}
+                  color="red"
+                  className="text-lg"
+                  spin
+                />{" "}
+                Loading Classes...{" "}
+              </option>
+            ) : classes.length > 0 ? (
+              classes.map((clas) => (
+                <option value={clas.id}>{clas.className}</option>
+              ))
+            ) : (
+              <option>No classes found.</option>
+            )}
+          </select>
         </div>
 
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
@@ -80,20 +140,22 @@ export const StudentsAttendance = ({ setViewAttendance, attendanceCode }) => {
                     <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                   </td>
                 </tr>
-              ) : employees.length > 0 ? (
-                employees.map((data) => (
+              ) : students.length > 0 ? (
+                students.map((data) => (
                   <tr class="bg-white border-b hover:bg-gray-50">
                     <th
                       scope="row"
                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                     >
-                      {data.employee}
+                      {data.student}
                     </th>
-                    <td class="px-6 py-4 text-gray-900">
-                      {data.department}
+                    <td class="px-6 py-4 text-gray-900">{data.class}</td>
+                    <td class="px-6 py-4">
+                      {new Date(data.clockIn).toLocaleTimeString()}
                     </td>
-                    <td class="px-6 py-4">{new Date(data.clockIn).toLocaleTimeString()}</td>
-                    <td class="px-6 py-4">06:30 PM</td>
+                    <td class="px-6 py-4">
+                      {new Date(data.clockOut).toLocaleTimeString()}
+                    </td>
                   </tr>
                 ))
               ) : (
