@@ -4,10 +4,12 @@ import { faPlusCircle, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { NewNotification } from "./NewNotification";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { EditNotification } from "./EditNotification";
 
 export default function Notifications() {
 
   const [notifications, setNotifications] = useState([])
+  const [notification,setNotification] = useState({})
   const [loading, setLoading] = useState(false)
 
   const [fetchData,setFetchData] = useState(true)
@@ -26,6 +28,7 @@ export default function Notifications() {
   };
 
   const [newNotification, setNewNotification] = useState(false)
+  const [editNotification,setEditNotification] = useState(false)
 
   useEffect(() => {
 
@@ -60,6 +63,7 @@ export default function Notifications() {
   return (
     <div>
       {newNotification && <NewNotification setNewNotification={setNewNotification} setFetchData={setFetchData} />}
+      {editNotification && <EditNotification setEditNotification={setEditNotification} setFetchData={setFetchData} notification={notification} />}
       <h1>Notifications</h1>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
         <div className="p-4 flex justify-between">
@@ -144,7 +148,10 @@ export default function Notifications() {
                   <span className="mr-2 cursor-pointer text-blue-600 hover:underline">
                     Resend
                   </span>
-                  <span className="mr-2 cursor-pointer text-blue-600 hover:underline">
+                  <span onClick={()=>{
+                    setNotification(notification)
+                    setEditNotification(true)
+                  }} className="mr-2 cursor-pointer text-blue-600 hover:underline">
                     Edit
                   </span>
                   <span className="cursor-pointer text-red-600 hover:underline">

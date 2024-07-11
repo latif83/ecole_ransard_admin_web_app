@@ -10,9 +10,9 @@ export default function DashboardLayout({ children }) {
 
             </div>
         </div>
-        <div className="w-full pl-2">
+        <div className="w-full flex flex-col pl-2">
         <Head />
-            <div className="p-3 pt-6">
+            <div className="p-3 flex-1 pt-6 overflow-y-auto">
             {children}
             </div>
         </div>

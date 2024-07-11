@@ -3,166 +3,136 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-export const NewNotification = ({ setNewNotification, setFetchData }) => {
+export const EditNotification = ({ setEditNotification, setFetchData, notification }) => {
     const [loading, setLoading] = useState(false);
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [date, setDate] = useState(""); // State for date field
-    const [sendTo, setSendTo] = useState("all"); // State for sendTo option: all, student, class
-    const [students, setStudents] = useState([]); // State for students fetched from backend
-    const [classes, setClasses] = useState([]); // State for classes fetched from backend
-    const [selectedClass, setSelectedClass] = useState(""); // State for selected class
-    const [selectedStudent, setSelectedStudent] = useState(""); // State for selected student
+    const [title, setTitle] = useState(notification.title || "");
+    const [content, setContent] = useState(notification.content || "");
+    const [date, setDate] = useState(notification.dateTime ? new Date(notification.dateTime).toISOString().slice(0, 16) : ""); // State for date field
+    const [sendTo, setSendTo] = useState(notification.sendToAll ? "all" : notification.studentId ? "student" : "class"); // State for sendTo option: all, student, class
+    const [students, setStudents] = useState([]);
+    const [classes, setClasses] = useState([]);
+    const [selectedClass, setSelectedClass] = useState(notification.classId || "");
+    const [selectedStudent, setSelectedStudent] = useState(notification.studentId || "");
 
     // Fetch classes from backend on component mount
     useEffect(() => {
+
+        if (notification.studentId) {
+            setSelectedClass(notification.student.classId)
+        }
+
         fetchClasses();
     }, []);
 
-    const [classesLoading, setClassesLoading] = useState(false)
-    const [studentsLoading, setStudentsLoading] = useState(false)
+    const [classesLoading, setClassesLoading] = useState(false);
+    const [studentsLoading, setStudentsLoading] = useState(false);
 
     const fetchClasses = async () => {
-        setClassesLoading(true)
+        setClassesLoading(true);
         try {
-            // Replace with your actual API endpoint to fetch classes
             const response = await fetch("/api/classes");
-
             const responseData = await response.json();
 
             if (!response.ok) {
-                toast.error(responseData.message)
-                return
+                toast.error(responseData.message);
+                return;
             }
 
             setClasses(responseData);
         } catch (error) {
             console.error("Error fetching classes:", error);
-            // Handle error (e.g., show error message)
             toast.error("Failed to fetch classes. Please try again later.");
         } finally {
-            setClassesLoading(false)
+            setClassesLoading(false);
         }
     };
 
     // Fetch students for selected class
     const fetchStudents = async (classId) => {
-        setStudentsLoading(true)
+        setStudentsLoading(true);
         try {
-            // Replace with your actual API endpoint to fetch students by classId
             const response = await fetch(`/api/students/classes/${classId}`);
-
             const responseData = await response.json();
 
             if (!response.ok) {
-                toast.error(responseData.message)
-                return
+                toast.error(responseData.message);
+                return;
             }
 
             setStudents(responseData.students);
         } catch (error) {
             console.error(`Error fetching students for class ${classId}:`, error);
-            // Handle error (e.g., show error message)
             toast.error("Failed to fetch students. Please try again later.");
         } finally {
-            setStudentsLoading(false)
+            setStudentsLoading(false);
         }
     };
-
-    const [sendData, setSendData] = useState(false)
 
     const handleSubmit = async () => {
-        setSendData(true)
-    };
+        setLoading(true);
 
-    useEffect(() => {
-        const submitNotification = async () => {
-            setLoading(true);
+        const notificationData = {
+            id: notification.id,
+            title,
+            content,
+            date,
+            sendTo,
+            studentId: sendTo === "student" ? selectedStudent : null,
+            classId: sendTo === "class" ? selectedClass : null,
+        };
 
-            // Construct the notification data
-            const notificationData = {
-                title,
-                content,
-                date,
-                sendTo,
-                studentId: sendTo === "student" ? selectedStudent : null,
-                classId: sendTo === "class" ? selectedClass : null,
-            };
+        try {
+            const response = await fetch(`/api/notification`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(notificationData),
+            });
 
-            try {
-                // Perform API call to submit the notification
-                // Replace with your actual API endpoint and method
-                const response = await fetch("/api/notification", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(notificationData),
-                });
+            const responseData = await response.json();
 
-                const responseData = await response.json()
-
-                if (!response.ok) {
-                    toast.error(responseData.message)
-                    return
-                }
-
-                // Reset form state
-                setTitle("");
-                setContent("");
-                setDate(""); // Reset date field
-                setSendTo("all");
-                setSelectedClass("");
-                setSelectedStudent("");
-
-                toast.success(responseData.message)
-                setFetchData(true)
-                setNewNotification(false)
-
-            } catch (error) {
-                console.error("Error creating notification:", error);
-
-                toast.error("Error creating notification. Please try again later.");
-            } finally {
-                setLoading(false);
+            if (!response.ok) {
+                toast.error(responseData.message);
+                return;
             }
-        }
 
-        if (sendData) {
-            submitNotification()
-            setSendData(false)
+            setFetchData(true);
+            setEditNotification(false);
+            toast.success(responseData.message);
+        } catch (error) {
+            console.error("Error updating notification:", error);
+            toast.error("Error updating notification. Please try again later.");
+        } finally {
+            setLoading(false);
         }
-
-    }, [sendData])
+    };
 
     const handleSendToChange = (e) => {
         setSendTo(e.target.value);
-        // Reset selectedClass and selectedStudent when sendTo option changes
         setSelectedClass("");
         setSelectedStudent("");
     };
 
     useEffect(() => {
-        sendTo == "student" && fetchStudents(selectedClass)
-    }, [selectedClass])
+        if (sendTo === "student" && selectedClass) fetchStudents(selectedClass);
+    }, [selectedClass]);
 
     return (
         <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-50">
             <div className="bg-white w-full max-w-2xl mx-auto p-6 mt-5 h-auto shrink-0 grow-0 rounded-md shadow-lg">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="font-bold">New Notification</h2>
+                    <h2 className="font-bold">Edit Notification</h2>
                     <FontAwesomeIcon
                         icon={faTimes}
                         width={15}
                         height={15}
                         className="p-1.5 hover:bg-gray-300 rounded-md cursor-pointer"
                         color="red"
-                        onClick={() => {
-                            setNewNotification(false)
-                        }}
+                        onClick={() => setEditNotification(false)}
                     />
                 </div>
-                <form action={handleSubmit}>
+                <form onSubmit={handleSubmit}>
                     <div className="relative z-0 w-full group mb-5">
                         <input
                             type="text"
@@ -254,24 +224,15 @@ export const NewNotification = ({ setNewNotification, setFetchData }) => {
                                             onChange={(e) => setSelectedClass(e.target.value)}
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-gray-300 border rounded-md"
                                         >
-                                            <option value="">Select Class</option>
+                                            <option value="">Select a class</option>
                                             {classesLoading ? (
-                                                <option>
-                                                    {" "}
-                                                    <FontAwesomeIcon
-                                                        icon={faSpinner}
-                                                        color="red"
-                                                        className="text-lg"
-                                                        spin
-                                                    />{" "}
-                                                    Loading Classes...{" "}
-                                                </option>
-                                            ) : classes.length > 0 ? (
-                                                classes.map((clas) => (
-                                                    <option value={clas.id}>{clas.className}</option>
-                                                ))
+                                                <option value="">Loading classes...</option>
                                             ) : (
-                                                <option>No classes found.</option>
+                                                classes.map((classItem) => (
+                                                    <option key={classItem.id} value={classItem.id}>
+                                                        {classItem.className}
+                                                    </option>
+                                                ))
                                             )}
                                         </select>
                                     </div>
@@ -280,34 +241,24 @@ export const NewNotification = ({ setNewNotification, setFetchData }) => {
                                             value={selectedStudent}
                                             onChange={(e) => setSelectedStudent(e.target.value)}
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-gray-300 border rounded-md"
+                                            disabled={!selectedClass}
                                         >
-                                            <option value="">Select Student</option>
-
+                                            <option value="">Select a student</option>
                                             {studentsLoading ? (
-                                                <option>
-                                                    {" "}
-                                                    <FontAwesomeIcon
-                                                        icon={faSpinner}
-                                                        color="red"
-                                                        className="text-lg"
-                                                        spin
-                                                    />{" "}
-                                                    Loading Students...{" "}
-                                                </option>
-                                            ) : students.length > 0 ? (
+                                                <option value="">Loading students...</option>
+                                            ) : (
                                                 students.map((student) => (
                                                     <option key={student.id} value={student.id}>
                                                         {student.firstName} {student.lastName}
                                                     </option>
                                                 ))
-                                            ) : (
-                                                <option>No Students found.</option>
                                             )}
                                         </select>
-                                    </div></div>
+                                    </div>
+                                </div>
                             )}
                         </div>
-                        <div className="mb-8">
+                        <div className="mb-5">
                             <div className="flex items-center">
                                 <input
                                     type="radio"
@@ -319,7 +270,7 @@ export const NewNotification = ({ setNewNotification, setFetchData }) => {
                                     className="mr-2"
                                 />
                                 <label htmlFor="sendToClass" className="text-sm text-gray-600">
-                                    Send to whole class
+                                    Send to a class
                                 </label>
                             </div>
                             {sendTo === "class" && (
@@ -327,45 +278,34 @@ export const NewNotification = ({ setNewNotification, setFetchData }) => {
                                     <select
                                         value={selectedClass}
                                         onChange={(e) => setSelectedClass(e.target.value)}
-                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border border-gray-300 rounded-md"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-gray-300 border rounded-md"
                                     >
-                                        <option value="">Select Class</option>
+                                        <option value="">Select a class</option>
                                         {classesLoading ? (
-                                            <option>
-                                                {" "}
-                                                <FontAwesomeIcon
-                                                    icon={faSpinner}
-                                                    color="red"
-                                                    className="text-lg"
-                                                    spin
-                                                />{" "}
-                                                Loading Classes...{" "}
-                                            </option>
-                                        ) : classes.length > 0 ? (
-                                            classes.map((clas) => (
-                                                <option value={clas.id}>{clas.className}</option>
-                                            ))
+                                            <option value="">Loading classes...</option>
                                         ) : (
-                                            <option>No classes found.</option>
+                                            classes.map((classItem) => (
+                                                <option key={classItem.id} value={classItem.id}>
+                                                    {classItem.className}
+                                                </option>
+                                            ))
                                         )}
-
                                     </select>
                                 </div>
                             )}
                         </div>
                     </div>
-
                     <button
-                        type="submit"
+                        type="button"
+                        onClick={handleSubmit}
+                        className={`w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${loading ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
                         disabled={loading}
-                        className="w-full bg-blue-500 disabled:bg-blue-200 hover:bg-blue-600 text-white font-medium rounded py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
                         {loading ? (
-                            <>
-                                <FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Submit
-                            </>
+                            <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
                         ) : (
-                            "Submit"
+                            "Save Changes"
                         )}
                     </button>
                 </form>
