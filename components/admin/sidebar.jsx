@@ -30,14 +30,14 @@ export const AdminSidebar = () => {
                 </p>
 
                 <div className="mt-5 flex flex-col gap-3">
-                    <Link href={'/admin'} className={`text-gray-50 hover:font-bold ${pathname=="/admin" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
+                    <Link href={'/admin'} className={`text-gray-50 hover:font-bold ${pathname == "/admin" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
                             <FontAwesomeIcon icon={faGaugeHigh} width={20} height={20} />
                             <span>Dashboard</span>
                         </div>
                     </Link>
 
-                    <Link href={'/admin/students'} className={`text-gray-50 hover:font-bold ${pathname=="/admin/students" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
+                    <Link href={'/admin/students'} className={`text-gray-50 hover:font-bold ${pathname == "/admin/students" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
                             <FontAwesomeIcon icon={faUsersLine} width={20} height={20} />
                             <span>Students</span>
@@ -58,19 +58,19 @@ export const AdminSidebar = () => {
                         </div>
                     </div>
 
-                    <div className="text-gray-50 p-2 rounded-l text-sm flex justify-between">
+                    <Link href={'/admin/classes'} className={`text-gray-50 hover:font-bold ${pathname == "/admin/classes" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
                             <FontAwesomeIcon icon={faSchool} width={20} height={20} />
                             <span>Classes</span>
                         </div>
-                    </div>
+                    </Link>
 
-                    <div className="text-gray-50 p-2 rounded-l text-sm flex justify-between">
+                    <Link href={'/admin/subjects'} className={`text-gray-50 hover:font-bold ${pathname == "/admin/subjects" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
                             <FontAwesomeIcon icon={faBookOpen} width={20} height={20} />
                             <span>Subjects</span>
                         </div>
-                    </div>
+                    </Link>
 
                     <div className="text-gray-50 p-2 rounded-l text-sm flex justify-between">
                         <div className="flex items-center justify-between gap-1.5">

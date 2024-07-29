@@ -1,5 +1,5 @@
 "use client"
-import { faPlusCircle, faSpinner, faUserTie, faTimes, faUsersBetweenLines } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faSpinner, faUserTie, faTimes, faUsersBetweenLines, faUsersLine } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -66,8 +66,16 @@ export default function Students() {
             )}
 
             <div className="flex items-center gap-2">
-                <FontAwesomeIcon icon={faUsersBetweenLines} width={25} height={25} />
+                <FontAwesomeIcon className="text-xl" icon={faUsersLine} width={25} height={25} />
                 <h1>Students</h1>
+            </div>
+
+            <div className="mt-5">
+                <select className="p-2 rounded text-sm w-full max-w-xl">
+                    <option>
+                        All Class
+                    </option>
+                </select>
             </div>
 
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
