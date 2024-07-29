@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import NewClass from "./NewClass";
 import EditClass from "./EditClass";
 import DeleteClass from "./DeleteClass";
+import Link from "next/link";
 
 export default function Classes() {
   const [addClass, setAddClass] = useState(false);
@@ -16,7 +17,7 @@ export default function Classes() {
   const [classData, setClassData] = useState();
   const [delClass, setDelClass] = useState(false);
 
-  const [classId,setClassId] = useState(0)
+  const [classId, setClassId] = useState(0)
 
   useEffect(() => {
     const getClasses = async () => {
@@ -113,7 +114,7 @@ export default function Classes() {
           <thead className="text-xs text-center text-gray-700 uppercase bg-gray-50">
             <tr>
               <th scope="col" className="px-6 py-3">
-                class
+                Class
               </th>
               <th scope="col" className="px-6 py-3">
                 Action
@@ -137,24 +138,12 @@ export default function Classes() {
                     {classData.className}
                   </th>
                   <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                    <span
-                      onClick={() => {
-                        setClassData(classData);
-                        setEditClass(true);
-                      }}
+                    <Link
+                      href={`/admin/classes/${classData.id}`}
                       className="font-medium text-blue-600 hover:underline cursor-pointer"
                     >
-                      Edit
-                    </span>
-                    <span
-                      onClick={() => {
-                        setClassId(classData.id);
-                        setDelClass(true);
-                      }}
-                      className="font-medium hover:underline text-red-600 hover:underline cursor-pointer"
-                    >
-                      Delete
-                    </span>
+                      Manage
+                    </Link>
                   </td>
                 </tr>
               ))

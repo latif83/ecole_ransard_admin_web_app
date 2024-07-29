@@ -58,7 +58,7 @@ export const AdminSidebar = () => {
                         </div>
                     </div>
 
-                    <Link href={'/admin/classes'} className={`text-gray-50 hover:font-bold ${pathname == "/admin/classes" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
+                    <Link href={'/admin/classes'} className={`text-gray-50 hover:font-bold ${pathname.includes("/admin/classes") && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
                             <FontAwesomeIcon icon={faSchool} width={20} height={20} />
                             <span>Classes</span>
