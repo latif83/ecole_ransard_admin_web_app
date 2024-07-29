@@ -5,11 +5,13 @@ import { NewNotification } from "./NewNotification";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { EditNotification } from "./EditNotification";
+import DeleteNotification from "./DeleteNotification";
 
 export default function Notifications() {
 
   const [notifications, setNotifications] = useState([])
   const [notification,setNotification] = useState({})
+  const [notificationId,setNotificationId] = useState()
   const [loading, setLoading] = useState(false)
 
   const [fetchData,setFetchData] = useState(true)
@@ -29,6 +31,7 @@ export default function Notifications() {
 
   const [newNotification, setNewNotification] = useState(false)
   const [editNotification,setEditNotification] = useState(false)
+  const [delNotification,setDelNotification] = useState(false)
 
   useEffect(() => {
 
@@ -64,6 +67,7 @@ export default function Notifications() {
     <div>
       {newNotification && <NewNotification setNewNotification={setNewNotification} setFetchData={setFetchData} />}
       {editNotification && <EditNotification setEditNotification={setEditNotification} setFetchData={setFetchData} notification={notification} />}
+      {delNotification && <DeleteNotification setDelNotification={setDelNotification} setFetchData={setFetchData} notificationId={notificationId} />}
       <h1>Notifications</h1>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
         <div className="p-4 flex justify-between">
@@ -154,7 +158,10 @@ export default function Notifications() {
                   }} className="mr-2 cursor-pointer text-blue-600 hover:underline">
                     Edit
                   </span>
-                  <span className="cursor-pointer text-red-600 hover:underline">
+                  <span onClick={()=>{
+                    setNotificationId(notification.id)
+                    setDelNotification(true)
+                  }} className="cursor-pointer text-red-600 hover:underline">
                     Delete
                   </span>
                 </td>
