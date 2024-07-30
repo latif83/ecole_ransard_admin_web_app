@@ -18,8 +18,44 @@ model Classes {
   updatedAt DateTime @updatedAt
 
   // Define relation to Students
-  students     Students[]     @relation(name: "ClassStudents")
-  Notification Notification[]
+  students      Students[]      @relation(name: "ClassStudents")
+  Notification  Notification[]
+  ClassSections ClassSections[]
+}
+
+// ClassSections model
+model ClassSections {
+  id          String   @id @default(cuid())
+  sectionName String
+  classId     String
+  teacherId   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Define relation to Classes
+  class Classes @relation(fields: [classId], references: [id])
+
+  // Define relation to Teachers
+  teacher Teachers? @relation(fields: [teacherId], references: [id])
+
+  // Define relation to Students
+  students Students[]
+}
+
+// Teachers model
+model Teachers {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  phone     String
+  password  String
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Define relation to ClassSections
+  classSections ClassSections[]
 }
 
 // Students model
@@ -40,8 +76,10 @@ model Students {
   parents Parents? @relation(fields: [parentId], name: "ParentStudents", references: [id])
 
   // Define relation to Attendance
-  attendance   attendance[]
-  Notification Notification[]
+  attendance      attendance[]
+  Notification    Notification[]
+  ClassSections   ClassSections? @relation(fields: [classSectionsId], references: [id])
+  classSectionsId String?
 }
 
 // Parents model
