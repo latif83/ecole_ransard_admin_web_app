@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { NewClassSection } from "./newClassSection";
+import { AssignSubject } from "./assignSubject";
 
 export default function ({ params }) {
 
@@ -45,11 +46,14 @@ export default function ({ params }) {
     }, [fetchData])
 
     const [createSection, setCreateSection] = useState(false)
+    const [assignSubject,setAssignSubject] = useState(false)
 
     return (
         <div>
 
             {createSection && <NewClassSection classId={classId} setCreateSection={setCreateSection} setFetchData={setFetchData} />}
+
+            {assignSubject && <AssignSubject classId={classId} setAssignSubject={setAssignSubject} setFetchData={setFetchData} />}
 
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-700 p-2 rounded hover:bg-red-600 hover:text-white">
@@ -188,7 +192,7 @@ export default function ({ params }) {
                     <h3>
                         Assigned Subjects
                     </h3>
-                    <button className="bg-blue-600 hover:bg-blue-800 p-2 flex items-center gap-1.5 rounded-md text-white">
+                    <button onClick={()=>setAssignSubject(true)} className="bg-blue-600 hover:bg-blue-800 p-2 flex items-center gap-1.5 rounded-md text-white">
                         <FontAwesomeIcon icon={faCirclePlus} width={15} height={15} className="text-lg" />
                         <span>
                             New Subject
@@ -202,10 +206,10 @@ export default function ({ params }) {
                     {
                         dataLoading ? <div className="w-full flex justify-center items-center text-sm gap-1.5">
                             <FontAwesomeIcon icon={faSpinner} spin width={20} height={20} /> Loading...
-                        </div> : data.subjects?.length > 0 ? data.subjects?.map((student) => (
+                        </div> : data.subjects?.length > 0 ? data.subjects?.map((subject) => (
                             <div className="bg-blue-100 text-sm rounded-full flex items-center gap-1.5 p-2 shrink-0 border border-blue-600">
                                 <span>
-                                    English Language
+                                    {subject.name}
                                 </span>
                                 <FontAwesomeIcon icon={faXmark} width={20} height={20} className="text-xl cursor-pointer hover:font-bold text-red-600" />
                             </div>

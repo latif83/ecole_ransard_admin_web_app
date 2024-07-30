@@ -29,7 +29,11 @@ export async function GET(req, { params }) {
             students: true, // Include students in each class section
           },
         },
-        assignedSubjects: true, // Subjects assigned to the class
+        assignedSubjects: {
+          include : {
+            subject : true
+          }
+        }, // Subjects assigned to the class
       },
     });
 
@@ -62,8 +66,8 @@ export async function GET(req, { params }) {
         numberOfStudents: section.students.length, // Count of students in the section
       })),
       subjects: classDetails.assignedSubjects.map(subject => ({
-        id: subject.id,
-        name: subject.name,
+        id: subject.subject.id,
+        name: subject.subject.name,
       })),
     };
 
