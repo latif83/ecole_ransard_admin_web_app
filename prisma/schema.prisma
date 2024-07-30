@@ -95,6 +95,7 @@ model Students {
   address   String?
   parentId  String?
   classId   String
+  classSectionsId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -107,7 +108,6 @@ model Students {
   attendance      attendance[]
   Notification    Notification[]
   ClassSections   ClassSections? @relation(fields: [classSectionsId], references: [id])
-  classSectionsId String?
 }
 
 // Parents model

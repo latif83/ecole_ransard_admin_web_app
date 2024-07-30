@@ -143,7 +143,7 @@ export default function Students() {
                     <tbody>
                         {loading ? (
                             <tr className="bg-white border-b hover:bg-gray-50">
-                                <td colSpan={4} className="px-6 py-4 text-center">
+                                <td colSpan={5} className="px-6 py-4 text-center">
                                     <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                                 </td>
                             </tr>
@@ -183,7 +183,7 @@ export default function Students() {
                             ))
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">
-                                <td colSpan={4} className="px-6 py-4 text-center">
+                                <td colSpan={5} className="px-6 py-4 text-center">
                                     No students found
                                 </td>
                             </tr>

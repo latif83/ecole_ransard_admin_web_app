@@ -11,38 +11,6 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req) {
   try {
-    // Check authentication using cookies or any other method you have
-    //   const hasCookies = cookies().has("access-token");
-    //   let user = {};
-
-    //   if (!hasCookies) {
-    //     return NextResponse.json(
-    //       {
-    //         error: "You're unauthorized, please login to continue.",
-    //       },
-    //       { status: 400 }
-    //     );
-    //   }
-
-    //   if (hasCookies) {
-    //     const cookie = cookies().get("access-token");
-
-    //     if (cookie?.value) {
-    //       const verificationResult = await verifyToken(cookie.value);
-
-    //       if (verificationResult.status) {
-    //         user = verificationResult.decodedToken;
-    //         // Now you have the user details, you can use them as needed
-    //         // console.log("User details:", user);
-    //       } else {
-    //         // Handle invalid token
-    //         return NextResponse.json(
-    //           { error: "Your session is expired, please login" },
-    //           { status: 400 }
-    //         );
-    //       }
-    //     }
-    //   }
 
     // Parse request body for class data
     const { className } = await req.json();

@@ -8,11 +8,16 @@ export default function NewStudent({ setAddStudent, setGData }) {
     const [lastName, setLastName] = useState("");
     const [birthDate, setBirthDate] = useState("");
     const [address, setAddress] = useState("");
-    const [classId, setClassId] = useState(""); // You might want to populate this with class data
+    const [classId, setClassId] = useState("");
+    const [classSectionsId, setClassSectionId] = useState("");
+
     const [loading, setLoading] = useState(false);
 
     const [classLoading, setClassLoading] = useState(false)
     const [classes, setClasses] = useState([])
+
+    const [classSectionsLoading, setClassSectionsLoading] = useState(false)
+    const [classSections, setClassSections] = useState([])
 
     useEffect(() => {
 
@@ -37,6 +42,31 @@ export default function NewStudent({ setAddStudent, setGData }) {
 
     }, [])
 
+    useEffect(() => {
+        const fetchClassSections = async () => {
+            try {
+                setClassSectionsLoading(true);
+                const response = await fetch(`/api/classes/${classId}/sections`);
+                const responseData = await response.json();
+                if (!response.ok) {
+                    toast.error(responseData.message);
+                    return;
+                }
+                setClassSections(responseData.classSections);
+            } catch (err) {
+                console.log(err);
+                toast.error("Error retrieving data, please try again!");
+            } finally {
+                setClassSectionsLoading(false)
+            }
+        }
+
+        if (classId) {
+            fetchClassSections()
+        }
+
+    }, [classId])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -46,7 +76,7 @@ export default function NewStudent({ setAddStudent, setGData }) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ firstName, lastName, birthDate, address, classId }),
+                body: JSON.stringify({ firstName, lastName, birthDate, address, classId,classSectionsId }),
             });
             const responseData = await response.json();
             if (!response.ok) {
@@ -150,41 +180,79 @@ export default function NewStudent({ setAddStudent, setGData }) {
                         </label>
                     </div>
 
-                    <div className="relative z-0 w-full group mb-5">
-                        <label
-                            htmlFor="dept"
-                            className="block mb-2 text-sm font-medium text-gray-900"
-                        >
-                            Class
-                        </label>
-                        <select
-                            id="class"
-                            name="class"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            required
-                            value={classId}
-                            onChange={(e) => setClassId(e.target.value)}
-                        >
-                            <option value="">Select Class</option>
-                            {classLoading ? (
-                                <option>
-                                    {" "}
-                                    <FontAwesomeIcon
-                                        icon={faSpinner}
-                                        color="red"
-                                        className="text-lg"
-                                        spin
-                                    />{" "}
-                                    Loading Classes...{" "}
-                                </option>
-                            ) : classes.length > 0 ? (
-                                classes.map((clas) => (
-                                    <option value={clas.id}>{clas.className}</option>
-                                ))
-                            ) : (
-                                <option>No classes found.</option>
-                            )}
-                        </select>
+                    <div className="grid grid-cols-2 gap-2">
+                        <div className="relative z-0 w-full group mb-5">
+                            <label
+                                htmlFor="dept"
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                            >
+                                Class
+                            </label>
+                            <select
+                                id="class"
+                                name="class"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required
+                                value={classId}
+                                onChange={(e) => setClassId(e.target.value)}
+                            >
+                                <option value="">Select Class</option>
+                                {classLoading ? (
+                                    <option>
+                                        {" "}
+                                        <FontAwesomeIcon
+                                            icon={faSpinner}
+                                            color="red"
+                                            className="text-lg"
+                                            spin
+                                        />{" "}
+                                        Loading Classes...{" "}
+                                    </option>
+                                ) : classes.length > 0 ? (
+                                    classes.map((clas) => (
+                                        <option value={clas.id}>{clas.className}</option>
+                                    ))
+                                ) : (
+                                    <option>No classes found.</option>
+                                )}
+                            </select>
+                        </div>
+                        <div className="relative z-0 w-full group mb-5">
+                            <label
+                                htmlFor="dept"
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                            >
+                                Section
+                            </label>
+                            <select
+                                id="class"
+                                name="class"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required
+                                value={classSectionsId}
+                                onChange={(e) => setClassSectionId(e.target.value)}
+                            >
+                                <option value="">Select Section</option>
+                                {classSectionsLoading ? (
+                                    <option>
+                                        {" "}
+                                        <FontAwesomeIcon
+                                            icon={faSpinner}
+                                            color="red"
+                                            className="text-lg"
+                                            spin
+                                        />{" "}
+                                        Loading Sections...{" "}
+                                    </option>
+                                ) : classSections.length > 0 ? (
+                                    classSections.map((section) => (
+                                        <option value={section.id}>{section.sectionName}</option>
+                                    ))
+                                ) : (
+                                    <option>No sections found.</option>
+                                )}
+                            </select>
+                        </div>
                     </div>
 
                     <div className="flex justify-end">

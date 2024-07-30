@@ -12,3 +12,6 @@ http://localhost:3000/api/teachers
 
 ###
 http://localhost:3000/api/classes/clye2sp9i0005wsthdaxhv0qz
+
+###
+http://localhost:3000/api/classes/clye2sj6n0004wsth81iazuxf/sections
