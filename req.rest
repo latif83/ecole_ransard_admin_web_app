@@ -6,3 +6,6 @@ http://localhost:3000/api/students
 ###
 
 http://localhost:3000/api/students/classes/clye2sp9i0005wsthdaxhv0qz
+
+###
+http://localhost:3000/api/teachers

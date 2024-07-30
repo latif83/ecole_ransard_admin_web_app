@@ -45,7 +45,7 @@ export default function Students() {
             }
         };
         fetchStudents();
-    }, [addStudent, editStudent, deleteStudent]); // Refetch data when adding, editing, or deleting
+    }, [addStudent, editStudent, deleteStudent]); 
 
     return (
         <div>

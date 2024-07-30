@@ -1,24 +1,51 @@
-import { faChalkboardTeacher, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+"use client"
+import { faChalkboardTeacher, faPlusCircle, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import NewTeacher from "./newTeacher";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Teachers() {
+
+    const [addTeacher, setAddTeacher] = useState(false)
+
+    const [loading, setLoading] = useState(false)
+
+    const [teachers, setTeachers] = useState([])
+
+    const [fetchData, setFetchData] = useState(true)
+
+    useEffect(() => {
+        const fetchTeachers = async () => {
+            setLoading(true)
+            try {
+                const response = await fetch("/api/teachers");
+                const data = await response.json();
+                if (!response.ok) {
+                    toast.error(data.error);
+                    return;
+                }
+                setTeachers(data.teachers);
+
+            } catch (error) {
+                console.error("Error fetching students:", error);
+                toast.error("Error fetching students, please try again!");
+                setLoading(false);
+            } finally {
+                setLoading(false)
+            }
+        };
+
+        if (fetchData) {
+            fetchTeachers();
+            setFetchData(false)
+        }
+    }, [fetchData]);
+
     return (
         <div>
-            {/* {addStudent && <NewStudent setAddStudent={setAddStudent} setGData={setStudents} />}
-            {editStudent && (
-                <EditStudent
-                    setEditStudent={setEditStudent}
-                    setGData={setStudents}
-                    studentData={studentData}
-                />
-            )}
-            {deleteStudent && (
-                <DeleteStudent
-                    setDeleteStudent={setDeleteStudent}
-                    setGData={setStudents}
-                    studentId={studentId}
-                />
-            )} */}
+
+            {addTeacher && <NewTeacher setAddTeacher={setAddTeacher} setFetchData={setFetchData} />}
 
             <div className="flex items-center gap-2">
                 <FontAwesomeIcon className="text-xl" icon={faChalkboardTeacher} width={25} height={25} />
@@ -59,7 +86,7 @@ export default function Teachers() {
                     </div>
                     <div>
                         <button
-                            // onClick={() => setAddStudent(true)}
+                            onClick={() => setAddTeacher(true)}
                             className="p-2 rounded-lg bg-gray-50 flex gap-2 items-center hover:bg-gray-200 text-sm"
                         >
                             <FontAwesomeIcon icon={faPlusCircle} />
@@ -92,76 +119,44 @@ export default function Teachers() {
                     </thead>
                     <tbody>
 
-                        <tr className="bg-white border-b hover:bg-gray-50">
-                            <th
-                                scope="row"
-                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                            >
-                                Abdul-Latif Mohammed
-                            </th>
-                            <td className="px-6 py-4 text-center">
-                                latif@gmail.com
-                            </td>
-                            <td className="px-6 py-4 text-center">
-                                0502002358
-                            </td>
-                            <td className="px-6 py-4 text-center">Kwabenya - ACP</td>
-                            <td className="px-6 py-4 text-center">Primary 1 ( A )</td>
-                            <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                <span
-                                    // onClick={() => {
-                                    //     setStudentData(student);
-                                    //     setEditStudent(true);
-                                    // }}
-                                    className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                >
-                                    Edit
-                                </span>
-                                <span
-                                    // onClick={() => {
-                                    //     setStudentId(student.id);
-                                    //     setDeleteStudent(true);
-                                    // }}
-                                    className="font-medium hover:underline text-red-600 hover:underline cursor-pointer"
-                                >
-                                    Delete
-                                </span>
-                            </td>
-                        </tr>
-
-                        {/* {loading ? (
+                        {loading ? (
                             <tr className="bg-white border-b hover:bg-gray-50">
-                                <td colSpan={4} className="px-6 py-4 text-center">
+                                <td colSpan={6} className="px-6 py-4 text-center">
                                     <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                                 </td>
                             </tr>
-                        ) : students.length > 0 ? (
-                            students.map((student) => (
-                                <tr key={student.id} className="bg-white border-b hover:bg-gray-50">
+                        ) : teachers.length > 0 ? (
+                            teachers.map((teacher) => (
+                                <tr key={teacher.id} className="bg-white border-b hover:bg-gray-50">
                                     <th
                                         scope="row"
                                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
                                     >
-                                        {student.firstName} {student.lastName}
+                                        {teacher.firstName} {teacher.lastName}
                                     </th>
-                                    <td className="px-6 py-4 text-center">{calculateAge(student.birthDate)}</td>
-                                    <td className="px-6 py-4 text-center">{student.class.className}</td>
-                                    <td className="px-6 py-4 text-center">{student.address}</td>
+                                    <td className="px-6 py-4 text-center">
+                                        {teacher.email}
+                                    </td>
+                                    <td className="px-6 py-4 text-center">
+                                        {teacher.phone}
+                                    </td>
+                                    <td className="px-6 py-4 text-center">{teacher.address}</td>
+                                    <td className="px-6 py-4 text-center">{teacher.classSections.length}</td>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
                                         <span
-                                            onClick={() => {
-                                                setStudentData(student);
-                                                setEditStudent(true);
-                                            }}
+                                            // onClick={() => {
+                                            //     setStudentData(student);
+                                            //     setEditStudent(true);
+                                            // }}
                                             className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
                                             Edit
                                         </span>
                                         <span
-                                            onClick={() => {
-                                                setStudentId(student.id);
-                                                setDeleteStudent(true);
-                                            }}
+                                            // onClick={() => {
+                                            //     setStudentId(student.id);
+                                            //     setDeleteStudent(true);
+                                            // }}
                                             className="font-medium hover:underline text-red-600 hover:underline cursor-pointer"
                                         >
                                             Delete
@@ -171,11 +166,11 @@ export default function Teachers() {
                             ))
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">
-                                <td colSpan={4} className="px-6 py-4 text-center">
+                                <td colSpan={6} className="px-6 py-4 text-center">
                                     No students found
                                 </td>
                             </tr>
-                        )} */}
+                        )}
                     </tbody>
                 </table>
             </div>
