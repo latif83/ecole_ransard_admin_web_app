@@ -21,6 +21,8 @@ model Classes {
   students      Students[]      @relation(name: "ClassStudents")
   Notification  Notification[]
   ClassSections ClassSections[]
+  // Define relation to AssignedSubjects
+  assignedSubjects AssignedSubjects[]
 }
 
 // ClassSections model
@@ -41,6 +43,32 @@ model ClassSections {
   // Define relation to Students
   students Students[]
 }
+
+// Subjects model
+model Subjects {
+  id         String           @id @default(cuid())
+  name       String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  // Define relation to AssignedSubjects
+  assignedSubjects AssignedSubjects[]
+}
+
+// AssignedSubjects model
+model AssignedSubjects {
+  id         String   @id @default(cuid())
+  classId    String
+  subjectId  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Define relation to Classes
+  class     Classes  @relation(fields: [classId], references: [id])
+  // Define relation to Subjects
+  subject   Subjects @relation(fields: [subjectId], references: [id])
+}
+
 
 // Teachers model
 model Teachers {

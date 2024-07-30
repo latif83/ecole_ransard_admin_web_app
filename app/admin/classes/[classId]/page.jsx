@@ -1,11 +1,47 @@
 "use client"
-import { faArrowLeftLong, faCirclePlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeftLong, faCirclePlus, faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-export default function () {
+export default function ({ params }) {
+
+    const { classId } = params
 
     const router = useRouter()
+
+    const [fetchData, setFetchData] = useState(true)
+    const [dataLoading, setDataLoading] = useState(false)
+
+    const [data, setData] = useState({})
+
+    useEffect(() => {
+
+        const getSummary = async () => {
+            setDataLoading(true)
+            try {
+                const response = await fetch(`/api/classes/${classId}`)
+                const responseData = await response.json()
+                if (!response.ok) {
+                    toast.error(responseData.error)
+                    return
+                }
+                setData(responseData.response)
+            }
+            catch (err) {
+                console.log(err)
+            } finally {
+                setDataLoading(false)
+            }
+        }
+
+        if (fetchData) {
+            getSummary()
+            setFetchData(false)
+        }
+
+    }, [fetchData])
 
     return (
         <div>
@@ -14,7 +50,7 @@ export default function () {
                     <FontAwesomeIcon icon={faArrowLeftLong} width={20} height={20} className="text-lg" />
                 </button>
                 <span>
-                    Primary 1
+                    {dataLoading ? <FontAwesomeIcon icon={faSpinner} spin width={20} height={20} /> : data.className}
                 </span>
             </div>
 
@@ -26,7 +62,7 @@ export default function () {
                     </h3>
                     <div className="flex mt-1 justify-end">
                         <span className="w-10 h-10 inline-flex justify-center items-center rounded-full bg-black text-white">
-                            23
+                            {dataLoading ? <FontAwesomeIcon icon={faSpinner} spin width={20} height={20} /> : data.numberOfStudents}
                         </span>
                     </div>
                 </div>
@@ -37,7 +73,7 @@ export default function () {
                     </h3>
                     <div className="flex mt-1 justify-end">
                         <span className="w-10 h-10 inline-flex justify-center items-center rounded-full bg-black text-white">
-                            2
+                            {dataLoading ? <FontAwesomeIcon icon={faSpinner} spin width={20} height={20} /> : data.numberOfClassSections}
                         </span>
                     </div>
                 </div>
@@ -48,7 +84,7 @@ export default function () {
                     </h3>
                     <div className="flex mt-1 justify-end">
                         <span className="w-10 h-10 inline-flex justify-center items-center rounded-full bg-black text-white">
-                            10
+                            {dataLoading ? <FontAwesomeIcon icon={faSpinner} spin width={20} height={20} /> : data.numberOfSubjects}
                         </span>
                     </div>
                 </div>
@@ -86,77 +122,57 @@ export default function () {
                     </thead>
                     <tbody>
 
-                        <tr className="bg-white border-b hover:bg-gray-50">
-                            <th
-                                scope="row"
-                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                            >
-                                A
-                            </th>
-                            <td className="px-6 py-4 text-center">
-                                20
-                            </td>
-                            <td className="px-6 py-4 text-center">
-                                Abdul-Latif Mohammed
-                            </td>
-                            <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                <span
-                                    //   onClick={() => {
-                                    //     setClassData(classData);
-                                    //     setEditClass(true);
-                                    //   }}
-                                    className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                >
-                                    Edit
-                                </span>
+                        {dataLoading ? (
+                            <tr className="bg-white border-b hover:bg-gray-50">
+                                <td colSpan={4} className="px-6 py-4 text-center">
+                                    <FontAwesomeIcon icon={faSpinner} spin /> Loading...
+                                </td>
+                            </tr>
+                        ) : data.classSections?.length > 0 ? (
+                            data.classSections?.map((classData) => (
+                                <tr key={classData.id} className="bg-white border-b hover:bg-gray-50">
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
+                                    >
+                                        A
+                                    </th>
+                                    <td className="px-6 py-4 text-center">
+                                        20
+                                    </td>
+                                    <td className="px-6 py-4 text-center">
+                                        Abdul-Latif Mohammed
+                                    </td>
+                                    <td className="px-6 py-4 flex justify-center items-center gap-1.5">
+                                        <span
+                                            //   onClick={() => {
+                                            //     setClassData(classData);
+                                            //     setEditClass(true);
+                                            //   }}
+                                            className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                        >
+                                            Edit
+                                        </span>
 
-                                <span
-                                    //   onClick={() => {
-                                    //     setClassData(classData);
-                                    //     setEditClass(true);
-                                    //   }}
-                                    className="font-medium text-red-600 hover:underline cursor-pointer"
-                                >
-                                    Delete
-                                </span>
-                            </td>
-                        </tr>
-
-                        {/* {loading ? (
-              <tr className="bg-white border-b hover:bg-gray-50">
-                <td colSpan={3} className="px-6 py-4 text-center">
-                  <FontAwesomeIcon icon={faSpinner} spin /> Loading...
-                </td>
-              </tr>
-            ) : classes?.length > 0 ? (
-              classes?.map((classData) => (
-                <tr key={classData.id} className="bg-white border-b hover:bg-gray-50">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                  >
-                    {classData.className}
-                  </th>
-                  <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                    <span
-                      onClick={() => {
-                        setClassData(classData);
-                        setEditClass(true);
-                      }}
-                      className="font-medium text-blue-600 hover:underline cursor-pointer"
-                    >
-                      Manage
-                    </span>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr className="bg-white border-b hover:bg-gray-50">
-                <td colSpan={3} className="px-6 py-4 text-center">
-                  No classes found
-                </td>
-              </tr>
-            )} */}
+                                        <span
+                                            //   onClick={() => {
+                                            //     setClassData(classData);
+                                            //     setEditClass(true);
+                                            //   }}
+                                            className="font-medium text-red-600 hover:underline cursor-pointer"
+                                        >
+                                            Delete
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr className="bg-white border-b hover:bg-gray-50">
+                                <td colSpan={4} className="px-6 py-4 text-center">
+                                    No Sections found
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
@@ -175,12 +191,22 @@ export default function () {
                 </div>
 
                 <div className="flex gap-2 mt-3">
-                    <div className="bg-blue-100 text-sm rounded-full flex items-center gap-1.5 p-2 shrink-0 border border-blue-600">
-                        <span>
-                            English Language
-                        </span>
-                        <FontAwesomeIcon icon={faXmark} width={20} height={20} className="text-xl cursor-pointer hover:font-bold text-red-600" />
-                    </div>
+
+
+                    {
+                        dataLoading ? <div className="w-full flex justify-center items-center text-sm gap-1.5">
+                            <FontAwesomeIcon icon={faSpinner} spin width={20} height={20} /> Loading...
+                        </div> : data.subjects?.length > 0 ? data.subjects?.map((student) => (
+                            <div className="bg-blue-100 text-sm rounded-full flex items-center gap-1.5 p-2 shrink-0 border border-blue-600">
+                                <span>
+                                    English Language
+                                </span>
+                                <FontAwesomeIcon icon={faXmark} width={20} height={20} className="text-xl cursor-pointer hover:font-bold text-red-600" />
+                            </div>
+                        )) : <div className="w-full flex justify-center text-sm gap-1.5">
+                            No Subjects found
+                        </div>
+                    }
                 </div>
             </div>
 
