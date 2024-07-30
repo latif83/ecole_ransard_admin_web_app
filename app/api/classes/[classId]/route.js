@@ -7,10 +7,9 @@ import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(req,params) {
+export async function GET(req, { params }) {
   try {
-    
-    const classId = params.params.classId;
+    const classId = params.classId;
 
     if (!classId) {
       return NextResponse.json(
@@ -27,6 +26,7 @@ export async function GET(req,params) {
         ClassSections: {
           include: {
             teacher: true, // Include the assigned teacher
+            students: true, // Include students in each class section
           },
         },
         assignedSubjects: true, // Subjects assigned to the class
@@ -50,7 +50,7 @@ export async function GET(req,params) {
       numberOfStudents,
       numberOfClassSections,
       numberOfSubjects,
-      className : classDetails.className,
+      className: classDetails.className,
       classSections: classDetails.ClassSections.map(section => ({
         sectionId: section.id,
         sectionName: section.sectionName,
@@ -59,6 +59,7 @@ export async function GET(req,params) {
           firstName: section.teacher.firstName,
           lastName: section.teacher.lastName,
         } : null,
+        numberOfStudents: section.students.length, // Count of students in the section
       })),
       subjects: classDetails.assignedSubjects.map(subject => ({
         id: subject.id,
@@ -66,7 +67,7 @@ export async function GET(req,params) {
       })),
     };
 
-    return NextResponse.json({response}, { status: 200 });
+    return NextResponse.json({ response }, { status: 200 });
   } catch (error) {
     console.error("Error fetching class summary:", error);
     return NextResponse.json(

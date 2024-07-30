@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
                     </div>
                 </div>
 
-                <div className="p-3 flex-1">
+                <div className="p-3 flex-1 overflow-auto">
                     {children}
                 </div>
 

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { NewClassSection } from "./newClassSection";
 
 export default function ({ params }) {
 
@@ -43,8 +44,13 @@ export default function ({ params }) {
 
     }, [fetchData])
 
+    const [createSection, setCreateSection] = useState(false)
+
     return (
         <div>
+
+            {createSection && <NewClassSection classId={classId} setCreateSection={setCreateSection} setFetchData={setFetchData} />}
+
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-700 p-2 rounded hover:bg-red-600 hover:text-white">
                     <FontAwesomeIcon icon={faArrowLeftLong} width={20} height={20} className="text-lg" />
@@ -95,7 +101,7 @@ export default function ({ params }) {
                     <h3>
                         Class Sections
                     </h3>
-                    <button className="bg-blue-600 hover:bg-blue-800 p-2 flex items-center gap-1.5 rounded-md text-white">
+                    <button onClick={() => setCreateSection(true)} className="bg-blue-600 hover:bg-blue-800 p-2 flex items-center gap-1.5 rounded-md text-white">
                         <FontAwesomeIcon icon={faCirclePlus} width={15} height={15} className="text-lg" />
                         <span>
                             New Section
@@ -135,13 +141,13 @@ export default function ({ params }) {
                                         scope="row"
                                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
                                     >
-                                        A
+                                        {classData.sectionName}
                                     </th>
                                     <td className="px-6 py-4 text-center">
-                                        20
+                                        {classData.numberOfStudents}
                                     </td>
                                     <td className="px-6 py-4 text-center">
-                                        Abdul-Latif Mohammed
+                                    {classData.teacher.firstName} {classData.teacher.lastName}
                                     </td>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
                                         <span
