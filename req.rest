@@ -15,3 +15,21 @@ http://localhost:3000/api/classes/clye2sp9i0005wsthdaxhv0qz
 
 ###
 http://localhost:3000/api/classes/clye2sj6n0004wsth81iazuxf/sections
+
+###
+POST http://localhost:3000/api/calendar/year
+Content-Type: application/json
+
+{ "year" : "2024/2025", "startDate" : "2024-08-01", "endDate" : "2024-09-10" }
+
+###
+POST http://localhost:3000/api/calendar/term
+Content-Type: application/json
+
+{ "termName" : "Term 1", "startDate" : "2024-08-05", "endDate" :"2024-08-10", "academicYearId" :"clza160gh0003lub0k7ztlpz8" }
+
+###
+POST http://localhost:3000/api/calendar/term
+Content-Type: application/json
+
+{ "termName" : "Term 1", "startDate" : "2024-07-31", "endDate" :"2024-08-10", "academicYearId" :"clza160gh0003lub0k7ztlpz8" }

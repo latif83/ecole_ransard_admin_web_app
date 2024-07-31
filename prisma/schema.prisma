@@ -186,3 +186,51 @@ model Notification {
   student Students? @relation(fields: [studentId], references: [id])
   class   Classes?  @relation(fields: [classId], references: [id])
 }
+
+
+// AcademicYear model
+model AcademicYear {
+  id        String   @id @default(cuid())
+  year      String   // E.g., "2024-2025"
+  startDate DateTime
+  endDate   DateTime
+  status    String   // E.g., "Active", "Inactive"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Define relation to AcademicTerms
+  terms AcademicTerm[]
+}
+
+// AcademicTerm model
+model AcademicTerm {
+  id           String   @id @default(cuid())
+  termName     String   // E.g., "Fall", "Spring"
+  startDate    DateTime
+  endDate      DateTime
+  status       String   // E.g., "Active", "Inactive"
+  academicYearId String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Define relation to AcademicYear
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  // Define relation to Events
+  events Event[]
+}
+
+
+// Event model
+model Event {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  eventDate     DateTime
+  academicTermId String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Define relation to AcademicTerm
+  academicTerm AcademicTerm @relation(fields: [academicTermId], references: [id])
+}
