@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import NewEvent from "./newEvent"
 
-export default function AcademicEvents({params}) {
+export default function AcademicEvents({ params }) {
 
-    const {termId} = params
+    const { termId } = params
 
     const [loading, setLoading] = useState(false)
 
@@ -16,6 +16,25 @@ export default function AcademicEvents({params}) {
     const router = useRouter()
 
     const [fetchData, setFetchData] = useState(true)
+
+    // Function to get the status based on event date
+    const getEventStatus = (eventDate) => {
+        const today = new Date();
+        const eventDateObj = new Date(eventDate);
+
+        // Normalize dates to only compare the date part (ignoring time)
+        const todayStart = new Date(today.setHours(0, 0, 0, 0));
+        const eventDateStart = new Date(eventDateObj.setHours(0, 0, 0, 0));
+
+        // Compare event date with today's date
+        if (eventDateStart < todayStart) {
+            return 'Past';
+        } else if (eventDateStart.getTime() === todayStart.getTime()) {
+            return 'Ongoing';
+        } else {
+            return 'Upcoming';
+        }
+    };
 
     useEffect(() => {
 
@@ -48,11 +67,11 @@ export default function AcademicEvents({params}) {
 
     }, [fetchData])
 
-    const [addEvent,setAddEvent] = useState(false)
+    const [addEvent, setAddEvent] = useState(false)
 
     return (
         <div>
-            {addEvent && <NewEvent setAddEvent={setAddEvent} />}
+            {addEvent && <NewEvent setAddEvent={setAddEvent} termId={termId} setFetchData={setFetchData} />}
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-800 hover:bg-red-600 hover:text-white rounded-md p-2">
                     <FontAwesomeIcon icon={faArrowLeftLong} width={20} height={20} className="text-lg" />
@@ -154,28 +173,28 @@ export default function AcademicEvents({params}) {
                         ) : data?.events?.length > 0 ? (
                             data?.events?.map((event) => (
                                 <tr key={event.id} className="bg-white border-b hover:bg-gray-50">
-                                <th
-                                    scope="row"
-                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                                >
-                                    {new Date(event.eventDate).toDateString()}
-                                </th>
-                                <td className="px-6 py-4 text-center">{event.title}</td>
-                                <td className="px-6 py-4 text-center">{event.description}</td>
-                                <td className="px-6 py-4 text-center">{event.status}</td>
-                                <td className="px-6 py-4 flex justify-center items-center gap-2">
-                                    <span
-                                        className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
                                     >
-                                        Edit
-                                    </span>
-                                    <span
-                                        className="font-medium text-red-600 hover:underline cursor-pointer"
-                                    >
-                                        Delete
-                                    </span>
-                                </td>
-                            </tr>
+                                        {new Date(event.eventDate).toDateString()}
+                                    </th>
+                                    <td className="px-6 py-4 text-center">{event.title}</td>
+                                    <td className="px-6 py-4 text-center">{event.description}</td>
+                                    <td className="px-6 py-4 text-center">{getEventStatus(event.eventDate)}</td>
+                                    <td className="px-6 py-4 flex justify-center items-center gap-2">
+                                        <span
+                                            className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                        >
+                                            Edit
+                                        </span>
+                                        <span
+                                            className="font-medium text-red-600 hover:underline cursor-pointer"
+                                        >
+                                            Delete
+                                        </span>
+                                    </td>
+                                </tr>
                             ))
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">

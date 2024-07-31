@@ -3,20 +3,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function NewEvent({ setAddEvent, setFetchData }) {
+export default function NewEvent({ setAddEvent, termId, setFetchData }) {
     const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         title: "",
         eventDate: "",
-        description :""
+        description: ""
     })
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true); // Set loading state when form is submitted
         try {
-            const response = await fetch("/api/calendar/year", {
+            const response = await fetch(`/api/calendar/term/${termId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

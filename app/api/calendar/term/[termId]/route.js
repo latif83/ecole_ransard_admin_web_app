@@ -9,13 +9,15 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req, { params }) {
   try {
-    const { termID: academicTermId } = params;
-    const { title, description, date } = await req.json();
+    const { termId: academicTermId } = params;
+    const { title, description, eventDate } = await req.json();
+
+    console.log({title, description, eventDate})
 
     // Validate required fields
-    if (!title || !date || !academicTermId) {
+    if (!title || !eventDate || !description) {
       return NextResponse.json(
-        { error: "title, date, and academicTermId are required" },
+        { error: "title, eventDate, and description are required" },
         { status: 400 }
       );
     }
@@ -37,7 +39,7 @@ export async function POST(req, { params }) {
       data: {
         title,
         description,
-        date: new Date(date),
+        eventDate: new Date(eventDate),
         academicTermId,
       },
     });
