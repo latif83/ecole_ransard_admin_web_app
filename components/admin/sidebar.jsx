@@ -103,7 +103,7 @@ export const AdminSidebar = () => {
                 </div>
             </div>
 
-            <button className="py-2 px-2 rounded-full bg-blue-500 border-2 border-[#f2f2f2] hover:bg-blue-700 absolute bottom-4 -right-3 flex items-center justify-center text-white">
+            <button className="py-2 px-2 rounded-full bg-black border-2 border-[#f2f2f2] hover:bg-gray-800 absolute bottom-4 -right-3 flex items-center justify-center text-white">
                 <FontAwesomeIcon className="text-xl" icon={faCaretDown} width={20} height={20} />
             </button>
 

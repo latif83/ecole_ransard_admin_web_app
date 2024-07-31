@@ -94,7 +94,7 @@ export default function AcademicTermPage({ params }) {
                 </div>
             </div>
 
-            <div className="flex justify-end gap-2 mt-2">
+            {data.status == "Active" && <div className="flex justify-end gap-2 mt-2">
                 <button className="p-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-800 flex items-center gap-1.5">
                     <FontAwesomeIcon icon={faEdit} width={15} height={15} />
                     <span>
@@ -107,7 +107,7 @@ export default function AcademicTermPage({ params }) {
                         End Academic Year
                     </span>
                 </button>
-            </div>
+            </div>}
 
             <div className="mt-5">
 
