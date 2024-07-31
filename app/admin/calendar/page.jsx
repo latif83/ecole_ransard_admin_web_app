@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import NewAcademicYr from "./newAcademicYr";
+import Link from "next/link";
 
 export default function AcademicYears() {
 
@@ -124,7 +125,7 @@ export default function AcademicYears() {
                             </tr>
                         ) : data.length > 0 ? (
                             data.map((year) => (
-                                <tr key={data.id} className="bg-white border-b hover:bg-gray-50">
+                                <tr key={year.id} className="bg-white border-b hover:bg-gray-50">
                                     <th
                                         scope="row"
                                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
@@ -135,11 +136,12 @@ export default function AcademicYears() {
                                     <td className="px-6 py-4 text-center">{new Date(year.endDate).toDateString()}</td>
                                     <td className="px-6 py-4 text-center">{year.status}</td>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                        <span
+                                        <Link
+                                        href={`/admin/calendar/${year.id}`}
                                             className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
                                             Manage
-                                        </span>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))
