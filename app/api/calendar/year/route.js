@@ -33,18 +33,19 @@ export async function POST(req) {
     if (activeAcademicYear) {
       // If there is an active academic year, set the new one as pending
       newStatus = "Pending";
-    } else if (pendingAcademicYear) {
+    }
+    if (pendingAcademicYear) {
       // If there is a pending academic year, throw an error
       return NextResponse.json(
         { error: "There is a pending academic year." },
         { status: 400 }
       );
-    } else {
+    }
+    
       // If no active or pending academic year exists, determine if it should be active or pending
       const today = new Date();
       const start = new Date(startDate);
       newStatus = start <= today ? "Active" : "Pending";
-    }
 
     // Create the new academic year with the determined status
     const newAcademicYear = await prisma.academicYear.create({
@@ -68,3 +69,24 @@ export async function POST(req) {
     );
   }
 }
+
+
+export async function GET(req) {
+    try {
+      // Fetch all academic years from the database
+      const academicYears = await prisma.academicYear.findMany({
+        orderBy: {
+          startDate: 'desc', // Order by start date, adjust as needed
+        },
+      });
+  
+      // Return the list of academic years
+      return NextResponse.json({ academicYears }, { status: 200 });
+    } catch (error) {
+      console.error("Error fetching academic years:", error);
+      return NextResponse.json(
+        { error: "Internal Server Error" },
+        { status: 500 }
+      );
+    }
+  }

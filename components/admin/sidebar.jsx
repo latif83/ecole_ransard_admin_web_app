@@ -46,8 +46,8 @@ export const AdminSidebar = () => {
 
                     <Link href={'/admin/teachers'} className={`text-gray-50 hover:font-bold ${pathname == "/admin/teachers" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
-                        <FontAwesomeIcon icon={faChalkboardTeacher} width={20} height={20} />
-                        <span>Teachers</span>
+                            <FontAwesomeIcon icon={faChalkboardTeacher} width={20} height={20} />
+                            <span>Teachers</span>
                         </div>
                     </Link>
 
@@ -93,19 +93,12 @@ export const AdminSidebar = () => {
                         </div>
                     </div>
 
-                    <div className="text-gray-50 p-2 rounded-l text-sm flex justify-between">
+                    <Link href={'/admin/calendar'} className={`text-gray-50 hover:font-bold ${pathname.includes("/admin/calendar") && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
                             <FontAwesomeIcon icon={faCalendarDays} width={20} height={20} />
-                            <span>Events</span>
-                        </div>
-                    </div>
-
-                    <div className="text-gray-50 p-2 rounded-l text-sm flex justify-between">
-                        <div className="flex items-center justify-between gap-1.5">
-                            <FontAwesomeIcon icon={faCalendarCheck} width={20} height={20} />
                             <span>Academic Calendar</span>
                         </div>
-                    </div>
+                    </Link>
 
                 </div>
             </div>

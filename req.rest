@@ -33,3 +33,6 @@ POST http://localhost:3000/api/calendar/term
 Content-Type: application/json
 
 { "termName" : "Term 1", "startDate" : "2024-07-31", "endDate" :"2024-08-10", "academicYearId" :"clza160gh0003lub0k7ztlpz8" }
+
+###
+http://localhost:3000/api/calendar/year
