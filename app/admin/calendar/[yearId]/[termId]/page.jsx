@@ -2,22 +2,63 @@
 import { faArrowLeftLong, faCirclePlus, faEdit, faSpinner, faStop } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import NewEvent from "./newEvent"
 
-export default function AcademicEvents() {
+export default function AcademicEvents({params}) {
+
+    const {termId} = params
 
     const [loading, setLoading] = useState(false)
 
+    const [data, setData] = useState([])
+
     const router = useRouter()
+
+    const [fetchData, setFetchData] = useState(true)
+
+    useEffect(() => {
+
+        const getData = async () => {
+            setLoading(true)
+            try {
+                const response = await fetch(`/api/calendar/term/${termId}`)
+
+                const responseData = await response.json()
+
+                if (!response.ok) {
+                    toast.error(responseData.error)
+                    return
+                }
+
+                setData(responseData.academicTerm)
+
+            }
+            catch (err) {
+                console.log(err)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        if (fetchData) {
+            getData()
+            setFetchData(false)
+        }
+
+    }, [fetchData])
+
+    const [addEvent,setAddEvent] = useState(false)
 
     return (
         <div>
+            {addEvent && <NewEvent setAddEvent={setAddEvent} />}
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-800 hover:bg-red-600 hover:text-white rounded-md p-2">
                     <FontAwesomeIcon icon={faArrowLeftLong} width={20} height={20} className="text-lg" />
                 </button>
                 <span className="text-sm">
-                    {loading ? <FontAwesomeIcon icon={faSpinner} width={20} height={20} className="text-lg" spin /> : 'Term 1'}
+                    {loading ? <FontAwesomeIcon icon={faSpinner} width={20} height={20} className="text-lg" spin /> : data.termName}
                 </span>
             </div>
 
@@ -27,7 +68,7 @@ export default function AcademicEvents() {
                         Start Date:
                     </h3>
                     <p className="text-sm">
-                        {loading ? <FontAwesomeIcon icon={faSpinner} width={20} height={20} className="text-lg" spin /> : new Date().toDateString()}
+                        {loading ? <FontAwesomeIcon icon={faSpinner} width={20} height={20} className="text-lg" spin /> : new Date(data.startDate).toDateString()}
                     </p>
                 </div>
 
@@ -36,7 +77,7 @@ export default function AcademicEvents() {
                         End Date:
                     </h3>
                     <p className="text-sm">
-                        {loading ? <FontAwesomeIcon icon={faSpinner} width={20} height={20} className="text-lg" spin /> : new Date().toDateString()}
+                        {loading ? <FontAwesomeIcon icon={faSpinner} width={20} height={20} className="text-lg" spin /> : new Date(data.endDate).toDateString()}
                     </p>
                 </div>
 
@@ -45,7 +86,7 @@ export default function AcademicEvents() {
                         Status:
                     </h3>
                     <p className="text-sm">
-                        {loading ? <FontAwesomeIcon icon={faSpinner} width={20} height={20} className="text-lg" spin /> : 'Pending'}
+                        {loading ? <FontAwesomeIcon icon={faSpinner} width={20} height={20} className="text-lg" spin /> : data.status}
                     </p>
                 </div>
             </div>
@@ -73,7 +114,7 @@ export default function AcademicEvents() {
                     </h1>
 
                     <button
-                        // onClick={() => setAddAcademicTerm(true)}
+                        onClick={() => setAddEvent(true)}
                         className="bg-lime-600 text-sm hover:bg-lime-800 text-white rounded-md p-2 flex items-center gap-1.5">
                         <FontAwesomeIcon icon={faCirclePlus} width={20} height={20} />
                         <span>
@@ -104,65 +145,45 @@ export default function AcademicEvents() {
                     </thead>
                     <tbody>
 
-                        <tr className="bg-white border-b hover:bg-gray-50">
-                            <th
-                                scope="row"
-                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                            >
-                                {new Date().toDateString()}
-                            </th>
-                            <td className="px-6 py-4 text-center">6TH March</td>
-                            <td className="px-6 py-4 text-center">This is 6th march event</td>
-                            <td className="px-6 py-4 text-center">Pending</td>
-                            <td className="px-6 py-4 flex justify-center items-center gap-2">
-                                <span
-                                    className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                >
-                                    Edit
-                                </span>
-                                <span
-                                    className="font-medium text-red-600 hover:underline cursor-pointer"
-                                >
-                                    Delete
-                                </span>
-                            </td>
-                        </tr>
-
-                        {/* {loading ? (
+                        {loading ? (
                             <tr className="bg-white border-b hover:bg-gray-50">
                                 <td colSpan={5} className="px-6 py-4 text-center">
                                     <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                                 </td>
                             </tr>
-                        ) : data?.terms?.length > 0 ? (
-                            data?.terms?.map((term) => (
-                                <tr key={term.id} className="bg-white border-b hover:bg-gray-50">
-                                    <th
-                                        scope="row"
-                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
+                        ) : data?.events?.length > 0 ? (
+                            data?.events?.map((event) => (
+                                <tr key={event.id} className="bg-white border-b hover:bg-gray-50">
+                                <th
+                                    scope="row"
+                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
+                                >
+                                    {new Date(event.eventDate).toDateString()}
+                                </th>
+                                <td className="px-6 py-4 text-center">{event.title}</td>
+                                <td className="px-6 py-4 text-center">{event.description}</td>
+                                <td className="px-6 py-4 text-center">{event.status}</td>
+                                <td className="px-6 py-4 flex justify-center items-center gap-2">
+                                    <span
+                                        className="font-medium text-blue-600 hover:underline cursor-pointer"
                                     >
-                                        {term.termName}
-                                    </th>
-                                    <td className="px-6 py-4 text-center">{new Date().toDateString(term.startDate)}</td>
-                                    <td className="px-6 py-4 text-center">{new Date().toDateString(term.endDate)}</td>
-                                    <td className="px-6 py-4 text-center">{term.status}</td>
-                                    <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                        <Link
-                                            href={`/admin/calendar/${yearId}/${term.id}`}
-                                            className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                        >
-                                            Manage
-                                        </Link>
-                                    </td>
-                                </tr>
+                                        Edit
+                                    </span>
+                                    <span
+                                        className="font-medium text-red-600 hover:underline cursor-pointer"
+                                    >
+                                        Delete
+                                    </span>
+                                </td>
+                            </tr>
                             ))
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">
                                 <td colSpan={5} className="px-6 py-4 text-center">
-                                    No terms found
+                                    No events found
                                 </td>
                             </tr>
-                        )} */}
+                        )}
                     </tbody>
                 </table>
 
