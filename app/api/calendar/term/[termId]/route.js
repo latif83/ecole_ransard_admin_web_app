@@ -12,8 +12,6 @@ export async function POST(req, { params }) {
     const { termId: academicTermId } = params;
     const { title, description, eventDate } = await req.json();
 
-    console.log({title, description, eventDate})
-
     // Validate required fields
     if (!title || !eventDate || !description) {
       return NextResponse.json(
@@ -94,3 +92,74 @@ export async function GET(req, { params }) {
     );
   }
 }
+
+
+export async function PUT(req,{params}) {
+    try {
+        const {termId:id} = params
+      const { termName, startDate, endDate } = await req.json();
+  
+      if (!termName || !startDate || !endDate) {
+        return NextResponse.json(
+          {
+            error: "id, termName, startDate, and endDate are required",
+          },
+          { status: 400 }
+        );
+      }
+  
+      // Find the existing academic term
+      const existingAcademicTerm = await prisma.academicTerm.findUnique({
+        where: { id },
+      });
+  
+      if (!existingAcademicTerm) {
+        return NextResponse.json(
+          { error: "Academic Term not found" },
+          { status: 404 }
+        );
+      }
+  
+      // Check if the academic year associated with the term exists
+      const academicYear = await prisma.academicYear.findUnique({
+        where: { id: existingAcademicTerm.academicYearId },
+      });
+  
+      if (!academicYear) {
+        return NextResponse.json(
+          { error: "Associated Academic Year not found" },
+          { status: 404 }
+        );
+      }
+
+      // Check if the existing academic year is inactive
+    if (existingAcademicTerm.status === "Inactive") {
+        return NextResponse.json(
+          { error: "Inactive academic terms cannot be updated" },
+          { status: 400 }
+        );
+      }
+  
+      // Update the academic term with the new data and status
+      const updatedAcademicTerm = await prisma.academicTerm.update({
+        where: { id },
+        data: {
+          termName,
+          startDate: new Date(startDate),
+          endDate: new Date(endDate),
+        },
+      });
+  
+      return NextResponse.json(
+        { message: "Academic Term updated successfully!" },
+        { status: 200 }
+      );
+    } catch (error) {
+      console.error("Error updating academic term:", error);
+      return NextResponse.json(
+        { error: "Internal Server Error" },
+        { status: 500 }
+      );
+    }
+  }
+  

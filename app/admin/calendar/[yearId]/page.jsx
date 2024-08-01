@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import NewTerm from "./newTerm";
 import Link from "next/link";
+import EditAcademicYr from "./editAcademicYr";
 
 export default function AcademicTermPage({ params }) {
 
@@ -51,10 +52,14 @@ export default function AcademicTermPage({ params }) {
 
     const [addAcademicTerm, setAddAcademicTerm] = useState(false)
 
+    const [editAcademicYr,setEditAcademicYr] = useState(false)
+
     return (
         <div>
 
             {addAcademicTerm && <NewTerm setAddAcademicTerm={setAddAcademicTerm} academicYearId={yearId} setFetchData={setFetchData} />}
+
+            {editAcademicYr && <EditAcademicYr setEditAcademicYr={setEditAcademicYr} data={data} setFetchData={setFetchData} />}
 
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-800 hover:bg-red-600 hover:text-white rounded-md p-2">
@@ -94,20 +99,20 @@ export default function AcademicTermPage({ params }) {
                 </div>
             </div>
 
-            {data.status == "Active" && <div className="flex justify-end gap-2 mt-2">
-                <button className="p-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-800 flex items-center gap-1.5">
+            <div className="flex justify-end gap-2 mt-2">
+                {(data.status == "Active" || "Pending") && <button onClick={()=>setEditAcademicYr(true)} className="p-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-800 flex items-center gap-1.5">
                     <FontAwesomeIcon icon={faEdit} width={15} height={15} />
                     <span>
                         Edit
                     </span>
-                </button>
-                <button className="p-2 rounded-md bg-red-600 text-sm text-white hover:bg-red-800 flex items-center gap-1.5">
+                </button>}
+                {data.status == "Active" && <button className="p-2 rounded-md bg-red-600 text-sm text-white hover:bg-red-800 flex items-center gap-1.5">
                     <FontAwesomeIcon icon={faStop} width={15} height={15} />
                     <span>
                         End Academic Year
                     </span>
-                </button>
-            </div>}
+                </button>}
+            </div>
 
             <div className="mt-5">
 

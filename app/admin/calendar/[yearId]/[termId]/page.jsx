@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import NewEvent from "./newEvent"
+import EditTerm from "./editTerm"
 
 export default function AcademicEvents({ params }) {
 
@@ -68,10 +69,13 @@ export default function AcademicEvents({ params }) {
     }, [fetchData])
 
     const [addEvent, setAddEvent] = useState(false)
+    const [editTerm, setEditTerm] = useState(false)
 
     return (
         <div>
             {addEvent && <NewEvent setAddEvent={setAddEvent} termId={termId} setFetchData={setFetchData} />}
+            {editTerm && <EditTerm setEditTerm={setEditTerm} data={data} setFetchData={setFetchData} />}
+
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-800 hover:bg-red-600 hover:text-white rounded-md p-2">
                     <FontAwesomeIcon icon={faArrowLeftLong} width={20} height={20} className="text-lg" />
@@ -110,20 +114,20 @@ export default function AcademicEvents({ params }) {
                 </div>
             </div>
 
-            {data.status == "Active" && <div className="flex justify-end gap-2 mt-2">
-                <button className="p-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-800 flex items-center gap-1.5">
+            <div className="flex justify-end gap-2 mt-2">
+                {(data.status == "Active" || "Pending") && <button onClick={() => setEditTerm(true)} className="p-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-800 flex items-center gap-1.5">
                     <FontAwesomeIcon icon={faEdit} width={15} height={15} />
                     <span>
                         Edit
                     </span>
-                </button>
-                <button className="p-2 rounded-md bg-red-600 text-sm text-white hover:bg-red-800 flex items-center gap-1.5">
+                </button>}
+                {data.status == "Active" && <button className="p-2 rounded-md bg-red-600 text-sm text-white hover:bg-red-800 flex items-center gap-1.5">
                     <FontAwesomeIcon icon={faStop} width={15} height={15} />
                     <span>
                         End Academic Term
                     </span>
-                </button>
-            </div>}
+                </button>}
+            </div>
 
             <div className="mt-5">
 
