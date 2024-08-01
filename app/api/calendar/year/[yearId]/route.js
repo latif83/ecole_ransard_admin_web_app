@@ -7,6 +7,72 @@ import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
+export async function POST(req,{params}) {
+  try {
+    const { yearId : academicYearId } = params;
+
+    if (!academicYearId) {
+      return NextResponse.json(
+        { error: "academicYearId is required" },
+        { status: 400 }
+      );
+    }
+
+    // Check if the academic year exists
+    const academicYear = await prisma.academicYear.findUnique({
+      where: { id: academicYearId },
+    });
+
+    if (!academicYear) {
+      return NextResponse.json(
+        { error: "Academic Year not found" },
+        { status: 404 }
+      );
+    }
+
+    // Check if there is already an active academic year
+    const activeAcademicYear = await prisma.academicYear.findFirst({
+      where: { status: "Active" },
+    });
+
+    if (activeAcademicYear) {
+      return NextResponse.json(
+        { error: "There is already an active academic year." },
+        { status: 400 }
+      );
+    }
+
+    // Check if the academic year is pending
+    if (academicYear.status !== "Pending") {
+      return NextResponse.json(
+        { error: "The academic year is not in pending status." },
+        { status: 400 }
+      );
+    }
+
+    // Activate the academic year
+    const updatedAcademicYear = await prisma.academicYear.update({
+      where: { id: academicYearId },
+      data: {
+        status: "Active",
+        startDate: new Date(), // Optional: Set startDate to today or keep the existing date
+      },
+    });
+
+    return NextResponse.json(
+      { message: "Academic Year activated successfully!" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error activating academic year:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+
 export async function DELETE(req, { params }) {
   try {
     const { yearId: academicYearId } = params;

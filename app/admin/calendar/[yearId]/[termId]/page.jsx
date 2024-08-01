@@ -1,11 +1,12 @@
 "use client"
-import { faArrowLeftLong, faCirclePlus, faEdit, faSpinner, faStop } from "@fortawesome/free-solid-svg-icons"
+import { faArrowLeftLong, faCirclePlus, faEdit, faPlay, faSpinner, faStop } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import NewEvent from "./newEvent"
 import EditTerm from "./editTerm"
 import { EndAcademicTerm } from "./endAcademicTerm"
+import { ActivateAcademicTerm } from "./activateAcademicTerm"
 
 export default function AcademicEvents({ params }) {
 
@@ -74,12 +75,16 @@ export default function AcademicEvents({ params }) {
 
     const [endAcademicTerm, setEndAcademicTerm] = useState(false)
 
+    const [startAcademicTerm,setStartAcademicTerm] = useState(false)
+
     return (
         <div>
             {addEvent && <NewEvent setAddEvent={setAddEvent} termId={termId} setFetchData={setFetchData} />}
             {editTerm && <EditTerm setEditTerm={setEditTerm} data={data} setFetchData={setFetchData} />}
 
             {endAcademicTerm && <EndAcademicTerm setEndAcademicTerm={setEndAcademicTerm} setFetchData={setFetchData} termId={termId} />}
+
+            {startAcademicTerm && <ActivateAcademicTerm setStartAcademicTerm={setStartAcademicTerm} setFetchData={setFetchData} termId={termId} />}
 
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-800 hover:bg-red-600 hover:text-white rounded-md p-2">
@@ -120,7 +125,7 @@ export default function AcademicEvents({ params }) {
             </div>
 
             <div className="flex justify-end gap-2 mt-2">
-                {(data.status == "Active" || "Pending") && <button onClick={() => setEditTerm(true)} className="p-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-800 flex items-center gap-1.5">
+                {data.status == "Inactive" && <button onClick={() => setEditTerm(true)} className="p-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-800 flex items-center gap-1.5">
                     <FontAwesomeIcon icon={faEdit} width={15} height={15} />
                     <span>
                         Edit
@@ -130,6 +135,13 @@ export default function AcademicEvents({ params }) {
                     <FontAwesomeIcon icon={faStop} width={15} height={15} />
                     <span>
                         End Academic Term
+                    </span>
+                </button>}
+
+                {data.status == "Pending" && <button onClick={() => setStartAcademicTerm(true)} className="p-2 rounded-md bg-green-600 text-sm text-white hover:bg-green-800 flex items-center gap-1.5">
+                    <FontAwesomeIcon icon={faPlay} width={15} height={15} />
+                    <span>
+                        Activate Academic Term
                     </span>
                 </button>}
             </div>

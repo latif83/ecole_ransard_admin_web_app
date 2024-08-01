@@ -1,5 +1,5 @@
 "use client"
-import { faArrowLeftLong, faCirclePlus, faEdit, faSpinner, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeftLong, faCirclePlus, faEdit, faPlay, faSpinner, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import NewTerm from "./newTerm";
 import Link from "next/link";
 import EditAcademicYr from "./editAcademicYr";
 import { EndAcademicYr } from "./endAcademicYr";
+import { ActivateAcademicYr } from "./activateAcademicYr";
 
 export default function AcademicTermPage({ params }) {
 
@@ -57,6 +58,8 @@ export default function AcademicTermPage({ params }) {
 
     const [endAcademicYr, setEndAcademicYr] = useState(false)
 
+    const [startAcademicYr, setStartAcademicYr] = useState(false)
+
     return (
         <div>
 
@@ -65,6 +68,8 @@ export default function AcademicTermPage({ params }) {
             {editAcademicYr && <EditAcademicYr setEditAcademicYr={setEditAcademicYr} data={data} setFetchData={setFetchData} />}
 
             {endAcademicYr && <EndAcademicYr setEndAcademicYr={setEndAcademicYr} setFetchData={setFetchData} yearId={yearId} />}
+
+            {startAcademicYr && <ActivateAcademicYr setStartAcademicYr={setStartAcademicYr} setFetchData={setFetchData} yearId={yearId} />}
 
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-800 hover:bg-red-600 hover:text-white rounded-md p-2">
@@ -105,16 +110,23 @@ export default function AcademicTermPage({ params }) {
             </div>
 
             <div className="flex justify-end gap-2 mt-2">
-                {(data.status == "Active" || "Pending") && <button onClick={() => setEditAcademicYr(true)} className="p-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-800 flex items-center gap-1.5">
+                {data.status != "Inactive" && <button onClick={() => setEditAcademicYr(true)} className="p-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-800 flex items-center gap-1.5">
                     <FontAwesomeIcon icon={faEdit} width={15} height={15} />
                     <span>
                         Edit
                     </span>
                 </button>}
-                {data.status == "Active" && <button onClick={()=>setEndAcademicYr(true)} className="p-2 rounded-md bg-red-600 text-sm text-white hover:bg-red-800 flex items-center gap-1.5">
+                {data.status == "Active" && <button onClick={() => setEndAcademicYr(true)} className="p-2 rounded-md bg-red-600 text-sm text-white hover:bg-red-800 flex items-center gap-1.5">
                     <FontAwesomeIcon icon={faStop} width={15} height={15} />
                     <span>
                         End Academic Year
+                    </span>
+                </button>}
+
+                {data.status == "Pending" && <button onClick={() => setStartAcademicYr(true)} className="p-2 rounded-md bg-green-600 text-sm text-white hover:bg-green-800 flex items-center gap-1.5">
+                    <FontAwesomeIcon icon={faPlay} width={15} height={15} />
+                    <span>
+                        Activate Academic Year
                     </span>
                 </button>}
             </div>
