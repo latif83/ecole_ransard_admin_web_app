@@ -7,6 +7,78 @@ import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
+export async function DELETE(req, { params }) {
+  try {
+    const { yearId: academicYearId } = params;
+
+    if (!academicYearId) {
+      return NextResponse.json(
+        { error: "academicYearId is required" },
+        { status: 400 }
+      );
+    }
+
+    // Find the existing academic year
+    const academicYear = await prisma.academicYear.findUnique({
+      where: { id: academicYearId },
+    });
+
+    if (!academicYear) {
+      return NextResponse.json(
+        { error: "Academic Year not found" },
+        { status: 404 }
+      );
+    }
+
+    // Check for active academic terms associated with the academic year
+    const activeAcademicTerms = await prisma.academicTerm.findMany({
+      where: {
+        academicYearId,
+        status: "Active",
+      },
+    });
+
+    if (activeAcademicTerms.length > 0) {
+      return NextResponse.json(
+        {
+          error: "The academic year has active academic terms. Please end the active terms before ending the academic year.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check if the academic year is active
+    if (academicYear.status !== "Active") {
+      return NextResponse.json(
+        { error: "Only active academic years can be ended" },
+        { status: 400 }
+      );
+    }
+
+    // Update the academic year to end it
+    const updatedAcademicYear = await prisma.academicYear.update({
+      where: { id: academicYearId },
+      data: {
+        endDate: new Date(), // Set endDate to the current date
+        status: "Inactive", // Set status to Inactive
+      },
+    });
+
+    return NextResponse.json(
+      { message: "Academic Year ended successfully!" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error ending academic year:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+
+
 export async function GET(req, { params }) {
   try {
     const { yearId: academicYearId } = params;

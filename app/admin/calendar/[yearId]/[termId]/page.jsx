@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import NewEvent from "./newEvent"
 import EditTerm from "./editTerm"
+import { EndAcademicTerm } from "./endAcademicTerm"
 
 export default function AcademicEvents({ params }) {
 
@@ -71,10 +72,14 @@ export default function AcademicEvents({ params }) {
     const [addEvent, setAddEvent] = useState(false)
     const [editTerm, setEditTerm] = useState(false)
 
+    const [endAcademicTerm, setEndAcademicTerm] = useState(false)
+
     return (
         <div>
             {addEvent && <NewEvent setAddEvent={setAddEvent} termId={termId} setFetchData={setFetchData} />}
             {editTerm && <EditTerm setEditTerm={setEditTerm} data={data} setFetchData={setFetchData} />}
+
+            {endAcademicTerm && <EndAcademicTerm setEndAcademicTerm={setEndAcademicTerm} setFetchData={setFetchData} termId={termId} />}
 
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-800 hover:bg-red-600 hover:text-white rounded-md p-2">
@@ -121,7 +126,7 @@ export default function AcademicEvents({ params }) {
                         Edit
                     </span>
                 </button>}
-                {data.status == "Active" && <button className="p-2 rounded-md bg-red-600 text-sm text-white hover:bg-red-800 flex items-center gap-1.5">
+                {data.status == "Active" && <button onClick={() => setEndAcademicTerm(true)} className="p-2 rounded-md bg-red-600 text-sm text-white hover:bg-red-800 flex items-center gap-1.5">
                     <FontAwesomeIcon icon={faStop} width={15} height={15} />
                     <span>
                         End Academic Term

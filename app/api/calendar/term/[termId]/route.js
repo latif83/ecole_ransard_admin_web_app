@@ -163,3 +163,56 @@ export async function PUT(req,{params}) {
     }
   }
   
+  export async function DELETE(req, { params }) {
+    try {
+      const { termId: academicTermId } = params;
+  
+      if (!academicTermId) {
+        return NextResponse.json(
+          { error: "academicTermId is required" },
+          { status: 400 }
+        );
+      }
+  
+      // Find the existing academic term
+      const academicTerm = await prisma.academicTerm.findUnique({
+        where: { id: academicTermId },
+      });
+  
+      if (!academicTerm) {
+        return NextResponse.json(
+          { error: "Academic Term not found" },
+          { status: 404 }
+        );
+      }
+  
+      // Check if the academic term is active
+      if (academicTerm.status !== "Active") {
+        return NextResponse.json(
+          { error: "Only active academic terms can be ended" },
+          { status: 400 }
+        );
+      }
+  
+      // Update the academic term to end it
+      const updatedAcademicTerm = await prisma.academicTerm.update({
+        where: { id: academicTermId },
+        data: {
+          endDate: new Date(), // Set endDate to the current date
+          status: "Inactive", // Set status to Inactive
+        },
+      });
+  
+      return NextResponse.json(
+        { message: "Academic Term ended successfully!" },
+        { status: 200 }
+      );
+    } catch (error) {
+      console.error("Error ending academic term:", error);
+      return NextResponse.json(
+        { error: "Internal Server Error" },
+        { status: 500 }
+      );
+    }
+  }
+  
