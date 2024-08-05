@@ -7,6 +7,7 @@ import NewEvent from "./newEvent"
 import EditTerm from "./editTerm"
 import { EndAcademicTerm } from "./endAcademicTerm"
 import { ActivateAcademicTerm } from "./activateAcademicTerm"
+import EditEvent from "./editEvent"
 
 export default function AcademicEvents({ params }) {
 
@@ -15,6 +16,8 @@ export default function AcademicEvents({ params }) {
     const [loading, setLoading] = useState(false)
 
     const [data, setData] = useState([])
+
+    const [selectedEventData,setSelectedEventData] = useState()
 
     const router = useRouter()
 
@@ -77,6 +80,8 @@ export default function AcademicEvents({ params }) {
 
     const [startAcademicTerm,setStartAcademicTerm] = useState(false)
 
+    const [editEvent,setEditEvent] = useState(false)
+
     return (
         <div>
             {addEvent && <NewEvent setAddEvent={setAddEvent} termId={termId} setFetchData={setFetchData} />}
@@ -85,6 +90,8 @@ export default function AcademicEvents({ params }) {
             {endAcademicTerm && <EndAcademicTerm setEndAcademicTerm={setEndAcademicTerm} setFetchData={setFetchData} termId={termId} />}
 
             {startAcademicTerm && <ActivateAcademicTerm setStartAcademicTerm={setStartAcademicTerm} setFetchData={setFetchData} termId={termId} />}
+
+            {editEvent && <EditEvent setEditEvent={setEditEvent} data={selectedEventData} setFetchData={setFetchData} />}
 
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-800 hover:bg-red-600 hover:text-white rounded-md p-2">
@@ -205,6 +212,7 @@ export default function AcademicEvents({ params }) {
                                     <td className="px-6 py-4 text-center">{getEventStatus(event.eventDate)}</td>
                                     <td className="px-6 py-4 flex justify-center items-center gap-2">
                                         <span
+                                        onClick={()=>{setSelectedEventData(event); setEditEvent(true)}}
                                             className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
                                             Edit

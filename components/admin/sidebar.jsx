@@ -51,12 +51,12 @@ export const AdminSidebar = () => {
                         </div>
                     </Link>
 
-                    <div className="text-gray-50 p-2 rounded-l text-sm flex justify-between">
+                    <Link href={'/admin/parents'} className={`text-gray-50 hover:font-bold ${pathname == "/admin/parents" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
-                            <FontAwesomeIcon icon={faUsersBetweenLines} width={20} height={20} />
-                            <span>Parents</span>
+                        <FontAwesomeIcon icon={faUsersBetweenLines} width={20} height={20} />
+                        <span>Parents</span>
                         </div>
-                    </div>
+                    </Link>
 
                     <Link href={'/admin/classes'} className={`text-gray-50 hover:font-bold ${pathname.includes("/admin/classes") && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
