@@ -16,7 +16,7 @@ export default function NewEvent({ setAddEvent, termId, setFetchData }) {
         e.preventDefault();
         setLoading(true); // Set loading state when form is submitted
         try {
-            const response = await fetch(`/api/calendar/term/${termId}`, {
+            const response = await fetch(`/api/calendar/term/${termId}/events`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

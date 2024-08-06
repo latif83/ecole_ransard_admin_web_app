@@ -91,7 +91,7 @@ export default function AcademicEvents({ params }) {
 
             {startAcademicTerm && <ActivateAcademicTerm setStartAcademicTerm={setStartAcademicTerm} setFetchData={setFetchData} termId={termId} />}
 
-            {editEvent && <EditEvent setEditEvent={setEditEvent} data={selectedEventData} setFetchData={setFetchData} />}
+            {editEvent && <EditEvent setEditEvent={setEditEvent} data={selectedEventData} setFetchData={setFetchData} termId={termId} />}
 
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-800 hover:bg-red-600 hover:text-white rounded-md p-2">

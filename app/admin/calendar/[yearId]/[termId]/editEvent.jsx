@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function EditEvent({ setEditEvent, data, setFetchData }) {
+export default function EditEvent({ setEditEvent, data, setFetchData, termId }) {
     const [loading, setLoading] = useState(false);
 
     const formatDate = (isoDateString) => {
@@ -22,6 +22,7 @@ export default function EditEvent({ setEditEvent, data, setFetchData }) {
     }
 
     const [formData, setFormData] = useState({
+        eventId : data.id,
         title: data.title,
         eventDate: formatDate(data.eventDate),
         description: data.description
@@ -31,8 +32,8 @@ export default function EditEvent({ setEditEvent, data, setFetchData }) {
         e.preventDefault();
         setLoading(true); // Set loading state when form is submitted
         try {
-            const response = await fetch(`/api/calendar/term/${termId}`, {
-                method: "POST",
+            const response = await fetch(`/api/calendar/term/${termId}/events`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -58,7 +59,7 @@ export default function EditEvent({ setEditEvent, data, setFetchData }) {
         <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-50">
             <div className="bg-white w-full max-w-xl mx-auto p-6 mt-5 h-auto shrink-0 grow-0 rounded-md shadow-lg">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="font-bold">Add Event</h2>
+                    <h2 className="font-bold">Edit Event</h2>
                     <FontAwesomeIcon
                         onClick={() => setEditEvent(false)}
                         icon={faTimes}
@@ -130,10 +131,10 @@ export default function EditEvent({ setEditEvent, data, setFetchData }) {
                     >
                         {loading ? (
                             <>
-                                <FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Adding...
+                                <FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Saving...
                             </>
                         ) : (
-                            "Submit"
+                            "Save Changes"
                         )}
                     </button>
                 </form>
