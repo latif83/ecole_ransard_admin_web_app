@@ -11,9 +11,9 @@ export default function Fees() {
                 <Link href="/admin/fees/feetypes" className="bg-gray-800 hover:bg-gray-950 text-gray-100 p-2 rounded-md">
                     Create Fees
                 </Link>
-                <button className="bg-gray-800 hover:bg-gray-950 text-gray-100 p-2 rounded-md">
+                <Link href="/admin/fees/billStudents" className="bg-gray-800 hover:bg-gray-950 text-gray-100 p-2 rounded-md">
                     Bill Students
-                </button>
+                </Link>
                 <button className="bg-gray-800 hover:bg-gray-950 text-gray-100 p-2 rounded-md">
                     Collect Fees
                 </button>
