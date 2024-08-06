@@ -5,12 +5,15 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import NewFee from "./newFee";
+import { useRouter } from "next/navigation";
 // import NewSubject from "./newSubject";
 
 export default function FeeTypes() {
     const [feeDetails, setFeeDetails] = useState([]);
     const [loading, setLoading] = useState(false);
     const [gData, setGData] = useState(true);
+
+    const router = useRouter()
 
     useEffect(() => {
         const getFeeDetails = async () => {
@@ -47,7 +50,7 @@ export default function FeeTypes() {
 
             <div className="flex gap-2 items-center">
                 <div>
-                    <button className="bg-red-200 p-2 rounded hover:bg-red-600 hover:text-white text-gray-700">
+                    <button onClick={() => router.back()} className="bg-red-200 p-2 rounded hover:bg-red-600 hover:text-white text-gray-700">
                         <FontAwesomeIcon icon={faArrowLeftLong} width={20} height={20} />
                     </button>
                 </div>
