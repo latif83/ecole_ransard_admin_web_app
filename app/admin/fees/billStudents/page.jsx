@@ -38,6 +38,16 @@ export default function BillStudents() {
                     return;
                 }
                 setAcademicYrs(data.academicYears);
+
+                // Find the active academic year
+                const activeAcademicYear = data.academicYears.find((year) => year.status === "Active");
+
+                // Check if an active academic year was found and then get the academic terms
+                if (activeAcademicYear) {
+                    setYearId(activeAcademicYear.id)
+                    getAcademicTerms(activeAcademicYear.id);
+                }
+
             } catch (error) {
                 console.error("Error fetching data:", error);
                 toast.error("Error fetching data, please try again!");
@@ -86,6 +96,14 @@ export default function BillStudents() {
             }
 
             setAcademicTerms(responseData.academicYear.terms)
+
+            // Find the active academic term
+            const activeAcademicTerm = responseData.academicYear.terms.find((term) => term.status === "Active");
+
+            // Check if an active academic term was found
+            if (activeAcademicTerm) {
+                setTermId(activeAcademicTerm.id)
+            }
 
         }
         catch (err) {
@@ -141,8 +159,8 @@ export default function BillStudents() {
                         Academic Year
                     </label>
                     <select
-                        id="teacherId"
-                        name="teacherId"
+                        id="yearId"
+                        name="yearId"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         required
                         value={yearId}
@@ -177,8 +195,8 @@ export default function BillStudents() {
                         Academic Term
                     </label>
                     <select
-                        id="teacherId"
-                        name="teacherId"
+                        id="termId"
+                        name="termId"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         required
                         value={termId}
@@ -242,11 +260,18 @@ export default function BillStudents() {
                                         {section.className} ( {section.sectionName} )
                                     </th>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                        <Link
-                                            href={`/admin/fees/billStudents/${section.sectionId}/${termId}/${yearId}`} className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                        <span
+                                            onClick={() => {
+                                                if (!termId) {
+                                                    toast.error("Please select an academic term!")
+                                                    return
+                                                }
+
+                                                router.push(`/admin/fees/billStudents/${section.sectionId}/${termId}/${yearId}`)
+                                            }} className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
                                             Select
-                                        </Link>
+                                        </span>
                                     </td>
                                 </tr>
                             ))
