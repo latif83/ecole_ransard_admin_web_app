@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { NewClassSection } from "./newClassSection";
 import { AssignSubject } from "./assignSubject";
+import { EditClassSection } from "./editClassSection";
 
 export default function ({ params }) {
 
@@ -48,10 +49,15 @@ export default function ({ params }) {
     const [createSection, setCreateSection] = useState(false)
     const [assignSubject,setAssignSubject] = useState(false)
 
+    const [classSectionData,setClassSectionData] = useState()
+    const [editClassSection,setEditClassSection] = useState()
+
     return (
         <div>
 
             {createSection && <NewClassSection classId={classId} setCreateSection={setCreateSection} setFetchData={setFetchData} />}
+
+            {editClassSection && <EditClassSection classSectionData={classSectionData} setEditClassSection={setEditClassSection} setFetchData={setFetchData} />}
 
             {assignSubject && <AssignSubject classId={classId} setAssignSubject={setAssignSubject} setFetchData={setFetchData} />}
 
@@ -140,7 +146,7 @@ export default function ({ params }) {
                             </tr>
                         ) : data.classSections?.length > 0 ? (
                             data.classSections?.map((classData) => (
-                                <tr key={classData.id} className="bg-white border-b hover:bg-gray-50">
+                                <tr key={classData.sectionId} className="bg-white border-b hover:bg-gray-50">
                                     <th
                                         scope="row"
                                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
@@ -155,10 +161,10 @@ export default function ({ params }) {
                                     </td>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
                                         <span
-                                            //   onClick={() => {
-                                            //     setClassData(classData);
-                                            //     setEditClass(true);
-                                            //   }}
+                                              onClick={() => {
+                                                setClassSectionData(classData);
+                                                setEditClassSection(true);
+                                              }}
                                             className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
                                             Edit

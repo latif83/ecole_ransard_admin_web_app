@@ -167,7 +167,7 @@ export default function Teachers() {
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">
                                 <td colSpan={6} className="px-6 py-4 text-center">
-                                    No students found
+                                    No teachers found
                                 </td>
                             </tr>
                         )}

@@ -42,3 +42,52 @@ export async function POST(req) {
     );
   }
 }
+
+
+export async function PUT(req, { params }) {
+  try {
+    const { sectionId,sectionName, teacherId } = await req.json();
+    console.log({ sectionId,sectionName, teacherId } )
+
+    // Validate required fields
+    if (!sectionName) {
+      return NextResponse.json(
+        { error: "Section Name is required" },
+        { status: 400 }
+      );
+    }
+
+    // Check if the class section exists
+    const classSectionExists = await prisma.ClassSections.findUnique({
+      where: { id: sectionId },
+    });
+
+    if (!classSectionExists) {
+      return NextResponse.json(
+        { error: "Class Section not found" },
+        { status: 404 }
+      );
+    }
+
+    // Update the class section
+    const updatedClassSection = await prisma.ClassSections.update({
+      where: { id: sectionId },
+      data: {
+        sectionName,
+        teacherId,
+      },
+    });
+
+    // Return the updated class section
+    return NextResponse.json(
+      { message: "Section updated successfully!", section: updatedClassSection },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error updating class section:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}

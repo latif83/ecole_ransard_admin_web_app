@@ -28,6 +28,9 @@ export async function GET(req, { params }) {
             teacher: true, // Include the assigned teacher
             students: true, // Include students in each class section
           },
+          orderBy: {
+            createdAt: 'desc', // Order class sections by createdAt in descending order
+          },
         },
         assignedSubjects: {
           include : {
