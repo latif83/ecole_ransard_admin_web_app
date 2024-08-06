@@ -72,6 +72,13 @@ export const AdminSidebar = () => {
                         </div>
                     </Link>
 
+                    <Link href={'/admin/fees'} className={`text-gray-50 hover:font-bold ${pathname.includes("/admin/fees") && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
+                        <div className="flex items-center justify-between gap-1.5">
+                        <FontAwesomeIcon icon={faCircleDollarToSlot} width={20} height={20} />
+                        <span>Fees</span>
+                        </div>
+                    </Link>
+
                     <div className="text-gray-50 p-2 rounded-l text-sm flex justify-between">
                         <div className="flex items-center justify-between gap-1.5">
                             <FontAwesomeIcon icon={faFile} width={20} height={20} />
@@ -83,13 +90,6 @@ export const AdminSidebar = () => {
                         <div className="flex items-center justify-between gap-1.5">
                             <FontAwesomeIcon icon={faClipboard} width={20} height={20} />
                             <span>Attendance</span>
-                        </div>
-                    </div>
-
-                    <div className="text-gray-50 p-2 rounded-l text-sm flex justify-between">
-                        <div className="flex items-center justify-between gap-1.5">
-                            <FontAwesomeIcon icon={faCircleDollarToSlot} width={20} height={20} />
-                            <span>Fees</span>
                         </div>
                     </div>
 

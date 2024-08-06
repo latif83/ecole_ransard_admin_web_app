@@ -18,9 +18,9 @@ model Classes {
   updatedAt DateTime @updatedAt
 
   // Define relation to Students
-  students      Students[]      @relation(name: "ClassStudents")
-  Notification  Notification[]
-  ClassSections ClassSections[]
+  students         Students[]         @relation(name: "ClassStudents")
+  Notification     Notification[]
+  ClassSections    ClassSections[]
   // Define relation to AssignedSubjects
   assignedSubjects AssignedSubjects[]
 }
@@ -46,10 +46,10 @@ model ClassSections {
 
 // Subjects model
 model Subjects {
-  id         String           @id @default(cuid())
-  name       String
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Define relation to AssignedSubjects
   assignedSubjects AssignedSubjects[]
@@ -57,18 +57,17 @@ model Subjects {
 
 // AssignedSubjects model
 model AssignedSubjects {
-  id         String   @id @default(cuid())
-  classId    String
-  subjectId  String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(cuid())
+  classId   String
+  subjectId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Define relation to Classes
-  class     Classes  @relation(fields: [classId], references: [id])
+  class   Classes  @relation(fields: [classId], references: [id])
   // Define relation to Subjects
-  subject   Subjects @relation(fields: [subjectId], references: [id])
+  subject Subjects @relation(fields: [subjectId], references: [id])
 }
-
 
 // Teachers model
 model Teachers {
@@ -88,16 +87,16 @@ model Teachers {
 
 // Students model
 model Students {
-  id        String   @id @default(cuid())
-  firstName String
-  lastName  String
-  birthDate DateTime
-  address   String?
-  parentId  String?
-  classId   String
+  id              String   @id @default(cuid())
+  firstName       String
+  lastName        String
+  birthDate       DateTime
+  address         String?
+  parentId        String?
+  classId         String
   classSectionsId String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   // Define relation to Classes
   class   Classes  @relation(fields: [classId], references: [id], name: "ClassStudents")
@@ -105,9 +104,11 @@ model Students {
   parents Parents? @relation(fields: [parentId], name: "ParentStudents", references: [id])
 
   // Define relation to Attendance
-  attendance      attendance[]
-  Notification    Notification[]
-  ClassSections   ClassSections? @relation(fields: [classSectionsId], references: [id])
+  attendance        attendance[]
+  Notification      Notification[]
+  ClassSections     ClassSections?      @relation(fields: [classSectionsId], references: [id])
+  StudentFeeDetail  StudentFeeDetail[]
+  StudentFeeSummary StudentFeeSummary[]
 }
 
 // Parents model
@@ -187,14 +188,13 @@ model Notification {
   class   Classes?  @relation(fields: [classId], references: [id])
 }
 
-
 // AcademicYear model
 model AcademicYear {
   id        String   @id @default(cuid())
-  year      String   // E.g., "2024-2025"
+  year      String // E.g., "2024-2025"
   startDate DateTime
   endDate   DateTime
-  status    String   // E.g., "Active", "Inactive"
+  status    String // E.g., "Active", "Inactive"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -204,32 +204,80 @@ model AcademicYear {
 
 // AcademicTerm model
 model AcademicTerm {
-  id           String   @id @default(cuid())
-  termName     String   // E.g., "Fall", "Spring"
-  startDate    DateTime
-  endDate      DateTime
-  status       String   // E.g., "Active", "Inactive"
+  id             String   @id @default(cuid())
+  termName       String // E.g., "Fall", "Spring"
+  startDate      DateTime
+  endDate        DateTime
+  status         String // E.g., "Active", "Inactive"
   academicYearId String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   // Define relation to AcademicYear
   academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
 
   // Define relation to Events
-  events Event[]
+  events            Event[]
+  StudentFeeDetail  StudentFeeDetail[]
+  StudentFeeSummary StudentFeeSummary[]
 }
-
 
 // Event model
 model Event {
-  id            String   @id @default(cuid())
-  title         String
-  description   String
-  eventDate     DateTime
+  id             String   @id @default(cuid())
+  title          String
+  description    String
+  eventDate      DateTime
   academicTermId String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Define relation to AcademicTerm
+  academicTerm AcademicTerm @relation(fields: [academicTermId], references: [id])
+}
+
+model FeeDetail {
+  id          String   @id @default(cuid())
+  title       String // E.g., "Tuition", "Lab Fees"
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Define relation to StudentFeeDetail
+  studentFeeDetails StudentFeeDetail[]
+}
+
+model StudentFeeDetail {
+  id             String   @id @default(cuid())
+  studentId      String
+  feeDetailId    String
+  academicTermId String
+  amountOwed     Float // Amount billed for this fee
+  amountPaid     Float // Amount paid for this fee
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Define relation to Students
+  student Students @relation(fields: [studentId], references: [id])
+
+  // Define relation to FeeDetails
+  feeDetail FeeDetail @relation(fields: [feeDetailId], references: [id])
+
+  // Define relation to AcademicTerm
+  academicTerm AcademicTerm @relation(fields: [academicTermId], references: [id])
+}
+
+model StudentFeeSummary {
+  id              String   @id @default(cuid())
+  studentId       String
+  academicTermId  String
+  totalAmountOwed Float // Total amount billed for the term
+  totalAmountPaid Float // Total amount paid for the term
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Define relation to Students
+  student Students @relation(fields: [studentId], references: [id])
 
   // Define relation to AcademicTerm
   academicTerm AcademicTerm @relation(fields: [academicTermId], references: [id])
