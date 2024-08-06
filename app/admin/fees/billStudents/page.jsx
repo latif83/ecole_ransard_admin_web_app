@@ -16,6 +16,7 @@ export default function BillStudents() {
     const router = useRouter()
 
     const [yearId, setYearId] = useState()
+    const [termId, setTermId] = useState()
 
     const [loadingAcademicYrs, setLoadingAcademicYrs] = useState(false)
     const [academicYrs, setAcademicYrs] = useState([])
@@ -24,7 +25,7 @@ export default function BillStudents() {
     const [academicTerms, setAcademicTerms] = useState(false)
 
     const [loadingClassSections, setLoadingClassSections] = useState(false)
-    const [classSections,setClassSections] = useState([])
+    const [classSections, setClassSections] = useState([])
 
     useEffect(() => {
         const fetchAcademicYrs = async () => {
@@ -94,32 +95,6 @@ export default function BillStudents() {
         }
     }
 
-    // useEffect(() => {
-    //     const getFeeDetails = async () => {
-    //         try {
-    //             setLoading(true);
-    //             const response = await fetch("/api/fees/feetype");
-    //             const responseData = await response.json();
-    //             if (!response.ok) {
-    //                 toast.error(responseData.message);
-    //                 return;
-    //             }
-    //             setFeeDetails(responseData.feeTypes);
-
-    //         } catch (err) {
-    //             console.log(err);
-    //             toast.error("Error retrieving data, please try again!");
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     if (gData) {
-    //         getFeeDetails();
-    //         setGData(false);
-    //     }
-    // }, [gData]);
-
     const [addFee, setAddFee] = useState(false)
 
     return (
@@ -171,7 +146,7 @@ export default function BillStudents() {
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         required
                         value={yearId}
-                        onChange={(e) => {setYearId(e.target.value); getAcademicTerms(e.target.value)}}
+                        onChange={(e) => { setYearId(e.target.value); getAcademicTerms(e.target.value) }}
                     >
                         <option value="">Select Year</option>
                         {loadingAcademicYrs ? (
@@ -206,28 +181,28 @@ export default function BillStudents() {
                         name="teacherId"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         required
-                    // value={formData.teacherId}
-                    // onChange={(e) => setFormData((prev) => ({ ...prev, teacherId: e.target.value }))}
+                        value={termId}
+                        onChange={(e) => setTermId(e.target.value)}
                     >
                         <option value="">Select Term</option>
                         {loadingAcademicTerms ? (
-                                <option>
-                                    {" "}
-                                    <FontAwesomeIcon
-                                        icon={faSpinner}
-                                        color="red"
-                                        className="text-lg"
-                                        spin
-                                    />{" "}
-                                    Loading Academic Terms...{" "}
-                                </option>
-                            ) : academicTerms.length > 0 ? (
-                                academicTerms.map((term) => (
-                                    <option value={term.id}>{term.termName}</option>
-                                ))
-                            ) : (
-                                <option>No terms found.</option>
-                            )}
+                            <option>
+                                {" "}
+                                <FontAwesomeIcon
+                                    icon={faSpinner}
+                                    color="red"
+                                    className="text-lg"
+                                    spin
+                                />{" "}
+                                Loading Academic Terms...{" "}
+                            </option>
+                        ) : academicTerms.length > 0 ? (
+                            academicTerms.map((term) => (
+                                <option value={term.id}>{term.termName}</option>
+                            ))
+                        ) : (
+                            <option>No terms found.</option>
+                        )}
                     </select>
                 </div>
             </div>
@@ -260,25 +235,25 @@ export default function BillStudents() {
                         ) : classSections?.length > 0 ? (
                             classSections?.map((section) => (
                                 <tr key={section.sectionId} className="bg-white border-b hover:bg-gray-50">
-                            <th
-                                scope="row"
-                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                            >
-                                {section.className} ( {section.sectionName} )
-                            </th>
-                            <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                <Link
-                                href={`/admin/fees/billStudents/${section.sectionId}`}                                    className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                >
-                                    Select
-                                </Link>
-                            </td>
-                        </tr>
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
+                                    >
+                                        {section.className} ( {section.sectionName} )
+                                    </th>
+                                    <td className="px-6 py-4 flex justify-center items-center gap-1.5">
+                                        <Link
+                                            href={`/admin/fees/billStudents/${section.sectionId}/${termId}/${yearId}`} className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                        >
+                                            Select
+                                        </Link>
+                                    </td>
+                                </tr>
                             ))
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">
                                 <td colSpan={3} className="px-6 py-4 text-center">
-                                    No students found
+                                    No classes found
                                 </td>
                             </tr>
                         )}

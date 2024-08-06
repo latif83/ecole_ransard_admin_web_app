@@ -252,8 +252,7 @@ model StudentFeeDetail {
   studentId      String
   feeDetailId    String
   academicTermId String
-  amountOwed     Float // Amount billed for this fee
-  amountPaid     Float // Amount paid for this fee
+  amount Float
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

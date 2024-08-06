@@ -45,3 +45,6 @@ http://localhost:3000/api/calendar/year/clza160gh0003lub0k7ztlpz8
 
 ###
 http://localhost:3000/api/calendar/term/clza19oi80007lub0qe65wtaj
+
+###
+http://localhost:3001/api/fees/students?classSectionId=clz8klm4800014vj4melipooz&academicTermId=clza48wac000dlub0e5yb6v14
