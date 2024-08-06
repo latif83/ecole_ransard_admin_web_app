@@ -24,6 +24,7 @@ export default function BillStudents() {
     const [academicTerms, setAcademicTerms] = useState(false)
 
     const [loadingClassSections, setLoadingClassSections] = useState(false)
+    const [classSections,setClassSections] = useState([])
 
     useEffect(() => {
         const fetchAcademicYrs = async () => {
@@ -46,6 +47,29 @@ export default function BillStudents() {
         };
 
         fetchAcademicYrs()
+    }, [])
+
+    useEffect(() => {
+        const fetchClassSections = async () => {
+            setLoadingClassSections(true);
+            try {
+                const response = await fetch("/api/classes/sections");
+                const data = await response.json();
+                if (!response.ok) {
+                    toast.error(data.error);
+                    return;
+                }
+                setClassSections(data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                toast.error("Error fetching data, please try again!");
+
+            } finally {
+                setLoadingClassSections(false);
+            }
+        };
+
+        fetchClassSections()
     }, [])
 
     const getAcademicTerms = async (yearId) => {
@@ -226,65 +250,38 @@ export default function BillStudents() {
                     </thead>
                     <tbody>
 
-                        <tr className="bg-white border-b hover:bg-gray-50">
-                            <th
-                                scope="row"
-                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                            >
-                                Primary 1 ( A )
-                            </th>
-                            <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                <span
-                                    className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                >
-                                    Select
-                                </span>
-                            </td>
-                        </tr>
 
-
-                        {/* {loading ? (
+                        {loadingClassSections ? (
                             <tr className="bg-white border-b hover:bg-gray-50">
                                 <td colSpan={3} className="px-6 py-4 text-center">
                                     <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                                 </td>
                             </tr>
-                        ) : feeDetails?.length > 0 ? (
-                            feeDetails?.map((fee) => (
-                                <tr key={fee.id} className="bg-white border-b hover:bg-gray-50">
-                                    <th
-                                        scope="row"
-                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                                    >
-                                        {fee.title}
-                                    </th>
-                                    <td
-                                        scope="row"
-                                        className="px-6 py-4 text-center"
-                                    >
-                                        {fee.description ? fee.description : 'N/A'}
-                                    </td>
-                                    <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                        <span
-                                            className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                        >
-                                            Edit
-                                        </span>
-                                        <span
-                                            className="font-medium text-red-600 hover:underline cursor-pointer"
-                                        >
-                                            Delete
-                                        </span>
-                                    </td>
-                                </tr>
+                        ) : classSections?.length > 0 ? (
+                            classSections?.map((section) => (
+                                <tr key={section.sectionId} className="bg-white border-b hover:bg-gray-50">
+                            <th
+                                scope="row"
+                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
+                            >
+                                {section.className} ( {section.sectionName} )
+                            </th>
+                            <td className="px-6 py-4 flex justify-center items-center gap-1.5">
+                                <Link
+                                href={`/admin/fees/billStudents/${section.sectionId}`}                                    className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                >
+                                    Select
+                                </Link>
+                            </td>
+                        </tr>
                             ))
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">
                                 <td colSpan={3} className="px-6 py-4 text-center">
-                                    No fees found
+                                    No students found
                                 </td>
                             </tr>
-                        )} */}
+                        )}
                     </tbody>
                 </table>
             </div>

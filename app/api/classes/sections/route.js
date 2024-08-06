@@ -44,6 +44,48 @@ export async function POST(req) {
 }
 
 
+// GET API to fetch all classes
+export async function GET(req) {
+  try {
+    // Fetch all classes from the database
+    const classes = await prisma.classes.findMany({
+      include : {
+        ClassSections: {
+          orderBy: {
+            createdAt: 'asc', // Order ClassSections by createdAt
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+   // Combine class details with their sections
+// Combine all class sections into a single array
+const classSections = classes.flatMap((classItem) => 
+  classItem.ClassSections.map((section) => ({
+    classId: classItem.id,
+    className: classItem.className, // Assuming classItem has a `name` field
+    sectionId: section.id,
+    sectionName: section.sectionName,
+  }))
+);
+
+    // console.log({classes})
+
+    // Return the list of classes as JSON response
+    return NextResponse.json(classSections, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching classes:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+
 export async function PUT(req, { params }) {
   try {
     const { sectionId,sectionName, teacherId } = await req.json();
