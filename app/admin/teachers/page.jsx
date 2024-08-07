@@ -150,16 +150,7 @@ export default function Teachers() {
                                             // }}
                                             className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
-                                            Edit
-                                        </span>
-                                        <span
-                                            // onClick={() => {
-                                            //     setStudentId(student.id);
-                                            //     setDeleteStudent(true);
-                                            // }}
-                                            className="font-medium hover:underline text-red-600 hover:underline cursor-pointer"
-                                        >
-                                            Delete
+                                            Manage
                                         </span>
                                     </td>
                                 </tr>

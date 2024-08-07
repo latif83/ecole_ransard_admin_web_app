@@ -76,6 +76,7 @@ model Teachers {
   lastName  String
   email     String   @unique
   phone     String
+  gender    String?
   password  String
   address   String?
   createdAt DateTime @default(now())
@@ -284,7 +285,7 @@ model StudentFeeSummary {
 }
 
 model Payment {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   studentId String
   amount    Float
   paymentMethod String
