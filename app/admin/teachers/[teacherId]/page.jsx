@@ -117,7 +117,7 @@ export default function Teacher({ params }) {
         <AssignClass
           setAssignClass={setAssignClass}
           teacherId={teacherId}
-        //   setFData={setFData}
+          setFData={setFData}
         />
       )}
       {/* {assignSub && (
