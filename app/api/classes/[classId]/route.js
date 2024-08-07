@@ -32,7 +32,7 @@ export async function GET(req, { params }) {
             createdAt: 'desc', // Order class sections by createdAt in descending order
           },
         },
-        assignedSubjects: {
+        classSubjects: {
           include : {
             subject : true
           }
@@ -50,7 +50,7 @@ export async function GET(req, { params }) {
     // Calculate the summary data
     const numberOfStudents = classDetails.students.length;
     const numberOfClassSections = classDetails.ClassSections.length;
-    const numberOfSubjects = classDetails.assignedSubjects.length;
+    const numberOfSubjects = classDetails.classSubjects.length;
 
     // Structure the response
     const response = {
@@ -68,7 +68,7 @@ export async function GET(req, { params }) {
         } : null,
         numberOfStudents: section.students.length, // Count of students in the section
       })),
-      subjects: classDetails.assignedSubjects.map(subject => ({
+      subjects: classDetails.classSubjects.map(subject => ({
         id: subject.subject.id,
         name: subject.subject.name,
       })),

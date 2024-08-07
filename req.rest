@@ -56,4 +56,10 @@ http://localhost:3001/api/fees/students/owing?classSectionId=clz8klm4800014vj4me
 http://localhost:3001/api/exams/settings
 
 ###
-http://localhost:3001/api/teachers/clz8h2b1w0000zc9g7udyyyyc
+http://localhost:3001/api/teachers/clzk38ueq0001xtsz8zjpfotg
+
+###
+http://localhost:3001/api/teachers/clzk38ueq0001xtsz8zjpfotg/assigned
+
+###
+http://localhost:3001/api/classes/sections

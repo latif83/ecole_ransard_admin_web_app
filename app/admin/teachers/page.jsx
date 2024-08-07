@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NewTeacher from "./newTeacher";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 export default function Teachers() {
 
@@ -143,15 +144,12 @@ export default function Teachers() {
                                     <td className="px-6 py-4 text-center">{teacher.address}</td>
                                     <td className="px-6 py-4 text-center">{teacher.classSections.length}</td>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                        <span
-                                            // onClick={() => {
-                                            //     setStudentData(student);
-                                            //     setEditStudent(true);
-                                            // }}
+                                        <Link
+                                        href={`/admin/teachers/${teacher.id}`}
                                             className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
                                             Manage
-                                        </span>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))

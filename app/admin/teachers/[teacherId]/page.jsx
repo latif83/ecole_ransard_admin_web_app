@@ -13,11 +13,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { AssignClass } from "./assignClass";
 import { useEffect, useState } from "react";
-import { AssignSubject } from "./assignSubject";
-import { EditTeacher } from "./editTeacher";
-import { DelTeacher } from "./delTeacher";
-import { RemoveAssignedSubject } from "./removeAssignedSubject";
-import { RemoveAssignedClass } from "./removeAssignedClass";
+// import { AssignSubject } from "./assignSubject";
+// import { EditTeacher } from "./editTeacher";
+// import { DelTeacher } from "./delTeacher";
+// import { RemoveAssignedSubject } from "./removeAssignedSubject";
+// import { RemoveAssignedClass } from "./removeAssignedClass";
 import { toast } from "react-toastify";
 
 export default function Teacher({ params }) {
@@ -31,7 +31,7 @@ export default function Teacher({ params }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [fData, setFData] = useState(false);
+  const [fData, setFData] = useState(true);
 
   // Keep assigned teacher id in a state when the add btn is clicked
   const [assignedTeacherId, setAssignedTeacherId] = useState(0);
@@ -44,7 +44,7 @@ export default function Teacher({ params }) {
 
   const [teacherDetails, setTeacherDetails] = useState({});
   const [teacherDetailsLoading, setTeacherDetailsLoading] = useState(false);
-  const [getTeacherDetails, setGetTeacherDetails] = useState(false);
+  const [getTeacherDetails, setGetTeacherDetails] = useState(true);
 
   const [classId,setClassId] = useState(0)
 
@@ -55,13 +55,7 @@ export default function Teacher({ params }) {
       try {
         setTeacherDetailsLoading(true);
         const response = await fetch(
-          `${server}/staff/details/${teacherId}/Teacher`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+          `/api/teachers/${teacherId}`
         );
 
         const responseData = await response.json();
@@ -75,7 +69,7 @@ export default function Teacher({ params }) {
 
         // console.log(responseData.teachers)
 
-        setTeacherDetails(responseData.user);
+        setTeacherDetails(responseData);
       } catch (err) {
         console.log(err);
         toast.error("Unexpected error!");
@@ -90,12 +84,7 @@ export default function Teacher({ params }) {
     const gData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${server}/assigning/all/${teacherId}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await fetch(`/api/teachers/${teacherId}/assigned`);
 
         const responseData = await response.json();
 
@@ -106,9 +95,9 @@ export default function Teacher({ params }) {
           return;
         }
 
-        console.log(responseData)
+        // console.log(responseData)
 
-        setData(responseData["assigned"]);
+        setData(responseData);
       } catch (err) {
         console.log(err);
         toast.error("Unexpected error!");
@@ -128,10 +117,10 @@ export default function Teacher({ params }) {
         <AssignClass
           setAssignClass={setAssignClass}
           teacherId={teacherId}
-          setFData={setFData}
+        //   setFData={setFData}
         />
       )}
-      {assignSub && (
+      {/* {assignSub && (
         <AssignSubject
           setAssignSub={setAssignSub}
           assignedTeacherId={assignedTeacherId}
@@ -166,7 +155,7 @@ export default function Teacher({ params }) {
           assignedTeacherId={assignedTeacherId}
           setFData={setFData}
         />
-      )}
+      )} */}
 
       <div className="flex mb-1 justify-end">
         <Link
@@ -352,8 +341,7 @@ export default function Teacher({ params }) {
             <div className="bg-white shadow-lg rounded-lg overflow-hidden">
               <div className="font-semibold p-2 bg-blue-700 text-white flex justify-between items-center">
                 <h3>
-                  {d.classSection}
-                  {/* <span className="text-sm">( A )</span> */}
+                  {d.classSectionName}
                 </h3>
                 <FontAwesomeIcon
                   onClick={() => {
