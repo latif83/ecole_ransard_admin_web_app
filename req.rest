@@ -51,3 +51,6 @@ http://localhost:3001/api/fees/students?classSectionId=clz8klm4800014vj4melipooz
 
 ###
 http://localhost:3001/api/fees/students/owing?classSectionId=clz8klm4800014vj4melipooz
+
+###
+http://localhost:3001/api/exams/settings

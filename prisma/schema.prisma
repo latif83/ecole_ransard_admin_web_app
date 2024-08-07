@@ -291,3 +291,13 @@ model Payment {
   createdAt DateTime @default(now())
   student   Students @relation(fields: [studentId], references: [id])
 }
+
+model GradeSetting {
+  id        String   @id @default(uuid())
+  grade     String  
+  minScore  Int      
+  maxScore  Int      
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
