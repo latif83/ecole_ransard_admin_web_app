@@ -4,15 +4,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import { RecordPayment } from "./recordPayment"
 
-export default function CollectFees({params}){
+export default function CollectFees({ params }) {
 
-    const {classSectionId} = params
+    const { classSectionId } = params
 
     const router = useRouter()
 
-    const [data,setData] = useState([])
-    const [loading,setLoading] = useState(false)
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
+
+    const [fetchData, setFetchData] = useState(true)
 
     useEffect(() => {
         const fetchBillingData = async () => {
@@ -34,13 +37,23 @@ export default function CollectFees({params}){
             }
         };
 
-        fetchBillingData()
-    }, [])
+        if (fetchData) {
+            fetchBillingData()
+            setFetchData(false)
+        }
+
+    }, [fetchData])
+
+    const [addPayment, setAddPayment] = useState(false)
+
+    const [selectedStudentId, setSelectedStudentId] = useState()
 
     return (
         <div>
 
-             <div className="flex gap-2 items-center">
+            {addPayment && <RecordPayment setAddPayment={setAddPayment} setFetchData={setFetchData} studentId={selectedStudentId} />}
+
+            <div className="flex gap-2 items-center">
                 <div>
                     <button onClick={() => router.back()} className="bg-red-200 p-2 rounded hover:bg-red-600 hover:text-white text-gray-700">
                         <FontAwesomeIcon icon={faArrowLeftLong} width={20} height={20} />
@@ -72,12 +85,12 @@ export default function CollectFees({params}){
 
             <div className="relative mt-5 overflow-x-auto shadow-md sm:rounded-lg">
 
-            <div className="p-4 bg-gray-800 flex justify-between items-center">
-                <div>
-                <h3 className="text-gray-50">
-                Primary 1 (A)
-            </h3>
-                </div>
+                <div className="p-4 bg-gray-800 flex justify-between items-center">
+                    <div>
+                        <h3 className="text-gray-50">
+                            Primary 1 (A)
+                        </h3>
+                    </div>
                     <div>
                         <label htmlFor="table-search" className="sr-only">
                             Search
@@ -132,7 +145,7 @@ export default function CollectFees({params}){
                     </thead>
                     <tbody>
 
-                   
+
 
                         {loading ? (
                             <tr className="bg-white border-b hover:bg-gray-50">
@@ -142,54 +155,54 @@ export default function CollectFees({params}){
                             </tr>
                         ) : data?.length > 0 ? (
                             data?.map((d) => (
-                                 <tr key={d.student.id}  className="bg-white border-b hover:bg-gray-50">
-                                 <th
-                                     scope="row"
-                                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                                 >
-                                     {d.student.firstName} {d.student.lastName}
-                                 </th>
-                                 <td
-                                     className="px-6 py-4"
-                                 >
-                                     {(d.previousOwed).toLocaleString("en-US", {
-                                             style: "currency",
-                                             currency: "GHS",
-                                             minimumFractionDigits: 2,
-                                             maximumFractionDigits: 2,
-                                         })}
-                                 </td>
-                                 <td
-                                     className="px-6 py-4"
-                                 >
-                                     {(d.currentBill).toLocaleString("en-US", {
-                                             style: "currency",
-                                             currency: "GHS",
-                                             minimumFractionDigits: 2,
-                                             maximumFractionDigits: 2,
-                                         })}
-                                 </td>
-                                 <td
-                                     className="px-6 py-4"
-                                 >
-                                     {(d.totalAmountPayable).toLocaleString("en-US", {
-                                             style: "currency",
-                                             currency: "GHS",
-                                             minimumFractionDigits: 2,
-                                             maximumFractionDigits: 2,
-                                         })}
-                                 </td>
-                                 <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                     <span
-                                         onClick={() => {
-
-                                             router.push(`/admin/fees/billStudents/${section.sectionId}/${termId}/${yearId}`)
-                                         }} className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                     >
-                                         Make Payment
-                                     </span>
-                                 </td>
-                             </tr>
+                                <tr key={d.student.id} className="bg-white border-b hover:bg-gray-50">
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
+                                    >
+                                        {d.student.firstName} {d.student.lastName}
+                                    </th>
+                                    <td
+                                        className="px-6 py-4"
+                                    >
+                                        {(d.previousOwed).toLocaleString("en-US", {
+                                            style: "currency",
+                                            currency: "GHS",
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
+                                    </td>
+                                    <td
+                                        className="px-6 py-4"
+                                    >
+                                        {(d.currentBill).toLocaleString("en-US", {
+                                            style: "currency",
+                                            currency: "GHS",
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
+                                    </td>
+                                    <td
+                                        className="px-6 py-4"
+                                    >
+                                        {(d.totalAmountPayable).toLocaleString("en-US", {
+                                            style: "currency",
+                                            currency: "GHS",
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
+                                    </td>
+                                    <td className="px-6 py-4 flex justify-center items-center gap-1.5">
+                                        <span
+                                            onClick={() => {
+                                                setSelectedStudentId(d.student.id)
+                                                setAddPayment(true)
+                                            }} className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                        >
+                                            Make Payment
+                                        </span>
+                                    </td>
+                                </tr>
                             ))
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">

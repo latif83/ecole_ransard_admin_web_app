@@ -11,13 +11,6 @@ export async function GET(req) {
       where: { status: "Active" },
     });
 
-    if (!currentAcademicTerm) {
-      return NextResponse.json(
-        { error: "No active academic term found" },
-        { status: 404 }
-      );
-    }
-
     const currentAcademicTermId = currentAcademicTerm.id;
 
     // Get inactive academic terms
@@ -45,7 +38,7 @@ export async function GET(req) {
       return acc;
     }, {});
 
-    // Get students' previous owed amounts
+    // Get students' previous owed amounts and payments
     const previousOwed = await prisma.StudentFeeSummary.findMany({
       where: {
         academicTermId: { in: inactiveTermIds },
@@ -56,16 +49,16 @@ export async function GET(req) {
       },
     });
 
-    // Calculate total owed for previous terms
+    // Calculate total owed and total paid for previous terms
     previousOwed.forEach((summary) => {
       const studentId = summary.studentId;
       if (studentData[studentId]) {
-        studentData[studentId].previousOwed += summary.totalAmountOwed;
+        studentData[studentId].previousOwed += summary.totalAmountOwed - summary.totalAmountPaid;
       }
     });
 
     // Get current bills
-    const currentBills = await prisma.StudentFeeDetail.findMany({
+    const currentBills = await prisma.StudentFeeSummary.findMany({
       where: {
         academicTermId: currentAcademicTermId,
         studentId: { in: allStudents.map((student) => student.id) }, // Filter by student IDs
@@ -76,10 +69,10 @@ export async function GET(req) {
     });
 
     // Calculate total current bills
-    currentBills.forEach((bill) => {
-      const studentId = bill.studentId;
+    currentBills.forEach((summary) => {
+      const studentId = summary.studentId;
       if (studentData[studentId]) {
-        studentData[studentId].currentBill += bill.amount;
+        studentData[studentId].currentBill += summary.totalAmountOwed - summary.totalAmountPaid;
       }
     });
 

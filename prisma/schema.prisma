@@ -109,6 +109,7 @@ model Students {
   ClassSections     ClassSections?      @relation(fields: [classSectionsId], references: [id])
   StudentFeeDetail  StudentFeeDetail[]
   StudentFeeSummary StudentFeeSummary[]
+  Payment           Payment[]
 }
 
 // Parents model
@@ -252,7 +253,7 @@ model StudentFeeDetail {
   studentId      String
   feeDetailId    String
   academicTermId String
-  amount Float
+  amount         Float
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -280,4 +281,13 @@ model StudentFeeSummary {
 
   // Define relation to AcademicTerm
   academicTerm AcademicTerm @relation(fields: [academicTermId], references: [id])
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  studentId String
+  amount    Float
+  paymentMethod String
+  createdAt DateTime @default(now())
+  student   Students @relation(fields: [studentId], references: [id])
 }
