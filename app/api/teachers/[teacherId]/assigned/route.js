@@ -29,6 +29,7 @@ export async function GET(req,{params}) {
   
       // Map the result to get class and subject details
       const result = assignedClasses.map((assignment) => ({
+        assignedTeacherId : `${assignment.id}`,
         classSectionId : `${assignment.class.id}`,
         classId :  `${assignment.class.class.id}`,
         classSectionName: `${assignment.class.class.className} (${assignment.class.sectionName})`,

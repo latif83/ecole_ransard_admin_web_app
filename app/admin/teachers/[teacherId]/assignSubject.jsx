@@ -3,7 +3,7 @@ import { faSpinner, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./assignClass.module.css";
 import { useEffect, useState } from "react";
-import { useToaster } from "@/providers/ToasterContext";
+import { toast } from "react-toastify";
 
 export const AssignSubject = ({ setAssignSub, assignedTeacherId,classSection,setFData, classId }) => {
   const [loading, setLoading] = useState(false);
@@ -11,8 +11,6 @@ export const AssignSubject = ({ setAssignSub, assignedTeacherId,classSection,set
   const [subjects,setSubjects] = useState([])
 
   const server = process.env.NEXT_PUBLIC_SERVER_URL;
-
-  const { showToast } = useToaster();
 
   // State that stores the selected subject id
   const [subjectId,setSubjectId] = useState(false)
@@ -25,17 +23,10 @@ export const AssignSubject = ({ setAssignSub, assignedTeacherId,classSection,set
 
   useEffect(()=>{
 
-    const accessToken = localStorage.getItem("SMSTOKEN");
-
     const getSubjects = async ()=>{
       try {
         setSubjectsLoading(true);
-        const response = await fetch(`${server}/class/get_class/${classId}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await fetch(`/api/subjects`);
 
         const responseData = await response.json();
 
@@ -44,14 +35,14 @@ export const AssignSubject = ({ setAssignSub, assignedTeacherId,classSection,set
         setSubjectsLoading(false);
 
         if (!response.ok) {
-          showToast("error", responseData.message);
+          toast.error(responseData.message);
           return;
         }
 
-        setSubjects(responseData.class.classSubjects);
+        setSubjects(responseData.subjects);
       } catch (err) {
         console.log(err);
-        showToast("error", "Unexpected error!");
+        toast.error("Unexpected error!");
         setSubjectsLoading(false);
       }
     }
@@ -65,11 +56,10 @@ export const AssignSubject = ({ setAssignSub, assignedTeacherId,classSection,set
           subjectId,
         };
 
-        const response = await fetch(`${server}/assigning/subject`, {
+        const response = await fetch(`/api/teachers/${assignedTeacherId}/assigned/subject`, {
           method: "POST",
           body: JSON.stringify(data),
           headers: {
-            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
         });
@@ -77,17 +67,17 @@ export const AssignSubject = ({ setAssignSub, assignedTeacherId,classSection,set
         const responseData = await response.json();
 
         if (!response.ok) {
-          showToast("error", responseData.message);
+          toast.error(responseData.message);
           setLoading(false);
           return;
         }
 
-        showToast("success", responseData.message);
+        toast.success(responseData.message);
         setFData(true)
         setAssignSub(false);
       } catch (err) {
         console.log(err);
-        showToast("error", "Unexpected error!");
+        toast.error("Unexpected error!");
         setLoading(false);
       }
     }
@@ -103,7 +93,7 @@ export const AssignSubject = ({ setAssignSub, assignedTeacherId,classSection,set
 
   return (
     <div className={`${styles.container} sm:pt-10`}>
-      <div className="w-full max-w-xl mx-auto bg-white dark:bg-black rounded shadow p-6">
+      <div className="w-full max-w-xl mx-auto bg-white rounded shadow p-6">
         <div className="flex justify-between mb-3">
           <h1 className="font-semibold">Assign subject</h1>
           <FontAwesomeIcon
@@ -124,14 +114,14 @@ export const AssignSubject = ({ setAssignSub, assignedTeacherId,classSection,set
           <div className="relative z-0 w-full group mb-3">
             <label
               htmlFor="grade"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-900"
             >
               Subject
             </label>
             <select
               id="grade"
               name="grade"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={(e) =>
                 setSubjectId(e.target.value)
               }

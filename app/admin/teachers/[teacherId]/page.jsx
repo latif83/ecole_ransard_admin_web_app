@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { AssignClass } from "./assignClass";
 import { useEffect, useState } from "react";
-// import { AssignSubject } from "./assignSubject";
+import { AssignSubject } from "./assignSubject";
 // import { EditTeacher } from "./editTeacher";
 // import { DelTeacher } from "./delTeacher";
 // import { RemoveAssignedSubject } from "./removeAssignedSubject";
@@ -120,7 +120,7 @@ export default function Teacher({ params }) {
           setFData={setFData}
         />
       )}
-      {/* {assignSub && (
+       {assignSub && (
         <AssignSubject
           setAssignSub={setAssignSub}
           assignedTeacherId={assignedTeacherId}
@@ -129,6 +129,7 @@ export default function Teacher({ params }) {
           classId={classId}
         />
       )}
+      {/*
       {editTeacher && (
         <EditTeacher
           setEditTeacher={setEditTeacher}
@@ -159,7 +160,7 @@ export default function Teacher({ params }) {
 
       <div className="flex mb-1 justify-end">
         <Link
-          href="/dashboard/teachers/teachers"
+          href="/admin/teachers"
           className="text-red-700 rounded-lg p-2 hover:bg-red-200 bg-red-100 flex gap-1 items-center text-sm font-semibold"
         >
           <FontAwesomeIcon icon={faRotateBack} width={15} height={15} />
@@ -362,7 +363,7 @@ export default function Teacher({ params }) {
                       setClassId(d.classId)
                       setAssignSub(true);
                       setAssignedTeacherId(d.assignedTeacherId);
-                      setSubClassSection(d.classSection);
+                      setSubClassSection(d.classSectionName);
                     }}
                     icon={faPlusCircle}
                     width={20}
@@ -374,7 +375,7 @@ export default function Teacher({ params }) {
                   {d.subjects.length > 0 ? (
                     d.subjects.map((subject) => (
                       <span className="bg-black text-white p-1.5 rounded-lg flex flex-shrink-0 gap-1 items-center">
-                        {subject?.Subject?.name}
+                        {subject?.name}
                         <FontAwesomeIcon
                           onClick={() => {
                             setSubId(subject?.Subject.id);

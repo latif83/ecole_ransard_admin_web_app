@@ -19,7 +19,7 @@ export async function POST(req) {
       });
   
       if (existingAssignment) {
-        return NextResponse.json({ error: "Subject is already assigned to this teacher" }, { status: 400 });
+        return NextResponse.json({ message: "Subject is already assigned to this teacher" }, { status: 400 });
       }
   
       // Create the assignment

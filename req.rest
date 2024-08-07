@@ -63,3 +63,6 @@ http://localhost:3001/api/teachers/clzk38ueq0001xtsz8zjpfotg/assigned
 
 ###
 http://localhost:3001/api/classes/sections
+
+###
+http://localhost:3001/api/subjects
