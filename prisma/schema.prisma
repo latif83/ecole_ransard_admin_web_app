@@ -18,11 +18,11 @@ model Classes {
   updatedAt DateTime @updatedAt
 
   // Define relation to Students
-  students         Students[]         @relation(name: "ClassStudents")
-  Notification     Notification[]
-  ClassSections    ClassSections[]
-  // Define relation to AssignedSubjects
-  assignedSubjects AssignedSubjects[]
+  students      Students[]      @relation(name: "ClassStudents")
+  Notification  Notification[]
+  ClassSections ClassSections[]
+  // Define relation to ClassSubjects
+  classSubjects ClassSubjects[]
 }
 
 // ClassSections model
@@ -41,7 +41,8 @@ model ClassSections {
   teacher Teachers? @relation(fields: [teacherId], references: [id])
 
   // Define relation to Students
-  students Students[]
+  students         Students[]
+  AssignedTeachers AssignedTeachers[]
 }
 
 // Subjects model
@@ -51,12 +52,13 @@ model Subjects {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Define relation to AssignedSubjects
-  assignedSubjects AssignedSubjects[]
+  // Define relation to ClassSubjects
+  classSubjects    ClassSubjects[]
+  AssignedSubjects AssignedSubjects[]
 }
 
-// AssignedSubjects model
-model AssignedSubjects {
+// ClassSubjects model
+model ClassSubjects {
   id        String   @id @default(cuid())
   classId   String
   subjectId String
@@ -83,7 +85,8 @@ model Teachers {
   updatedAt DateTime @updatedAt
 
   // Define relation to ClassSections
-  classSections ClassSections[]
+  classSections    ClassSections[]
+  AssignedTeachers AssignedTeachers[]
 }
 
 // Students model
@@ -285,20 +288,47 @@ model StudentFeeSummary {
 }
 
 model Payment {
-  id        String   @id @default(uuid())
-  studentId String
-  amount    Float
+  id            String   @id @default(uuid())
+  studentId     String
+  amount        Float
   paymentMethod String
-  createdAt DateTime @default(now())
-  student   Students @relation(fields: [studentId], references: [id])
+  createdAt     DateTime @default(now())
+  student       Students @relation(fields: [studentId], references: [id])
 }
 
 model GradeSetting {
   id        String   @id @default(uuid())
-  grade     String  
-  minScore  Int      
-  maxScore  Int      
+  grade     String
+  minScore  Int
+  maxScore  Int
   comment   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AssignedSubjects {
+  id                String   @id @default(uuid())
+  assignedTeacherId String
+  subjectId         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  assignedTeacher AssignedTeachers @relation(fields: [assignedTeacherId], references: [id])
+  subject         Subjects         @relation(fields: [subjectId], references: [id])
+}
+
+model AssignedTeachers {
+  id        String   @id @default(uuid())
+  teacherId String
+  classId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  teacher Teachers      @relation(fields: [teacherId], references: [id])
+  class   ClassSections @relation(fields: [classId], references: [id])
+
+  // This will help to track which subjects a teacher is assigned to in a class
+  assignedSubjects AssignedSubjects[]
 }

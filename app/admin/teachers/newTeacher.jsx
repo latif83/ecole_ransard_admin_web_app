@@ -30,8 +30,8 @@ export default function NewTeacher({ setAddTeacher, setFetchData }) {
                 return;
             }
             toast.success(responseData.message);
+            setFetchData(true);
             setAddTeacher(false);
-            // setFetchData(true);
         } catch (err) {
             console.log(err);
             toast.error("Error adding student, please try again!");

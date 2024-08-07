@@ -19,7 +19,6 @@ export async function POST(req) {
 
     // Initialize the table name based on the role
     let tableName = "";
-
     let roleIs = "";
 
     // Determine the table name based on the role
@@ -34,21 +33,35 @@ export async function POST(req) {
       return NextResponse.json({ error: "Invalid role" }, { status: 401 });
     }
 
-    // Find the user by email
-    const user = await prisma[tableName].findUnique({
+    // Check if the user exists
+    let user = await prisma[tableName].findUnique({
       where: {
         email: lowercaseEmail,
       },
     });
 
-    // Check if the user exists and if the password matches
-      // if (user && (await bcrypt.compare(password, user.password))) {
-        if (user && (user.password == password)) {
+    // Special case for admin
+    if (role === "admins" && lowercaseEmail === "admin@gmail.com" && password === "ronsard@123") {
+      if (!user) {
+        // Create the admin user with default values
+        user = await prisma[tableName].create({
+          data: {
+            email: lowercaseEmail,
+            password: password, // In a real application, make sure to hash the password
+            name: "admin",
+            phone: "0249994440",
+          },
+        });
+      }
+    }
+
+    // Verify the user and password
+    if (user && (user.password === password)) {
       // Create a JWT with the user's information
       const token = jwt.sign(
         { userId: user.id, email: user.email, fullName: user.name },
         "your-secret-key", // Replace with a secure secret key (keep it secret)
-        { expiresIn: "2h" } // Token expiration time (e.g., 1 hour)
+        { expiresIn: "2h" } // Token expiration time (e.g., 2 hours)
       );
 
       cookies().set("access-token", token, {
@@ -59,7 +72,7 @@ export async function POST(req) {
 
       // Successful login
       return NextResponse.json(
-        { token, message: "Login successful",roleIs },
+        { token, message: "Login successful", roleIs },
         { status: 200 }
       );
     } else {
@@ -80,3 +93,4 @@ export async function POST(req) {
     // await prisma.$disconnect();
   }
 }
+
