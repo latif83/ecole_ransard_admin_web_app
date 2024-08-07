@@ -82,9 +82,24 @@ export async function GET(req) {
       studentInfo.totalAmountPayable = studentInfo.previousOwed + studentInfo.currentBill;
     }
 
+    const classWithSection = await prisma.Classes.findFirst({
+      where: {
+        ClassSections: {
+          some: { id: classSectionId }
+        }
+      },
+      include: {
+        ClassSections: {
+          where: {
+            id: classSectionId
+          }
+        }
+      }
+    });
+
     // Return the formatted response
     return NextResponse.json(
-      Object.values(studentData),
+      {className : `${classWithSection.className} (${classWithSection.ClassSections[0].sectionName})` , data:Object.values(studentData)},
       { status: 200 }
     );
   } catch (error) {

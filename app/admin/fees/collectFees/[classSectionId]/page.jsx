@@ -88,7 +88,7 @@ export default function CollectFees({ params }) {
                 <div className="p-4 bg-gray-800 flex justify-between items-center">
                     <div>
                         <h3 className="text-gray-50">
-                            Primary 1 (A)
+                            {data.className}
                         </h3>
                     </div>
                     <div>
@@ -153,8 +153,8 @@ export default function CollectFees({ params }) {
                                     <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                                 </td>
                             </tr>
-                        ) : data?.length > 0 ? (
-                            data?.map((d) => (
+                        ) : data?.data?.length > 0 ? (
+                            data?.data?.map((d) => (
                                 <tr key={d.student.id} className="bg-white border-b hover:bg-gray-50">
                                     <th
                                         scope="row"

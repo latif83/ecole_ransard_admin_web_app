@@ -46,7 +46,7 @@ export default function SelectClass() {
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold">
-                        Collect Fees
+                        Check Fees
                     </h1>
                     <p className="flex gap-1.5 text-sm">
                         <span>
@@ -62,14 +62,14 @@ export default function SelectClass() {
                             {'>'}
                         </span>
                         <span className="text-blue-600">
-                            Collect
+                            Check
                         </span>
                     </p>
                 </div>
             </div>
 
             <h3 className="text-xs text-red-600 my-3">
-                Select a class below to collect fees
+                Select a class below to check fees
             </h3>
 
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
