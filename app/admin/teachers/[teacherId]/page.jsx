@@ -14,7 +14,7 @@ import Link from "next/link";
 import { AssignClass } from "./assignClass";
 import { useEffect, useState } from "react";
 import { AssignSubject } from "./assignSubject";
-// import { EditTeacher } from "./editTeacher";
+import { EditTeacher } from "./editTeacher";
 // import { DelTeacher } from "./delTeacher";
 // import { RemoveAssignedSubject } from "./removeAssignedSubject";
 // import { RemoveAssignedClass } from "./removeAssignedClass";
@@ -129,7 +129,7 @@ export default function Teacher({ params }) {
           classId={classId}
         />
       )}
-      {/*
+      
       {editTeacher && (
         <EditTeacher
           setEditTeacher={setEditTeacher}
@@ -137,6 +137,7 @@ export default function Teacher({ params }) {
           setGetTeacherDetails={setGetTeacherDetails}
         />
       )}
+      {/*
       {delTeacher && (
         <DelTeacher setDelTeacher={setDelTeacher} teacherId={teacherId} />
       )}

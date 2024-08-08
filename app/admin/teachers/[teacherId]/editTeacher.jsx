@@ -3,7 +3,7 @@ import { faSpinner, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./editTeacher.module.css";
 import { useEffect, useState } from "react";
-import { useToaster } from "@/providers/ToasterContext";
+import { toast } from "react-toastify";
 
 export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetails }) => {
   const [loading, setLoading] = useState(false);
@@ -11,20 +11,14 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
   const server = process.env.NEXT_PUBLIC_SERVER_URL;
 
   const [formData, setFormData] = useState({
-    userName: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    role: "",
-    staffID: "",
-    dob: "",
-    gender: "",
-    departmentId: "",
+    id : teacherDetails.id,
+    firstName: teacherDetails.firstName,
+    lastName: teacherDetails.lastName,
+    email: teacherDetails.email,
+    phone: teacherDetails.phone,
+    address: teacherDetails.address,
+    gender: teacherDetails.gender,
   });
-
-  const { showToast } = useToaster();
 
   const [sendEditTeacherData, setSendEditTeacherData] = useState(false);
 
@@ -42,21 +36,17 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
   };
 
   useEffect(() => {
-    setFormData(teacherDetails);
-
-    const accessToken = localStorage.getItem("SMSTOKEN");
 
     const sData = async () => {
       try {
         setLoading(true);
 
         const response = await fetch(
-          `${server}/staff/update/${teacherDetails.id}`,
+          `/api/teachers`,
           {
-            method: "POST",
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify(formData),
           }
@@ -64,18 +54,18 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
 
         if (response.ok) {
           const responseData = await response.json();
-          showToast("success", responseData.message);
+          toast.success(responseData.message);
           setGetTeacherDetails(true);
           setLoading(false);
           setEditTeacher(false);
         } else {
           const errorData = await response.json();
-          showToast("error", errorData.message);
+          toast.error(errorData.message);
           setLoading(false);
         }
       } catch (error) {
-        console.error("Error adding department:", error);
-        showToast("error", "An error occurred while adding the department");
+        console.error("Error adding teacher:", error);
+        toast.error("An error occurred while adding the teacher");
       }
     };
 
@@ -87,7 +77,7 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
 
   return (
     <div className={`${styles.container} sm:pt-10`}>
-      <div className="w-full max-w-2xl mx-auto bg-white dark:bg-black rounded shadow p-6">
+      <div className="w-full max-w-2xl mx-auto bg-white rounded shadow p-6">
         <div className="flex justify-between mb-3">
           <h1 className="font-semibold">Edit Teacher</h1>
           <FontAwesomeIcon
@@ -105,7 +95,7 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
                 type="text"
                 name="first_name"
                 id="floating_first_name"
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
                 value={formData.firstName}
@@ -118,7 +108,7 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
               />
               <label
                 for="floating_first_name"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 First name
               </label>
@@ -128,7 +118,7 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
                 type="text"
                 name="last_name"
                 id="floating_last_name"
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
                 value={formData.lastName}
@@ -141,34 +131,9 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
               />
               <label
                 for="floating_last_name"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Last name
-              </label>
-            </div>
-          </div>
-          <div className="grid md:grid-cols-2 md:gap-6">
-            <div className="relative z-0 w-full mb-5 group">
-              <input
-                type="text"
-                name="username"
-                id="floating_username"
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
-                required
-                value={formData.userName}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    userName: e.target.value,
-                  }))
-                }
-              />
-              <label
-                for="floating_username"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >
-                Username
               </label>
             </div>
             <div className="relative z-0 w-full mb-5 group">
@@ -176,7 +141,7 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
                 type="email"
                 name="email"
                 id="floating_email"
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
                 value={formData.email}
@@ -189,13 +154,11 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
               />
               <label
                 for="floating_email"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Email address
               </label>
             </div>
-          </div>
-          <div className="grid md:grid-cols-2 md:gap-6">
             <div className="relative z-0 w-full mb-5 group">
               <input
                 type="tel"
@@ -203,7 +166,7 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
                 title="Phone number should be in the format +CCC XXXXXXXXXX or XXXXXXXXXX, where CCC is the country code and XXXXXXXXXX is the 10-digit number"
                 name="phone"
                 id="floating_phone"
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
                 value={formData.phone}
@@ -216,7 +179,7 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
               />
               <label
                 for="floating_phone"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Phone number (123-456-7890)
               </label>
@@ -226,7 +189,7 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
                 type="text"
                 name="address"
                 id="address"
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
                 value={formData.address}
@@ -239,41 +202,16 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
               />
               <label
                 for="address"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Address
-              </label>
-            </div>
-          </div>
-          <div className="grid md:grid-cols-2 md:gap-6">
-            <div className="relative z-0 w-full mb-5 group">
-              <input
-                type="date"
-                name="dob"
-                id="dob"
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
-                required
-                value={formatDate(formData.dob)}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    dob: e.target.value,
-                  }))
-                }
-              />
-              <label
-                for="dob"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >
-                Date of birth
               </label>
             </div>
             <div className="relative z-0 w-full mb-5 group">
               <select
                 name="gender"
                 id="floating_gender"
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 required
                 value={formData.gender}
                 onChange={(e) =>
@@ -286,12 +224,12 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
                 <option value="" disabled selected>
                   Select Gender
                 </option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
               </select>
               <label
                 for="floating_gender"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Gender
               </label>
@@ -302,9 +240,8 @@ export const EditTeacher = ({ setEditTeacher, teacherDetails, setGetTeacherDetai
             <button
               type="submit"
               disabled={loading}
-              className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ${
-                loading && "disabled"
-              }`}
+              className={`text-white bg-blue-700 disabled:bg-blue-200 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center   dark:focus:ring-blue-800 ${loading && "disabled"
+                }`}
             >
               {loading ? (
                 <>

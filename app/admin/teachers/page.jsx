@@ -111,9 +111,6 @@ export default function Teachers() {
                                 Address
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Assigned Class
-                            </th>
-                            <th scope="col" className="px-6 py-3">
                                 Actions
                             </th>
                         </tr>
@@ -142,7 +139,6 @@ export default function Teachers() {
                                         {teacher.phone}
                                     </td>
                                     <td className="px-6 py-4 text-center">{teacher.address}</td>
-                                    <td className="px-6 py-4 text-center">{teacher.classSections.length}</td>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
                                         <Link
                                         href={`/admin/teachers/${teacher.id}`}

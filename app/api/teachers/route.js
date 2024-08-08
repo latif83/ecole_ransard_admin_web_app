@@ -71,3 +71,56 @@ export async function GET(req) {
       );
     }
   }
+
+
+  export async function PUT(req) {
+    try {
+      // Parse request body
+      const { id, firstName, lastName, email, address, phone,gender } = await req.json();
+  
+      // Check if required fields are provided
+      if (!id) {
+        return NextResponse.json(
+          { message: "Teacher ID is required" },
+          { status: 400 }
+        );
+      }
+  
+      // Find the teacher to be updated
+      const existingTeacher = await prisma.Teachers.findUnique({
+        where: { id: id },
+      });
+  
+      if (!existingTeacher) {
+        return NextResponse.json(
+          { message: "Teacher not found" },
+          { status: 404 }
+        );
+      }
+  
+      // Update the teacher's information
+      const updatedTeacher = await prisma.Teachers.update({
+        where: { id: id },
+        data: {
+          firstName,
+          lastName,
+          email,
+          address,
+          phone,
+          gender
+        },
+      });
+  
+      return NextResponse.json(
+        { message: "Teacher updated successfully" },
+        { status: 200 }
+      );
+    } catch (error) {
+      console.error("Error updating teacher:", error);
+      return NextResponse.json(
+        { message: "Internal Server Error" },
+        { status: 500 }
+      );
+    }
+  }
+  
