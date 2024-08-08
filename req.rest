@@ -59,7 +59,7 @@ http://localhost:3001/api/exams/settings
 http://localhost:3001/api/teachers/clzk38ueq0001xtsz8zjpfotg
 
 ###
-http://localhost:3001/api/teachers/clzk38ueq0001xtsz8zjpfotg/assigned
+http://localhost:3001/api/teachers/clzk38ueq0001xtsz8zjpfotg/assigned/classSections
 
 ###
 http://localhost:3001/api/classes/sections

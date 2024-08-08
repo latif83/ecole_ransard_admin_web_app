@@ -11,46 +11,37 @@ export default function TeacherDashboard() {
 
   const [sections, setSections] = useState([])
 
-//   useEffect(() => {
+  useEffect(() => {
 
-//     const getAssignedCourses = async () => {
-//       setLoading(true)
-//       try {
+    const getAssignedCourses = async () => {
+      setLoading(true)
+      try {
 
-//         const accessToken = localStorage.getItem("SMSTOKEN")
+        const teacherId = localStorage.getItem("identity")
 
-//         const getTokenData = await verifyToken(accessToken)
-//         console.log(getTokenData)
-//         const teacherId = getTokenData?.decodedToken?.id
+        const response = await fetch(`/api/teachers/${teacherId}/assigned/classSections`)
 
-//         const response = await fetch(`${serverUrl}/teacher/assigned_classes/${teacherId}`, {
-//           method: "GET",
-//           headers: {
-//             Authorization: `Bearer ${accessToken}`
-//           }
-//         })
+        const responseData = await response.json()
 
-//         const responseData = await response.json()
+        if (!response.ok) {
+          showToast("error", responseData.message)
+          return
+        }
 
-//         if (!response.ok) {
-//           showToast("error", responseData.message)
-//           return
-//         }
+        setSections(responseData)
 
-//         setSections(responseData.assignedClasses)
-
-//       } catch (err) {
-//         console.log(err)
-//       } finally {
-//         setLoading(false)
-//       }
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setLoading(false)
+      }
 
 
-//     }
+    }
 
-//     getAssignedCourses()
+    getAssignedCourses()
 
-//   }, [])
+  }, [])
 
   return (
     <div>
@@ -72,24 +63,24 @@ export default function TeacherDashboard() {
               </span>
             </div>
 
-            </div>
-            
-            <div>
-            <button className="inline-flex w-full justify-center text-white gap-x-1.5 rounded-t-md px-3 py-2 text-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                </svg>
-
-                Abdul-Latif Mohammed
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="-mr-1 h-5 w-5">
-  <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-</svg>
-            </button>
-
-        
           </div>
 
-          
+          <div>
+            <button className="inline-flex w-full justify-center text-white gap-x-1.5 rounded-t-md px-3 py-2 text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+              </svg>
+
+              Abdul-Latif Mohammed
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="-mr-1 h-5 w-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
+
+
+          </div>
+
+
 
         </div>
 
@@ -144,10 +135,10 @@ export default function TeacherDashboard() {
 
 
           {sections.map((session) => (<div className="border shadow-md p-2 rounded-lg">
-            <p>{session.classSection}</p>
+            <p>{session.className} ({session.classSectionName})</p>
 
             <div className="flex justify-end">
-              <Link href={`/t/dashboard/${session.classSectionId}`} className="p-1.5 rounded bg-blue-500 text-gray-100 hover:bg-blue-600 mt-2 flex items-center gap-1.5">
+              <Link href={`/teacher/dashboard/${session.classSessionId}`} className="p-1.5 rounded bg-gray-500 text-gray-100 hover:bg-gray-600 mt-2 flex items-center gap-1.5">
                 <span>Manage</span> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                 </svg>

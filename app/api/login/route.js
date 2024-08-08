@@ -25,9 +25,9 @@ export async function POST(req) {
     if (role === "admins") {
       tableName = "admins";
       roleIs = "admin";
-    } else if (role === "employees") {
-      tableName = "employees";
-      roleIs = "employee";
+    } else if (role === "teacher") {
+      tableName = "Teachers";
+      roleIs = "teacher";
     } else {
       // Invalid role
       return NextResponse.json({ error: "Invalid role" }, { status: 401 });
@@ -72,7 +72,7 @@ export async function POST(req) {
 
       // Successful login
       return NextResponse.json(
-        { token, message: "Login successful", roleIs },
+        { token, message: "Login successful", roleIs, identity : user.id },
         { status: 200 }
       );
     } else {

@@ -49,6 +49,8 @@ export default function Home() {
           return;
         }
 
+        localStorage.setItem("identity",responseData.identity)
+
         toast.success(responseData.message);
 
         router.push(responseData.roleIs);
