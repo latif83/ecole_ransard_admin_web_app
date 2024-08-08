@@ -43,6 +43,7 @@ model ClassSections {
   // Define relation to Students
   students         Students[]
   AssignedTeachers AssignedTeachers[]
+  Assessments      Assessments[]
 }
 
 // Subjects model
@@ -55,6 +56,7 @@ model Subjects {
   // Define relation to ClassSubjects
   classSubjects    ClassSubjects[]
   AssignedSubjects AssignedSubjects[]
+  Assessments      Assessments[]
 }
 
 // ClassSubjects model
@@ -87,6 +89,7 @@ model Teachers {
   // Define relation to ClassSections
   classSections    ClassSections[]
   AssignedTeachers AssignedTeachers[]
+  Assessments      Assessments[]
 }
 
 // Students model
@@ -114,6 +117,7 @@ model Students {
   StudentFeeDetail  StudentFeeDetail[]
   StudentFeeSummary StudentFeeSummary[]
   Payment           Payment[]
+  Grades            Grades[]
 }
 
 // Parents model
@@ -225,6 +229,7 @@ model AcademicTerm {
   events            Event[]
   StudentFeeDetail  StudentFeeDetail[]
   StudentFeeSummary StudentFeeSummary[]
+  Assessments       Assessments[]
 }
 
 // Event model
@@ -331,4 +336,39 @@ model AssignedTeachers {
 
   // This will help to track which subjects a teacher is assigned to in a class
   assignedSubjects AssignedSubjects[]
+}
+
+model Assessments {
+  id             String   @id @default(uuid())
+  name           String?
+  description    String?
+  academicTermId String
+  teacherId      String
+  classSessionId String
+  subjectId      String
+  weight         Float?
+  marks          Float?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  academicTerm AcademicTerm  @relation(fields: [academicTermId], references: [id])
+  classSession ClassSections @relation(fields: [classSessionId], references: [id])
+  subject      Subjects      @relation(fields: [subjectId], references: [id])
+  teacher      Teachers      @relation(fields: [teacherId], references: [id])
+
+  // This will help to track grades related to the assessment
+  grades Grades[]
+}
+
+model Grades {
+  id           String   @id @default(uuid())
+  studentId    String
+  assessmentId String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Define relations
+  assessment Assessments @relation(fields: [assessmentId], references: [id])
+  student    Students    @relation(fields: [studentId], references: [id])
 }
