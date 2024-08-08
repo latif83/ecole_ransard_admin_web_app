@@ -83,7 +83,7 @@ export default function RootLayout({ children, params }) {
             </Link>
             <Link
               href={`/teacher/dashboard/${classSectionId}/assessments`}
-              className={`p-2 rounded-t-md ${pathname == `/teacher/dashboard/${classSectionId}/assessments` ? 'bg-gray-100 text-gray-700' : 'text-white'}`}
+              className={`p-2 rounded-t-md ${pathname.includes(`/teacher/dashboard/${classSectionId}/assessments`) ? 'bg-gray-100 text-gray-700' : 'text-white'}`}
             >
               Assessments
             </Link>

@@ -3,10 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './page.module.css'
 import { faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
-import { accessToken, serverUrl } from '@/constants/constants';
-import { useToaster } from '@/providers/ToasterContext';
+import { toast } from 'react-toastify';
 
-export const NewAssessment = ({ setAddAssessment, classSessionId, subjectId, academicTermId, teacherId, setGetData }) => {
+export const NewAssessment = ({ setAddAssessment, classSessionId, subjectId, setGetData }) => {
 
   const [loading, setLoading] = useState(false)
 
@@ -19,18 +18,14 @@ export const NewAssessment = ({ setAddAssessment, classSessionId, subjectId, aca
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    academicTermId: "",
-    teacherId: "",
     classSessionId: "",
     subjectId: "",
     weight: "",
     marks: ""
   })
 
-  const { showToast } = useToaster();
-
   useEffect(() => {
-    setFormData((prevData) => ({ ...prevData, classSessionId, subjectId, academicTermId, teacherId }))
+    setFormData((prevData) => ({ ...prevData, classSessionId, subjectId }))
   }, [])
 
   useEffect(() => {
@@ -39,12 +34,11 @@ export const NewAssessment = ({ setAddAssessment, classSessionId, subjectId, aca
       setLoading(true)
       try {
 
-        const response = await fetch(`${serverUrl}/teacher/assessment/create
+        const response = await fetch(`/api/exams/assessments
 `, {
           method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`
+            "Content-Type": "application/json"
           },
           body: JSON.stringify(formData)
         })
@@ -53,11 +47,11 @@ export const NewAssessment = ({ setAddAssessment, classSessionId, subjectId, aca
 
         if (!response.ok) {
           // Error
-          showToast("error", responseData.message)
+          toast.error(responseData.message)
           return
         }
 
-        showToast("success", responseData.message)
+        toast.success(responseData.message)
         setGetData(true)
         setAddAssessment(false)
 
@@ -78,7 +72,7 @@ export const NewAssessment = ({ setAddAssessment, classSessionId, subjectId, aca
 
   return (
     <div className={`${styles.container} sm:pt-10`}>
-      <div className="w-full max-w-xl mx-auto bg-white dark:bg-black rounded shadow p-6">
+      <div className="w-full max-w-xl mx-auto bg-white rounded shadow p-6">
         <div className="flex justify-between mb-3">
           <h1 className="font-semibold">New Assessment</h1>
           <FontAwesomeIcon

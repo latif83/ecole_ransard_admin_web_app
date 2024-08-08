@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link";
-// import { NewAssessment } from "./NewAssessment";
+import { NewAssessment } from "./NewAssessment";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -20,7 +20,7 @@ export default function ({ params }) {
 
     const router = useRouter()
 
-    const { classSessionId, subjectId } = params
+    const { classSectionId, subjectId } = params
 
     const [teacherId, setTeacherId] = useState(0)
 
@@ -35,57 +35,10 @@ export default function ({ params }) {
 
     useEffect(() => {
 
-        const getAcademicTerm = async () => {
-            try {
-                const response = await fetch(`cademic_term/active`)
-
-                const responseData = await response.json()
-
-                if (!response.ok) {
-                    console.log(responseData)
-                    return
-                }
-
-                // console.log(responseData)
-
-                setAcademicTermId(responseData.ActiveAcademicTerm.id)
-                setAcademicYearId(responseData.ActiveAcademicTerm.academicYearId)
-            }
-            catch (err) {
-                console.log(err)
-            }
-        }
-
-        const getSubjectData = async () => {
-            try {
-                const response = await fetch(`/subject/get_subject/${subjectId}`)
-
-                const responseData = await response.json()
-
-                if (!response.ok) {
-                    console.log(responseData)
-                    return
-                }
-
-                setSubject(responseData.subject)
-
-            }
-            catch (err) {
-                console.log(err)
-            }
-        }
-
-        // getTeacherID()
-        getAcademicTerm()
-        getSubjectData()
-    }, [])
-
-    useEffect(() => {
-        const accessToken = localStorage.getItem('SMSTOKEN')
         const getAssessments = async () => {
             setAssessmentsLoading(true)
             try {
-                const response = await fetch(`/teacher/subject_assessments/${classSessionId}/${subjectId}
+                const response = await fetch(`/api/exams/assessments?classSectionId=${classSectionId}&subjectId=${subjectId}
 `)
                 const responseData = await response.json()
                 if (!response.ok) {
@@ -94,9 +47,8 @@ export default function ({ params }) {
                     return
                 }
 
-                // console.log(responseData.assessments)
-
                 setAssessments(responseData.assessments)
+                setSubject(responseData.subject.name)
 
             }
             catch (err) {
@@ -115,47 +67,49 @@ export default function ({ params }) {
 
     return (
         <div className="relative">
-            {/* 
-            {addAssessment && <NewAssessment setAddAssessment={setAddAssessment} subjectId={subjectId} classSessionId={classSessionId} teacherId={teacherId} academicTermId={academicTermId} setGetData={setGetData} />}
 
+            {addAssessment && <NewAssessment setAddAssessment={setAddAssessment} subjectId={subjectId} classSessionId={classSectionId} setGetData={setGetData} />}
+
+            {/* 
             {editAssessment && <EditAssessment setEditAssessment={setEditAssessment} assessmentData={assessmentData} setGetData={setGetData} />}
 
             {delAssessment && <DelAssessment setDelAssessment={setDelAssessment} assessmentId={selectedAssessmentId} setGData={setGetData} />} */}
 
-            <div className="flex mt-3 items-center gap-1">
-                <button onClick={() => router.back()} className="bg-red-200 text-gray-700 hover:bg-red-700 hover:text-gray-100 p-2 rounded">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
-                    </svg>
-                </button>
-
-                <h1 className="text-lg font-semibold">
-                    {/* {subject.name} */}
-                    English Language
-                </h1>
-            </div>
-            <p>
-                Select / Create a new assessment to score students!
-            </p>
-
-            <div className="mt-8">
-                <div className="grid gap-4 grid-cols-2">
-
-                    <div className="flex justify-end">
-
-                        <button type="button" onClick={() => setAddAssessment(true)} className="bg-blue-600 hover:bg-blue-800 flex items-center p-2 px-4 rounded text-gray-100 gap-2 text-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            <div className="flex items-center justify-between">
+                <div>
+                    <div className="flex mt-3 items-center gap-1">
+                        <button onClick={() => router.back()} className="bg-red-200 text-gray-700 hover:bg-red-700 hover:text-gray-100 p-2 rounded">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                             </svg>
-
-                            <span>
-                                New Assessment
-                            </span>
                         </button>
 
+                        <h1 className="text-lg font-semibold">
+                            {subject}
+                        </h1>
                     </div>
+                    <p>
+                        Select / Create a new assessment to score students!
+                    </p>
+                </div>
+                <div className="flex justify-end">
+
+                    <button type="button" onClick={() => setAddAssessment(true)} className="bg-blue-600 hover:bg-blue-800 flex items-center p-4 rounded text-gray-100 gap-2 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+
+                        <span>
+                            New Assessment
+                        </span>
+                    </button>
 
                 </div>
+            </div>
+
+            <div className="mt-8">
+
+
 
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500">
@@ -200,7 +154,7 @@ export default function ({ params }) {
                                         <td className="px-6 py-4"> {assesment.weight}% </td>
                                         <td className="px-6 py-4 flex gap-4 items-center">
                                             <Link
-                                                href={`/t/dashboard/${classSessionId}/assessments/${subjectId}/${assesment.id}`}
+                                                href={`/t/dashboard/${classSectionId}/assessments/${subjectId}/${assesment.id}`}
                                                 className="font-medium text-blue-600 hover:underline"
                                             >
                                                 Grade
