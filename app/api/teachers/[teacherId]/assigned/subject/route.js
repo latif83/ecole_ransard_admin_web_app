@@ -37,4 +37,52 @@ export async function POST(req) {
       return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
   }
-  
+
+export async function GET(req) {
+  try {
+
+    // Parse query parameters
+    const { searchParams } = new URL(req.url);
+    const teacherId = searchParams.get("teacherId");
+    const classSectionId = searchParams.get("classSectionId");
+
+    // Validate parameters
+    if (!teacherId || !classSectionId) {
+      return NextResponse.json(
+        { error: 'Missing required query parameters: teacherId or classSectionId' },
+        { status: 400 }
+      );
+    }
+
+    // Retrieve assigned subjects for the specified teacher and class section
+    const assignedSubjects = await prisma.assignedSubjects.findMany({
+      where: {
+        assignedTeacher: {
+          teacherId: teacherId,
+          classId: classSectionId,
+        },
+      },
+      include: {
+        subject: true, // Include subject details
+      },
+    });
+
+    // Return the subjects
+    return NextResponse.json(
+      assignedSubjects.map((assignment) => ({
+        id: assignment.id,
+        subjectId: assignment.subjectId,
+        subjectName: assignment.subject.name,
+        createdAt: assignment.createdAt,
+        updatedAt: assignment.updatedAt,
+      })),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error retrieving assigned subjects:', error);
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
+  }
+}

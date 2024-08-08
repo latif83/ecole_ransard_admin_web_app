@@ -77,13 +77,13 @@ export default function RootLayout({ children, params }) {
           <div className="flex gap-8 items-center font-medium">
             <Link
               href={`/teacher/dashboard/${classSectionId}`}
-              className={`p-2 rounded-t-md text-white ${pathname == `/teacher/dashboard/${classSectionId}` && 'bg-gray-100 text-gray-700'}`}
+              className={`p-2 rounded-t-md ${pathname == `/teacher/dashboard/${classSectionId}` ? 'bg-gray-100 text-gray-700' : 'text-white'}`}
             >
               Overview
             </Link>
             <Link
               href={`/teacher/dashboard/${classSectionId}/assessments`}
-              className={`p-2 rounded-t-md text-white ${pathname == `/teacher/dashboard/${classSectionId}/assessments` && 'bg-gray-100 text-gray-700'}`}
+              className={`p-2 rounded-t-md ${pathname == `/teacher/dashboard/${classSectionId}/assessments` ? 'bg-gray-100 text-gray-700' : 'text-white'}`}
             >
               Assessments
             </Link>
