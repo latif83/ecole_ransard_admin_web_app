@@ -343,7 +343,6 @@ model Assessments {
   name           String?
   description    String?
   academicTermId String
-  teacherId      String
   classSessionId String
   subjectId      String
   weight         Float?
@@ -355,10 +354,11 @@ model Assessments {
   academicTerm AcademicTerm  @relation(fields: [academicTermId], references: [id])
   classSession ClassSections @relation(fields: [classSessionId], references: [id])
   subject      Subjects      @relation(fields: [subjectId], references: [id])
-  teacher      Teachers      @relation(fields: [teacherId], references: [id])
 
   // This will help to track grades related to the assessment
-  grades Grades[]
+  grades     Grades[]
+  Teachers   Teachers? @relation(fields: [teachersId], references: [id])
+  teachersId String?
 }
 
 model Grades {

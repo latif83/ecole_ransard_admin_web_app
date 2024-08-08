@@ -148,7 +148,7 @@ export default function AcademicYears() {
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">
                                 <td colSpan={5} className="px-6 py-4 text-center">
-                                    No students found
+                                    No academic years found
                                 </td>
                             </tr>
                         )}

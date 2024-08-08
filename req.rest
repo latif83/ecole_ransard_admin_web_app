@@ -66,3 +66,14 @@ http://localhost:3001/api/classes/sections
 
 ###
 http://localhost:3001/api/subjects
+
+###
+POST http://localhost:3001/api/exams/assessments
+Content-Type: application/json
+
+{
+    "name" : "End-of-Term Exams", "description" :"This is the description!", "classSessionId" :"clzk4ap0u0005xtszt0csbpym", "subjectId" :"clzk5mdjo0009xtszx4sq4d1i", "weight" :10, "marks" :100
+}
+
+###
+http://localhost:3001/api/exams/assessments?subjectId=clzk5mdjo0009xtszx4sq4d1i&classSectionId=clzk4ap0u0005xtszt0csbpym
