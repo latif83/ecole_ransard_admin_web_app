@@ -80,3 +80,15 @@ http://localhost:3001/api/exams/assessments?subjectId=clzk5mdjo0009xtszx4sq4d1i&
 
 ###
 http://localhost:3000/api/classes/sections/clzk4ap0u0005xtszt0csbpym/students
+
+###
+http://localhost:3000/api/exams/assessments/grade/clzk4ap0u0005xtszt0csbpym/0558a5d7-f84d-4d5e-a52e-13792b662ff1
+
+###
+POST http://localhost:3000/api/exams/assessments/grade/clzk4ap0u0005xtszt0csbpym/0558a5d7-f84d-4d5e-a52e-13792b662ff1
+Content-Type: application/json
+
+{
+    "studentId" : "clzqrws5s000110uuk06fnznp",
+    "score" : 20
+}

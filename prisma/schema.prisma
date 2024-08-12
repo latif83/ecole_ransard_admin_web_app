@@ -365,6 +365,7 @@ model Grades {
   id           String   @id @default(uuid())
   studentId    String
   assessmentId String
+  score        Float
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
