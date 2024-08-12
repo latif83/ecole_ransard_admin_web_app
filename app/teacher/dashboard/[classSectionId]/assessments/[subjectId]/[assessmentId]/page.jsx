@@ -121,7 +121,7 @@ export default function ({ params }) {
                                 <tr className="bg-white border-b hover:bg-gray-50">
                                     <th className="px-6 py-4">{student.studentName}</th>
                                     <td className="px-6 py-4"> {student.score} </td>
-                                    <td className="px-6 py-4"> {student.weight}% </td>
+                                    <td className="px-6 py-4"> {student.weight != "N/A" ? `${student.weight}%` : student.weight} </td>
                                     <td className="px-6 py-4 flex gap-4 justify-center items-center">
                                         <button onClick={() => {
                                             setScoreStudentData((prev) => ({ ...prev, studentId: student.studentId }))
