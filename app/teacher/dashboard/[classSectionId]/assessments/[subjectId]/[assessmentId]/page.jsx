@@ -3,22 +3,28 @@ import { faArrowLeftLong, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { ScoreStudent } from "./score";
+import { useRouter } from "next/navigation";
 
-export default function ({params}) {
+export default function ({ params }) {
 
-    const {classSectionId,assessmentId} = params
+    const { classSectionId, assessmentId } = params
 
-    const [students,setStudents] = useState([])
-    const [data,setData] = useState({})
-    const [loading,setLoading] = useState(false)
+    const [students, setStudents] = useState([])
+    const [data, setData] = useState({})
+    const [loading, setLoading] = useState(false)
 
-    useEffect(()=>{
-        const getGrades = async()=>{
+    const router = useRouter()
+
+    const [getData, setGetData] = useState(true)
+
+    useEffect(() => {
+        const getGrades = async () => {
             setLoading(true)
-            try{
+            try {
                 const response = await fetch(`/api/exams/assessments/grade/${classSectionId}/${assessmentId}`)
                 const responseData = await response.json()
-                if(!response.ok){
+                if (!response.ok) {
                     toast.error(responseData.message)
                     return
                 }
@@ -26,23 +32,36 @@ export default function ({params}) {
                 setStudents(responseData.students)
                 setData(responseData)
             }
-            catch(e){
+            catch (e) {
                 console.log(e)
-            } finally{
+            } finally {
                 setLoading(false)
             }
         }
 
-        getGrades()
-    },[])
+        if (getData) {
+            getGrades()
+            setGetData(false)
+        }
+    }, [getData])
+
+    const [scoreStudent, setScoreStudent] = useState(false)
+
+    const [scoreStudentData, setScoreStudentData] = useState({
+        studentId: "",
+        classSectionId,
+        assessmentId
+    })
 
     return (
         <div>
 
+            {scoreStudent && <ScoreStudent setScoreStudent={setScoreStudent} data={scoreStudentData} setGetData={setGetData} />}
+
             <div className="flex justify-between items-center">
 
                 <div className="flex gap-2 items-center h-full">
-                    <button className="p-3 rounded h-full bg-red-200 text-gray-700 hover:bg-red-800 hover:text-white">
+                    <button onClick={() => router.back()} className="p-3 rounded h-full bg-red-200 text-gray-700 hover:bg-red-800 hover:text-white">
                         <FontAwesomeIcon icon={faArrowLeftLong} width={15} height={15} />
                     </button>
                     <h3 className="text-black font-semibold">
@@ -87,37 +106,40 @@ export default function ({params}) {
                     <tbody>
 
                         {loading ? (
+                            <tr className="bg-white border-b hover:bg-gray-50">
+                                <td className="px-6 py-4 text-center" colSpan={4}>
+                                    <FontAwesomeIcon
+                                        icon={faSpinner}
+                                        spin
+                                        className="text-lg"
+                                        color="red"
+                                    />
+                                </td>
+                            </tr>
+                        ) : students.length > 0 ? (
+                            students.map((student) => (
                                 <tr className="bg-white border-b hover:bg-gray-50">
-                                    <td className="px-6 py-4 text-center" colSpan={4}>
-                                        <FontAwesomeIcon
-                                            icon={faSpinner}
-                                            spin
-                                            className="text-lg"
-                                            color="red"
-                                        />
-                                    </td>
-                                </tr>
-                            ) : students.length > 0 ? (
-                                students.map((student) => (
-                                    <tr className="bg-white border-b hover:bg-gray-50">
                                     <th className="px-6 py-4">{student.studentName}</th>
                                     <td className="px-6 py-4"> {student.score} </td>
                                     <td className="px-6 py-4"> {student.weight}% </td>
                                     <td className="px-6 py-4 flex gap-4 justify-center items-center">
-                                        <span className="font-medium text-blue-600 hover:underline"
+                                        <button onClick={() => {
+                                            setScoreStudentData((prev) => ({ ...prev, studentId: student.studentId }))
+                                            setScoreStudent(true)
+                                        }} className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
                                             Score
-                                        </span>
+                                        </button>
                                     </td>
                                 </tr>
-                                ))
-                            ) : (
-                                <tr className="bg-white border-b hover:bg-gray-50">
-                                    <td className="px-6 py-4" colSpan={4}>
-                                        No Students found
-                                    </td>
-                                </tr>
-                            )}
+                            ))
+                        ) : (
+                            <tr className="bg-white border-b hover:bg-gray-50">
+                                <td className="px-6 py-4" colSpan={4}>
+                                    No Students found
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>

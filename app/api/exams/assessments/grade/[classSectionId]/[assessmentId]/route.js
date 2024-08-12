@@ -37,11 +37,13 @@ export async function GET(req, { params }) {
     const formattedResponse = students.map((student) => {
       const grade = student.Grades[0];
       const studentName = `${student.firstName} ${student.lastName}`;
+      const studentId= student.id
       const score = grade?.score ? grade?.score : "N/A";
       const weight =
-        score != "N/A" ? (score / assessment.marks) * assessment.weight : "N/A";
+        score != "N/A" ? ((score / assessment.marks) * assessment.weight).toFixed(2) : "N/A";
 
       return {
+        studentId,
         studentName,
         score,
         weight,
@@ -68,7 +70,9 @@ export async function GET(req, { params }) {
 
 export async function POST(req, { params }) {
   try {
-    const { score, studentId } = await req.json();
+    let { score, studentId } = await req.json();
+
+    score = parseFloat(score)
 
     const { assessmentId } = params;
 
