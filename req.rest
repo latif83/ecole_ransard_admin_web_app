@@ -77,3 +77,6 @@ Content-Type: application/json
 
 ###
 http://localhost:3001/api/exams/assessments?subjectId=clzk5mdjo0009xtszx4sq4d1i&classSectionId=clzk4ap0u0005xtszt0csbpym
+
+###
+http://localhost:3000/api/classes/sections/clzk4ap0u0005xtszt0csbpym/students

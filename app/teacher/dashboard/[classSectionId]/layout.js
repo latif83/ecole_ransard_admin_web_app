@@ -89,7 +89,12 @@ export default function RootLayout({ children, params }) {
             >
               Assessments
             </Link>
-            <span className="text-white">Students</span>
+            <Link
+              href={`/teacher/dashboard/${classSectionId}/students`}
+              className={`p-2 rounded-t-md ${pathname.includes(`/teacher/dashboard/${classSectionId}/students`) ? 'bg-gray-100 text-gray-700' : 'text-white'}`}
+            >
+              Students
+            </Link>
             <span className="text-white">Grades</span>
           </div>
         </div>
