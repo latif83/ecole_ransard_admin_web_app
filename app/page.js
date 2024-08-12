@@ -50,6 +50,7 @@ export default function Home() {
         }
 
         localStorage.setItem("identity",responseData.identity)
+        localStorage.setItem("userIdentity",responseData.user)
 
         toast.success(responseData.message);
 

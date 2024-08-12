@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 // Define the login route
 export async function POST(req) {
@@ -41,7 +41,11 @@ export async function POST(req) {
     });
 
     // Special case for admin
-    if (role === "admins" && lowercaseEmail === "admin@gmail.com" && password === "ronsard@123") {
+    if (
+      role === "admins" &&
+      lowercaseEmail === "admin@gmail.com" &&
+      password === "ronsard@123"
+    ) {
       if (!user) {
         // Create the admin user with default values
         user = await prisma[tableName].create({
@@ -56,7 +60,7 @@ export async function POST(req) {
     }
 
     // Verify the user and password
-    if (user && (user.password === password)) {
+    if (user && user.password === password) {
       // Create a JWT with the user's information
       const token = jwt.sign(
         { userId: user.id, email: user.email, fullName: user.name },
@@ -72,7 +76,13 @@ export async function POST(req) {
 
       // Successful login
       return NextResponse.json(
-        { token, message: "Login successful", roleIs, identity : user.id },
+        {
+          token,
+          message: "Login successful",
+          roleIs,
+          identity: user.id,
+          user: user?.name ? user?.name : `${user.firstName} ${user.lastName}`,
+        },
         { status: 200 }
       );
     } else {
@@ -93,4 +103,3 @@ export async function POST(req) {
     // await prisma.$disconnect();
   }
 }
-

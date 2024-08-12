@@ -1,21 +1,30 @@
-"use client"
-import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+"use client";
+import { faArrowLeftLong, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function RootLayout({ children, params }) {
   const { classSectionId } = params;
 
   const pathname = usePathname();
 
-  const router = useRouter()
+  const router = useRouter();
+
+  const [userIdentity, setUserIdentity] = useState("");
+
+  useEffect(() => {
+    setUserIdentity(localStorage.getItem("userIdentity"));
+  }, []);
+
+  const [dropMenu, setDropMenu] = useState(false);
 
   return (
     <div>
       <div className="sm:px-10 px-2 pt-5 bg-gray-600">
-        <div className="flex justify-between">
+        <div className="flex justify-between relative">
           <div className="flex gap-1.5 justify-center items-center">
             <Image
               width={500}
@@ -31,7 +40,10 @@ export default function RootLayout({ children, params }) {
           </div>
 
           <div>
-            <button className="inline-flex w-full justify-center text-white gap-x-1.5 rounded-t-md px-3 py-2 text-sm">
+            <button
+              onClick={() => setDropMenu((prev) => !prev)}
+              className="inline-flex w-full justify-center text-white gap-x-1.5 rounded-t-md px-3 py-2 text-sm"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -46,7 +58,7 @@ export default function RootLayout({ children, params }) {
                   d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
                 />
               </svg>
-              Abdul-Latif Mohammed
+              {userIdentity}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -63,10 +75,24 @@ export default function RootLayout({ children, params }) {
               </svg>
             </button>
           </div>
+
+          {dropMenu && (
+            <div className="absolute flex justify-end -bottom-12 mt-2 p-2 w-full left-0">
+              <div className="bg-white w-[200px] rounded-md p-3">
+                <button className="flex items-center justify-center w-full block gap-2 text-red-600">
+                  <FontAwesomeIcon icon={faSignOut} />
+                  <span>Log Out</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
         <div className="flex justify-between mt-5">
           <div className="flex items-center gap-2">
-            <button onClick={()=>router.replace('/teacher')} className="p-2 px-3 bg-gray-100 h-full rounded-t-md hover:bg-red-200 text-gray-700">
+            <button
+              onClick={() => router.replace("/teacher")}
+              className="p-2 px-3 bg-gray-100 h-full rounded-t-md hover:bg-red-200 text-gray-700"
+            >
               <FontAwesomeIcon
                 className="text-sm"
                 icon={faArrowLeftLong}
@@ -79,19 +105,35 @@ export default function RootLayout({ children, params }) {
           <div className="flex gap-8 items-center font-medium">
             <Link
               href={`/teacher/dashboard/${classSectionId}`}
-              className={`p-2 rounded-t-md ${pathname == `/teacher/dashboard/${classSectionId}` ? 'bg-gray-100 text-gray-700' : 'text-white'}`}
+              className={`p-2 rounded-t-md ${
+                pathname == `/teacher/dashboard/${classSectionId}`
+                  ? "bg-gray-100 text-gray-700"
+                  : "text-white"
+              }`}
             >
               Overview
             </Link>
             <Link
               href={`/teacher/dashboard/${classSectionId}/assessments`}
-              className={`p-2 rounded-t-md ${pathname.includes(`/teacher/dashboard/${classSectionId}/assessments`) ? 'bg-gray-100 text-gray-700' : 'text-white'}`}
+              className={`p-2 rounded-t-md ${
+                pathname.includes(
+                  `/teacher/dashboard/${classSectionId}/assessments`
+                )
+                  ? "bg-gray-100 text-gray-700"
+                  : "text-white"
+              }`}
             >
               Assessments
             </Link>
             <Link
               href={`/teacher/dashboard/${classSectionId}/students`}
-              className={`p-2 rounded-t-md ${pathname.includes(`/teacher/dashboard/${classSectionId}/students`) ? 'bg-gray-100 text-gray-700' : 'text-white'}`}
+              className={`p-2 rounded-t-md ${
+                pathname.includes(
+                  `/teacher/dashboard/${classSectionId}/students`
+                )
+                  ? "bg-gray-100 text-gray-700"
+                  : "text-white"
+              }`}
             >
               Students
             </Link>
