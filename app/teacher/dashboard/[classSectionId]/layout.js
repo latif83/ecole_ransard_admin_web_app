@@ -3,12 +3,14 @@ import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function RootLayout({ children, params }) {
   const { classSectionId } = params;
 
   const pathname = usePathname();
+
+  const router = useRouter()
 
   return (
     <div>
@@ -64,7 +66,7 @@ export default function RootLayout({ children, params }) {
         </div>
         <div className="flex justify-between mt-5">
           <div className="flex items-center gap-2">
-            <button className="p-2 px-3 bg-gray-100 h-full rounded-t-md hover:bg-red-200 text-gray-700">
+            <button onClick={()=>router.replace('/teacher')} className="p-2 px-3 bg-gray-100 h-full rounded-t-md hover:bg-red-200 text-gray-700">
               <FontAwesomeIcon
                 className="text-sm"
                 icon={faArrowLeftLong}

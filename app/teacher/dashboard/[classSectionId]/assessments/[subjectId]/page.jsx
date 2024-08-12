@@ -154,10 +154,10 @@ export default function ({ params }) {
                                         <td className="px-6 py-4"> {assesment.weight}% </td>
                                         <td className="px-6 py-4 flex gap-4 items-center">
                                             <Link
-                                                href={`/t/dashboard/${classSectionId}/assessments/${subjectId}/${assesment.id}`}
+                                                href={`/teacher/dashboard/${classSectionId}/assessments/${subjectId}/${assesment.id}`}
                                                 className="font-medium text-blue-600 hover:underline"
                                             >
-                                                Grade
+                                                Score Students
                                             </Link>
 
                                             <div className="flex gap-2">
