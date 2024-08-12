@@ -92,3 +92,7 @@ Content-Type: application/json
     "studentId" : "clzqrws5s000110uuk06fnznp",
     "score" : 20
 }
+
+###
+
+http://localhost:3000/api/exams/assessments/grade/clzk4ap0u0005xtszt0csbpym/subject/clzk5mapf0008xtszq3313q7m
