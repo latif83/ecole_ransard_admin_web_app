@@ -5,6 +5,8 @@ export async function GET(req, { params }) {
   try {
     const { subjectId, classSectionId } = params;
 
+    console.log({subjectId, classSectionId})
+
     if (!subjectId || !classSectionId) {
       return NextResponse.json(
         { message: "Subject ID and Class Section ID are required" },
@@ -31,8 +33,14 @@ export async function GET(req, { params }) {
       where: {
         subjectId,
         classSessionId: classSectionId,
-      },
+      }
     });
+
+    const subject = await prisma.Subjects.findUnique({
+      where : {
+        id : subjectId
+      }
+    })
 
     const gradeSettings = await prisma.GradeSetting.findMany();
 
@@ -75,7 +83,7 @@ export async function GET(req, { params }) {
       };
     });
 
-    return NextResponse.json(formattedResponse, { status: 200 });
+    return NextResponse.json({subject:subject.name,students:formattedResponse}, { status: 200 });
   } catch (error) {
     console.error("Error fetching students:", error);
     return NextResponse.json(
