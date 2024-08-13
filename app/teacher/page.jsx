@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import LogOut from "@/components/logout";
 
 export default function TeacherDashboard() {
 
@@ -59,8 +60,13 @@ export default function TeacherDashboard() {
 
   const [dropMenu, setDropMenu] = useState(false)
 
+  const [logout, setLogout] = useState(false);
+
   return (
     <div>
+
+      {logout && <LogOut setLogOut={setLogout} />}
+
       <div className="sm:px-10 px-2 py-5 bg-gray-600">
 
         <div className="flex relative justify-between">
@@ -94,13 +100,13 @@ export default function TeacherDashboard() {
 
           </div>
           {dropMenu && <div className="absolute z-50 flex justify-end -bottom-12 mt-2 p-2 w-full left-0">
-              <div className="bg-white w-[200px] border rounded-md p-3">
-                <button className="flex items-center justify-center w-full block gap-2 text-red-600">
-                  <FontAwesomeIcon icon={faSignOut} />
-                  <span>Log Out</span>
-                </button>
-              </div>
-            </div>}
+            <div className="bg-white w-[200px] border rounded-md p-3">
+              <button onClick={() => setLogout(true)} className="flex items-center justify-center w-full block gap-2 text-red-600">
+                <FontAwesomeIcon icon={faSignOut} />
+                <span>Log Out</span>
+              </button>
+            </div>
+          </div>}
 
 
 

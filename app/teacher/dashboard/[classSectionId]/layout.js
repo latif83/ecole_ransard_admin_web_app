@@ -1,4 +1,5 @@
 "use client";
+import LogOut from "@/components/logout";
 import { faArrowLeftLong, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -21,8 +22,12 @@ export default function RootLayout({ children, params }) {
 
   const [dropMenu, setDropMenu] = useState(false);
 
+  const [logout, setLogout] = useState(false);
+
   return (
     <div>
+      {logout && <LogOut setLogOut={setLogout} />}
+
       <div className="sm:px-10 px-2 pt-5 bg-gray-600">
         <div className="flex justify-between relative">
           <div className="flex gap-1.5 justify-center items-center">
@@ -79,7 +84,10 @@ export default function RootLayout({ children, params }) {
           {dropMenu && (
             <div className="absolute flex justify-end -bottom-12 mt-2 p-2 w-full left-0">
               <div className="bg-white w-[200px] rounded-md p-3">
-                <button className="flex items-center justify-center w-full block gap-2 text-red-600">
+                <button
+                  onClick={() => setLogout(true)}
+                  className="flex items-center justify-center w-full block gap-2 text-red-600"
+                >
                   <FontAwesomeIcon icon={faSignOut} />
                   <span>Log Out</span>
                 </button>
@@ -137,7 +145,16 @@ export default function RootLayout({ children, params }) {
             >
               Students
             </Link>
-            <span className="text-white">Grades</span>
+            <Link
+              href={`/teacher/dashboard/${classSectionId}/grades`}
+              className={`p-2 rounded-t-md ${
+                pathname.includes(`/teacher/dashboard/${classSectionId}/grades`)
+                  ? "bg-gray-100 text-gray-700"
+                  : "text-white"
+              }`}
+            >
+              Grades
+            </Link>
           </div>
         </div>
       </div>
