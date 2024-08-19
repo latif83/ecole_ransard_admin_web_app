@@ -157,7 +157,7 @@ export default function Students() {
                                         {student.firstName} {student.lastName}
                                     </th>
                                     <td className="px-6 py-4 text-center">{calculateAge(student.birthDate)}</td>
-                                    <td className="px-6 py-4 text-center">{student.class.className}</td>
+                                    <td className="px-6 py-4 text-center">{student.class.className} ({student.ClassSections.sectionName})</td>
                                     <td className="px-6 py-4 text-center">{student.address}</td>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
                                         <span

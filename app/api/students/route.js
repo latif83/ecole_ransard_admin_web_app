@@ -10,8 +10,14 @@ export const dynamic = "force-dynamic";
 export async function POST(req) {
   try {
     // Parse request body for student data
-    const { firstName, lastName, birthDate, address, classId,classSectionsId } =
-      await req.json();
+    const {
+      firstName,
+      lastName,
+      birthDate,
+      address,
+      classId,
+      classSectionsId,
+    } = await req.json();
 
     // Check if required fields are provided
     if (!firstName || !lastName || !birthDate || !classId) {
@@ -34,7 +40,7 @@ export async function POST(req) {
         birthDate: isoBirthDate,
         address,
         classId,
-        classSectionsId
+        classSectionsId,
       },
     });
 
@@ -55,8 +61,24 @@ export async function GET(req) {
   try {
     // Fetch all students from the database
     const students = await prisma.students.findMany({
-      include: {
-        class: true, // Including class data if needed
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        birthDate: true,
+        address: true,
+        classId: true,
+        classSectionsId: true,
+        class: {
+          select: {
+            className: true, // Fetch class name
+          },
+        },
+        ClassSections: {
+          select: {
+            sectionName: true, // Fetch class section name
+          },
+        },
       },
     });
 
@@ -73,11 +95,25 @@ export async function GET(req) {
 
 export async function PUT(req) {
   try {
-    const { id, firstName, lastName, birthDate, address, classId } =
-      await req.json();
+    const {
+      id,
+      firstName,
+      lastName,
+      birthDate,
+      address,
+      classId,
+      classSectionsId,
+    } = await req.json();
 
     // Check if required fields are provided
-    if (!id || !firstName || !lastName || !birthDate || !classId) {
+    if (
+      !id ||
+      !firstName ||
+      !lastName ||
+      !birthDate ||
+      !classId ||
+      !classSectionsId
+    ) {
       return NextResponse.json(
         {
           message:
@@ -96,9 +132,10 @@ export async function PUT(req) {
       data: {
         firstName,
         lastName,
-        birthDate : isoBirthDate,
+        birthDate: isoBirthDate,
         address,
         classId,
+        classSectionsId,
       },
     });
 

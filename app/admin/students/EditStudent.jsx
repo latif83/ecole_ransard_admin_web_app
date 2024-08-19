@@ -9,11 +9,15 @@ export default function EditStudent({ setEditStudent, setGData, studentData }) {
     const [birthDate, setBirthDate] = useState(studentData.birthDate.split('T')[0]);
     const [address, setAddress] = useState(studentData.address);
     const [classId, setClassId] = useState(studentData.classId);
+    const [classSectionsId, setClassSectionId] = useState(studentData.classSectionsId);
     const [id, setId] = useState(studentData.id);
     const [loading, setLoading] = useState(false);
 
     const [classLoading, setClassLoading] = useState(false)
     const [classes, setClasses] = useState([])
+
+    const [classSectionsLoading, setClassSectionsLoading] = useState(false)
+    const [classSections, setClassSections] = useState([])
 
     useEffect(() => {
 
@@ -38,6 +42,31 @@ export default function EditStudent({ setEditStudent, setGData, studentData }) {
 
     }, [])
 
+    useEffect(() => {
+        const fetchClassSections = async () => {
+            try {
+                setClassSectionsLoading(true);
+                const response = await fetch(`/api/classes/${classId}/sections`);
+                const responseData = await response.json();
+                if (!response.ok) {
+                    toast.error(responseData.message);
+                    return;
+                }
+                setClassSections(responseData.classSections);
+            } catch (err) {
+                console.log(err);
+                toast.error("Error retrieving data, please try again!");
+            } finally {
+                setClassSectionsLoading(false)
+            }
+        }
+
+        if (classId) {
+            fetchClassSections()
+        }
+
+    }, [classId])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -47,7 +76,7 @@ export default function EditStudent({ setEditStudent, setGData, studentData }) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ firstName, lastName, birthDate, address, classId,id }),
+                body: JSON.stringify({ firstName, lastName, birthDate, address, classId,id,classSectionsId }),
             });
             const responseData = await response.json();
             if (!response.ok) {
@@ -151,6 +180,7 @@ export default function EditStudent({ setEditStudent, setGData, studentData }) {
                         </label>
                     </div>
 
+                    <div className="grid grid-cols-2 gap-2">
                     <div className="relative z-0 w-full group mb-5">
                         <label
                             htmlFor="dept"
@@ -187,6 +217,43 @@ export default function EditStudent({ setEditStudent, setGData, studentData }) {
                             )}
                         </select>
                     </div>
+                    <div className="relative z-0 w-full group mb-5">
+                        <label
+                            htmlFor="dept"
+                            className="block mb-2 text-sm font-medium text-gray-900"
+                        >
+                            Section
+                        </label>
+                        <select
+                            id="class"
+                            name="class"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            required
+                            value={classSectionsId}
+                            onChange={(e) => setClassSectionId(e.target.value)}
+                        >
+                            <option value="">Select Section</option>
+                            {classSectionsLoading ? (
+                                <option>
+                                    {" "}
+                                    <FontAwesomeIcon
+                                        icon={faSpinner}
+                                        color="red"
+                                        className="text-lg"
+                                        spin
+                                    />{" "}
+                                    Loading Sections...{" "}
+                                </option>
+                            ) : classSections.length > 0 ? (
+                                classSections.map((section) => (
+                                    <option value={section.id}>{section.sectionName}</option>
+                                ))
+                            ) : (
+                                <option>No sections found.</option>
+                            )}
+                        </select>
+                    </div>
+                </div>
 
                     <div className="flex justify-end">
                         <button
