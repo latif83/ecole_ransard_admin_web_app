@@ -5,6 +5,8 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 // import { verifyToken } from "@/actions/action";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req) {
     try {
       // Parse the incoming JSON request body
