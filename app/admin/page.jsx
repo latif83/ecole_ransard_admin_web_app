@@ -1,7 +1,40 @@
-import { faChalkboardTeacher, faUsersBetweenLines, faUsersLine } from "@fortawesome/free-solid-svg-icons";
+"use client"
+import { faChalkboardTeacher, faSpinner, faUsersBetweenLines, faUsersLine } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Admin() {
+
+    const [summaryData, setSummaryData] = useState({})
+    const [summaryLoading, setSummaryLoading] = useState(false)
+
+    useEffect(() => {
+        const getSummaryData = async () => {
+
+            setSummaryLoading(true)
+
+            try {
+                const response = await fetch(`/api/summary/admin`)
+                const responseData = await response.json()
+
+                if (!response.ok) {
+                    toast.error(responseData.message)
+                    return
+                }
+
+                setSummaryData(responseData)
+
+            } catch (e) {
+                console.log(e)
+            } finally {
+                setSummaryLoading(false)
+            }
+        }
+
+        getSummaryData()
+    }, [])
+
     return (
         <div className="">
 
@@ -31,7 +64,7 @@ export default function Admin() {
                     <div className="flex justify-between mt-2">
                         <FontAwesomeIcon icon={faUsersLine} className="text-2xl" width={30} height={30} />
                         <span>
-                            2000
+                            {summaryLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : summaryData.studentCount}
                         </span>
                     </div>
 
@@ -44,7 +77,7 @@ export default function Admin() {
                     <div className="flex justify-between mt-2">
                         <FontAwesomeIcon icon={faChalkboardTeacher} className="text-2xl" width={30} height={30} />
                         <span>
-                            500
+                        {summaryLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : summaryData.teacherCount}
                         </span>
                     </div>
                 </div>
@@ -56,7 +89,7 @@ export default function Admin() {
                     <div className="flex justify-between mt-2">
                         <FontAwesomeIcon icon={faUsersBetweenLines} className="text-2xl" width={30} height={30} />
                         <span>
-                            600
+                        {summaryLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : summaryData.parentCount}
                         </span>
                     </div>
                 </div>
