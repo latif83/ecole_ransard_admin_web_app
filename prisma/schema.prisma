@@ -44,6 +44,7 @@ model ClassSections {
   students         Students[]
   AssignedTeachers AssignedTeachers[]
   Assessments      Assessments[]
+  Attendance       Attendance[]
 }
 
 // Subjects model
@@ -118,6 +119,7 @@ model Students {
   StudentFeeSummary StudentFeeSummary[]
   Payment           Payment[]
   Grades            Grades[]
+  Attendance        Attendance[]
 }
 
 // Parents model
@@ -372,4 +374,22 @@ model Grades {
   // Define relations
   assessment Assessments @relation(fields: [assessmentId], references: [id])
   student    Students    @relation(fields: [studentId], references: [id])
+}
+
+// Attendance model
+model Attendance {
+  id             String    @id @default(cuid())
+  studentId      String // Reference to the student
+  classSectionId String? // Reference to the class section (optional)
+  date           DateTime // Date of the attendance
+  status         String // Attendance status (Present, Absent, Late, Excused)
+  clockIn        DateTime? // Time the student clocked in
+  clockOut       DateTime? // Time the student clocked out
+  remarks        String? // Optional remarks for the attendance record
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relations
+  student      Students       @relation(fields: [studentId], references: [id])
+  classSection ClassSections? @relation(fields: [classSectionId], references: [id])
 }
