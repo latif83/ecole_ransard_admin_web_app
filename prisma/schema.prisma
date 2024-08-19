@@ -381,7 +381,6 @@ model Attendance {
   id             String    @id @default(cuid())
   studentId      String // Reference to the student
   classSectionId String? // Reference to the class section (optional)
-  date           DateTime // Date of the attendance
   status         String // Attendance status (Present, Absent, Late, Excused)
   clockIn        DateTime? // Time the student clocked in
   clockOut       DateTime? // Time the student clocked out
