@@ -20,6 +20,8 @@ export default function NewParent({ setAddParent, setGData }) {
     const [studentLoading, setStudentLoading] = useState(false);
     const [students, setStudents] = useState([]);
 
+    const [studentsByClass, setStudentsByClass] = useState({});
+
     useEffect(() => {
         const getClasses = async () => {
             try {
@@ -40,9 +42,10 @@ export default function NewParent({ setAddParent, setGData }) {
         getClasses();
     }, []);
 
-    const handleClassChange = async (classId) => {
+    const handleClassChange = async (index,classId) => {
         if (!classId) {
-            setStudents([]);
+            // setStudents([]);
+            setStudentsByClass((prevState) => ({ ...prevState, [classId]: [] }));
             return;
         }
 
@@ -55,6 +58,20 @@ export default function NewParent({ setAddParent, setGData }) {
                 return;
             }
             setStudents(responseData.students);
+
+            setStudentsByClass((prevState) => ({
+                ...prevState,
+                [classId]: responseData.students,
+            }));
+
+            // Update the selected class for the student at the current index
+            setFormData((prevData) => {
+                const updatedStudents = [...prevData.students];
+                updatedStudents[index].classId = classId;
+                updatedStudents[index].studentId = ""; // Reset the student selection
+                return { ...prevData, students: updatedStudents };
+            });
+
             setStudentLoading(false);
         } catch (err) {
             console.log(err);
@@ -114,8 +131,8 @@ export default function NewParent({ setAddParent, setGData }) {
     };
 
     return (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 z-50">
-            <div className="bg-white w-full max-w-3xl mx-auto mt-5 p-6 rounded-md shadow-lg">
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 z-50 pt-5">
+            <div className="bg-white w-full max-w-3xl mx-auto p-6 rounded-t-md shadow-lg h-full overflow-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-bold">New Parent</h2>
                     <button
@@ -233,8 +250,8 @@ export default function NewParent({ setAddParent, setGData }) {
                         </div>
 
                         {formData.students.map((student, index) => (
-                            <>
-                                <div key={index} className="grid mt-4 sm:grid-cols-2 grid-cols-1 gap-x-4">
+                            <div className="bg-cyan-200 p-2 rounded-md mt-4">
+                                <div key={index} className="grid sm:grid-cols-2 grid-cols-1 gap-x-4">
                                     <div className="relative z-0 w-full group mb-5">
                                         <label
                                             htmlFor={`class-${index}`}
@@ -248,7 +265,7 @@ export default function NewParent({ setAddParent, setGData }) {
                                             value={student.classId}
                                             onChange={(e) => {
                                                 handleStudentChange(index, e);
-                                                handleClassChange(e.target.value);
+                                                handleClassChange(index,e.target.value);
                                             }}
                                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                             required
@@ -281,15 +298,15 @@ export default function NewParent({ setAddParent, setGData }) {
                                             value={student.studentId}
                                             onChange={(e) => handleStudentChange(index, e)}
                                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                            
+
                                         >
                                             <option value="">Select Student</option>
                                             {studentLoading ? (
                                                 <option disabled>Loading Students...</option>
-                                            ) : students.length > 0 ? (
-                                                students.map((student) => (
-                                                    <option key={student.id} value={student.id}>
-                                                        {student.firstName} {student.lastName}
+                                            ) : studentsByClass[student.classId]?.length > 0 ? (
+                                                studentsByClass[student.classId].map((stud) => (
+                                                    <option key={stud.id} value={stud.id}>
+                                                        {stud.firstName} {stud.lastName}
                                                     </option>
                                                 ))
                                             ) : (
@@ -311,7 +328,7 @@ export default function NewParent({ setAddParent, setGData }) {
                                         </button>
                                     </div>
                                 )}
-                            </>
+                            </div>
                         ))}
                     </div>
 

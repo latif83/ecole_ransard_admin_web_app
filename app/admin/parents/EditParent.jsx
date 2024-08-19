@@ -25,6 +25,8 @@ export default function EditParent({ setEditParent, setGData, parentData }) {
     const [studentLoading, setStudentLoading] = useState(false);
     const [students, setStudents] = useState([]);
 
+    const [studentsByClass, setStudentsByClass] = useState({});
+
     useEffect(() => {
         const getClasses = async () => {
             try {
@@ -45,27 +47,51 @@ export default function EditParent({ setEditParent, setGData, parentData }) {
         getClasses();
     }, []);
 
-    const handleClassChange = async (classId) => {
+    const handleClassChange = async (index, classId) => {
         if (!classId) {
+            // Reset students for the selected class and update form data
             setStudents([]);
+            setStudentsByClass((prevState) => ({ ...prevState, [classId]: [] }));
+    
+            setFormData((prevData) => {
+                const updatedStudents = [...prevData.students];
+                updatedStudents[index] = { classId: "", studentId: "" };
+                return { ...prevData, students: updatedStudents };
+            });
             return;
         }
-
+    
         try {
             setStudentLoading(true);
             const response = await fetch(`/api/students/classes/${classId}`);
             const responseData = await response.json();
             if (!response.ok) {
                 toast.error(responseData.message);
+                setStudentLoading(false);
                 return;
             }
+    
             setStudents(responseData.students);
+            setStudentsByClass((prevState) => ({
+                ...prevState,
+                [classId]: responseData.students,
+            }));
+    
+            // Update the selected class for the student at the current index
+            setFormData((prevData) => {
+                const updatedStudents = [...prevData.students];
+                updatedStudents[index] = { classId, studentId: "" };
+                return { ...prevData, students: updatedStudents };
+            });
+    
             setStudentLoading(false);
         } catch (err) {
             console.log(err);
             toast.error("Error retrieving students, please try again!");
+            setStudentLoading(false);
         }
     };
+    
 
     const handleAddStudent = () => {
         setFormData((prevData) => ({
@@ -90,6 +116,7 @@ export default function EditParent({ setEditParent, setGData, parentData }) {
             return { ...prevData, students: updatedStudents };
         });
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -119,8 +146,8 @@ export default function EditParent({ setEditParent, setGData, parentData }) {
     };
 
     return (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 z-50">
-            <div className="bg-white w-full max-w-3xl mx-auto mt-5 p-6 rounded-md shadow-lg">
+        <div className="fixed inset-0 bg-gray-800 mt-5 bg-opacity-75 z-50">
+            <div className="bg-white w-full max-w-3xl mx-auto h-full overflow-auto p-6 rounded-md shadow-lg">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-bold">Edit Parent</h2>
                     <button
@@ -237,86 +264,77 @@ export default function EditParent({ setEditParent, setGData, parentData }) {
                         </div>
 
                         {formData.students.map((student, index) => (
-                            <>
-                                <div key={index} className="grid mt-4 sm:grid-cols-2 grid-cols-1 gap-x-4">
-                                    <div className="relative z-0 w-full group mb-5">
-                                        <label
-                                            htmlFor={`class-${index}`}
-                                            className="block mb-2 text-sm font-medium text-gray-900"
-                                        >
-                                            Class
-                                        </label>
-                                        <select
-                                            id={`class-${index}`}
-                                            name={`classId`}
-                                            value={student.classId}
-                                            onChange={(e) => {
-                                                handleStudentChange(index, e);
-                                                handleClassChange(e.target.value);
-                                            }}
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                            required
-                                        >
-                                            <option value="">Select Class</option>
-                                            {classLoading ? (
-                                                <option disabled>Loading Classes...</option>
-                                            ) : classes.length > 0 ? (
-                                                classes.map((clas) => (
-                                                    <option key={clas.id} value={clas.id}>
-                                                        {clas.className}
-                                                    </option>
-                                                ))
-                                            ) : (
-                                                <option disabled>No classes found.</option>
-                                            )}
-                                        </select>
-                                    </div>
+    <div key={index} className="bg-cyan-200 p-2 rounded-md mt-4">
+        <div className="grid mt-4 sm:grid-cols-2 grid-cols-1 gap-x-4">
+            <div className="relative z-0 w-full group mb-5">
+                <label htmlFor={`class-${index}`} className="block mb-2 text-sm font-medium text-gray-900">
+                    Class
+                </label>
+                <select
+                    id={`class-${index}`}
+                    name="classId"
+                    value={student.classId}
+                    onChange={(e) => {
+                        handleClassChange(index, e.target.value);
+                    }}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    required
+                >
+                    <option value="">Select Class</option>
+                    {classLoading ? (
+                        <option disabled>Loading Classes...</option>
+                    ) : classes.length > 0 ? (
+                        classes.map((clas) => (
+                            <option key={clas.id} value={clas.id}>
+                                {clas.className}
+                            </option>
+                        ))
+                    ) : (
+                        <option disabled>No classes found.</option>
+                    )}
+                </select>
+            </div>
 
-                                    <div className="relative z-0 w-full group mb-5">
-                                        <label
-                                            htmlFor={`student-${index}`}
-                                            className="block mb-2 text-sm font-medium text-gray-900"
-                                        >
-                                            Student
-                                        </label>
-                                        <select
-                                            id={`student-${index}`}
-                                            name={`studentId`}
-                                            value={student.studentId}
-                                            onChange={(e) => handleStudentChange(index, e)}
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            <div className="relative z-0 w-full group mb-5">
+                <label htmlFor={`student-${index}`} className="block mb-2 text-sm font-medium text-gray-900">
+                    Student
+                </label>
+                <select
+                    id={`student-${index}`}
+                    name="studentId"
+                    value={student.studentId}
+                    onChange={(e) => handleStudentChange(index, e)}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                >
+                    <option value="">Select Student</option>
+                    {studentLoading ? (
+                        <option disabled>Loading Students...</option>
+                    ) : students.length > 0 ? (
+                        students.map((stu) => (
+                            <option key={stu.id} value={stu.id}>
+                                {stu.firstName} {stu.lastName}
+                            </option>
+                        ))
+                    ) : (
+                        <option disabled>No students found.</option>
+                    )}
+                </select>
+            </div>
+        </div>
+        {index > 0 && (
+            <div className="flex sm:col-span-2 justify-end">
+                <button
+                    type="button"
+                    onClick={() => handleRemoveStudent(index)}
+                    className="bg-red-600 text-xs text-gray-50 hover:bg-red-300 p-1.5 rounded-md"
+                >
+                    Remove
+                </button>
+            </div>
+        )}
+    </div>
+))}
 
-                                        >
-                                            <option value="">Select Student</option>
-                                            {studentLoading ? (
-                                                <option disabled>Loading Students...</option>
-                                            ) : students.length > 0 ? (
-                                                students.map((student) => (
-                                                    <option key={student.id} value={student.id}>
-                                                        {student.firstName} {student.lastName}
-                                                    </option>
-                                                ))
-                                            ) : (
-                                                <option disabled>No students found.</option>
-                                            )}
-                                        </select>
-                                    </div>
-
-
-                                </div>
-                                {index > 0 && (
-                                    <div className="flex sm:col-span-2 justify-end">
-                                        <button
-                                            type="button"
-                                            onClick={() => handleRemoveStudent(index)}
-                                            className="bg-red-600 text-xs text-gray-50 hover:bg-red-300 p-1.5 rounded-md"
-                                        >
-                                            Remove
-                                        </button>
-                                    </div>
-                                )}
-                            </>
-                        ))}
                     </div>
                     <div className="flex justify-end mt-4">
                         <button

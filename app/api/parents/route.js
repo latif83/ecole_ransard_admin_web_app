@@ -88,16 +88,20 @@ export async function PUT(req) {
                 data: { parentId: null },
             });
 
-            // Link new students
-            const studentIds = students.map((student) => student.studentId);
-            await prisma.students.updateMany({
-                where: {
-                    id: { in: studentIds },
-                },
-                data: {
-                    parentId: id,
-                },
-            });
+            // Filter out undefined student IDs
+            const studentIds = students.map((student) => student.studentId).filter((id) => id !== undefined && id !== null);
+
+            if (studentIds.length > 0) {
+                // Link new students
+                await prisma.students.updateMany({
+                    where: {
+                        id: { in: studentIds },
+                    },
+                    data: {
+                        parentId: id,
+                    },
+                });
+            }
         }
 
         return new NextResponse(JSON.stringify({ message: "Parent updated successfully" }), { status: 200 });
@@ -106,3 +110,4 @@ export async function PUT(req) {
         return new NextResponse(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
     }
 }
+
