@@ -158,6 +158,16 @@ export default function RootLayout({ children, params }) {
             >
               Grades
             </Link>
+            <Link
+              href={`/teacher/dashboard/${classSectionId}/attendance`}
+              className={`p-2 rounded-t-md ${
+                pathname.includes(`/teacher/dashboard/${classSectionId}/attendance`)
+                  ? "bg-gray-100 text-gray-700"
+                  : "text-white"
+              }`}
+            >
+              Attendance
+            </Link>
           </div>
         </div>
       </div>
