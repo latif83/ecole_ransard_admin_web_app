@@ -104,7 +104,7 @@ http://localhost:3000/api/summary/admin
 http://localhost:3000/api/calendar/term/events
 
 ###
-http://localhost:3000/api/attendance?date=2024-08-19
+http://localhost:3000/api/attendance?date=2024-08-18
 
 ###
 POST http://localhost:3000/api/attendance
