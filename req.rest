@@ -99,3 +99,6 @@ http://localhost:3000/api/exams/assessments/grade/clzk4ap0u0005xtszt0csbpym/subj
 
 ###
 http://localhost:3000/api/summary/admin
+
+###
+http://localhost:3000/api/calendar/term/events

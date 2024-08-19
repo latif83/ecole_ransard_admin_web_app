@@ -43,3 +43,56 @@ body {
     text-wrap: balance;
   }
 }
+
+.calendar-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.full-width-calendar {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.react-calendar {
+  width: 100% !important;
+  max-width: 100%;
+}
+
+.react-calendar__tile {
+  padding: 10px !important;
+  border-radius: 5px;
+  position: relative;
+}
+
+.event-indicator {
+  background-color: #f9f9f9;
+  padding: 2px 5px;
+  border-radius: 4px;
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  font-size: 0.8rem;
+  color: #0070f3;
+  text-align: center;
+}
+
+.event-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.react-calendar__tile--active {
+  background-color: #006edc !important;
+  color: white !important;
+}
+
+.react-calendar__tile--now {
+  background-color: #038f21 !important;
+}
