@@ -161,12 +161,11 @@ export default function TeacherDashboard() {
         </div> : <div className="grid grid-cols-4 gap-4 mt-3">
 
 
-
           {sections.map((session) => (<div className="border shadow-md p-2 rounded-lg">
             <p>{session.className} ({session.classSectionName})</p>
 
             <div className="flex justify-end">
-              <Link href={`/teacher/dashboard/${session.classSessionId}`} className="p-1.5 rounded bg-gray-500 text-gray-100 hover:bg-gray-600 mt-2 flex items-center gap-1.5">
+              <Link onClick={()=>localStorage.setItem("ClassSection",`${session.className} (${session.classSectionName})`)} href={`/teacher/dashboard/${session.classSessionId}`} className="p-1.5 rounded bg-gray-500 text-gray-100 hover:bg-gray-600 mt-2 flex items-center gap-1.5">
                 <span>Manage</span> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                 </svg>

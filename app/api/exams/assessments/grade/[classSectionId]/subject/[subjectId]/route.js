@@ -5,8 +5,6 @@ export async function GET(req, { params }) {
   try {
     const { subjectId, classSectionId } = params;
 
-    console.log({subjectId, classSectionId})
-
     if (!subjectId || !classSectionId) {
       return NextResponse.json(
         { message: "Subject ID and Class Section ID are required" },

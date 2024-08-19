@@ -16,8 +16,11 @@ export default function RootLayout({ children, params }) {
 
   const [userIdentity, setUserIdentity] = useState("");
 
+  const [ClassSection,setClassSection] = useState("")
+
   useEffect(() => {
     setUserIdentity(localStorage.getItem("userIdentity"));
+    setClassSection(localStorage.getItem("ClassSection"));
   }, []);
 
   const [dropMenu, setDropMenu] = useState(false);
@@ -108,7 +111,7 @@ export default function RootLayout({ children, params }) {
                 height={20}
               />
             </button>
-            <span className="text-gray-100">Primary 1 ( A )</span>
+            <span className="text-gray-100">{ClassSection}</span>
           </div>
           <div className="flex gap-8 items-center font-medium">
             <Link
