@@ -3,14 +3,20 @@ import { faBookOpen, faPlusCircle, faSpinner } from "@fortawesome/free-solid-svg
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Link from "next/link";
 import NewSubject from "./newSubject";
 import EditSubject from "./editSubject";
+import DeleteSubject from "./deleteSubject";
 
 export default function Subjects() {
     const [subjects, setSubjects] = useState([]);
     const [loading, setLoading] = useState(false);
     const [gData, setGData] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [addSubject, setAddSubject] = useState(false);
+    const [editSubject, setEditSubject] = useState(false);
+    const [subjectData, setSubjectData] = useState(null);
+    const [deleteSubject, setDeleteSubject] = useState(false);
+    const [subjectId, setSubjectId] = useState(0);
 
     useEffect(() => {
         const getSubjects = async () => {
@@ -36,18 +42,15 @@ export default function Subjects() {
         }
     }, [gData]);
 
-    const [addSubject, setAddSubject] = useState(false)
-
-    const [editSubject,setEditSubject] = useState(false)
-
-    const [subjectData,setSubjectData] = useState(null)
+    const filteredSubjects = subjects.filter(subject =>
+        subject.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <div>
-
             {editSubject && <EditSubject setEditSubject={setEditSubject} subjectData={subjectData} setGData={setGData} />}
-
             {addSubject && <NewSubject setAddSubject={setAddSubject} setGData={setGData} />}
+            {deleteSubject && <DeleteSubject setDeleteSubject={setDeleteSubject} setGData={setGData} subjectId={subjectId} />}
 
             <div className="flex items-center gap-2">
                 <FontAwesomeIcon icon={faBookOpen} width={20} height={20} className="text-lg" />
@@ -57,9 +60,7 @@ export default function Subjects() {
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
                 <div className="p-4 bg-gray-800 flex justify-between">
                     <div>
-                        <label htmlFor="table-search" className="sr-only">
-                            Search
-                        </label>
+                        <label htmlFor="table-search" className="sr-only">Search</label>
                         <div className="relative mt-1">
                             <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <svg
@@ -83,6 +84,8 @@ export default function Subjects() {
                                 id="table-search"
                                 className="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Search subject"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
                     </div>
@@ -99,24 +102,19 @@ export default function Subjects() {
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500">
                     <thead className="text-xs text-center text-gray-700 uppercase bg-gray-50">
                         <tr>
-                            <th scope="col" className="px-6 py-3">
-                                Subject
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Action
-                            </th>
+                            <th scope="col" className="px-6 py-3">Subject</th>
+                            <th scope="col" className="px-6 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-
                         {loading ? (
                             <tr className="bg-white border-b hover:bg-gray-50">
                                 <td colSpan={2} className="px-6 py-4 text-center">
                                     <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                                 </td>
                             </tr>
-                        ) : subjects?.length > 0 ? (
-                            subjects?.map((subject) => (
+                        ) : filteredSubjects.length > 0 ? (
+                            filteredSubjects.map((subject) => (
                                 <tr key={subject.id} className="bg-white border-b hover:bg-gray-50">
                                     <th
                                         scope="row"
@@ -126,15 +124,19 @@ export default function Subjects() {
                                     </th>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
                                         <span
-                                        onClick={()=>{
-                                            setSubjectData(subject)
-                                            setEditSubject(true)
-                                        }}
+                                            onClick={() => {
+                                                setSubjectData(subject)
+                                                setEditSubject(true)
+                                            }}
                                             className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
                                             Edit
                                         </span>
                                         <span
+                                            onClick={() => {
+                                                setSubjectId(subject.id)
+                                                setDeleteSubject(true)
+                                            }}
                                             className="font-medium text-red-600 hover:underline cursor-pointer"
                                         >
                                             Delete
