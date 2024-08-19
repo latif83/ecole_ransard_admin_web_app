@@ -59,8 +59,31 @@ export async function POST(req) {
 
 export async function GET(req) {
   try {
-    // Fetch all students from the database
+    
+    // Parse query parameters
+    const { searchParams } = new URL(req.url);
+    const classId = searchParams.get("classId");
+    const classSectionsId = searchParams.get("classSectionsId");
+
+    // Build the where clause dynamically
+    let whereClause = {};
+
+    if (classId && classSectionsId && classId !== "0" && classSectionsId !== "0") {
+      // Fetch students for a specific class and class section
+      whereClause = {
+        classId,
+        classSectionsId,
+      };
+    } else if (classId && classId !== "0") {
+      // Fetch students for a specific class, regardless of the class section
+      whereClause = {
+        classId,
+      };
+    } // If classId and classSectionsId are "0", it fetches all students
+
+    // Fetch students from the database based on the dynamic where clause
     const students = await prisma.students.findMany({
+      where: whereClause, // Apply dynamic filtering
       select: {
         id: true,
         firstName: true,
@@ -92,6 +115,7 @@ export async function GET(req) {
     );
   }
 }
+
 
 export async function PUT(req) {
   try {

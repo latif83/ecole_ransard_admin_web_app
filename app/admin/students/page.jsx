@@ -20,6 +20,7 @@ function calculateAge(birthDate) {
 
 export default function Students() {
     const [students, setStudents] = useState([]);
+    const [filteredStudents, setFilteredStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [addStudent, setAddStudent] = useState(false);
     const [editStudent, setEditStudent] = useState(false);
@@ -27,10 +28,76 @@ export default function Students() {
     const [studentData, setStudentData] = useState(null);
     const [studentId, setStudentId] = useState(null);
 
+    const [classId, setClassId] = useState("0");
+    const [classSectionsId, setClassSectionId] = useState("0");
+
+    const [classLoading, setClassLoading] = useState(false)
+    const [classes, setClasses] = useState([])
+
+    const [classSectionsLoading, setClassSectionsLoading] = useState(false)
+    const [classSections, setClassSections] = useState([])
+
+    const [fetchData, setFetchData] = useState(false)
+
+    const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+
+        const getClasses = async () => {
+            try {
+                setClassLoading(true);
+                const response = await fetch("/api/classes");
+                const responseData = await response.json();
+                if (!response.ok) {
+                    toast.error(responseData.message);
+                    return;
+                }
+                setClasses(responseData);
+                setClassLoading(false);
+            } catch (err) {
+                console.log(err);
+                toast.error("Error retrieving data, please try again!");
+            }
+        };
+
+        getClasses()
+
+    }, [])
+
+    useEffect(() => {
+        const fetchClassSections = async () => {
+            try {
+                setClassSectionsLoading(true);
+                const response = await fetch(`/api/classes/${classId}/sections`);
+                const responseData = await response.json();
+                if (!response.ok) {
+                    toast.error(responseData.message);
+                    return;
+                }
+                setClassSections(responseData.classSections);
+            } catch (err) {
+                console.log(err);
+                toast.error("Error retrieving data, please try again!");
+            } finally {
+                setClassSectionsLoading(false)
+            }
+        }
+
+        if (classId) {
+            fetchClassSections()
+        }
+
+    }, [classId])
+
+    useEffect(() => {
+        setFetchData(true)
+    }, [classId, classSectionsId])
+
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await fetch("/api/students");
+                setSearchTerm("")
+                const response = await fetch(`/api/students?classId=${classId}&classSectionsId=${classSectionsId}`);
                 const data = await response.json();
                 if (!response.ok) {
                     toast.error(data.error);
@@ -44,16 +111,30 @@ export default function Students() {
                 setLoading(false);
             }
         };
-        fetchStudents();
-    }, [addStudent, editStudent, deleteStudent]); 
+
+        if (fetchData) {
+            fetchStudents();
+            setFetchData(false)
+        }
+
+    }, [fetchData]);
+
+    useEffect(() => {
+        // Filter students based on search term
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        const filtered = students.filter((student) =>
+            `${student.firstName} ${student.lastName}`.toLowerCase().includes(lowerCaseSearchTerm)
+        );
+        setFilteredStudents(filtered);
+    }, [searchTerm,students]);
 
     return (
         <div>
-            {addStudent && <NewStudent setAddStudent={setAddStudent} setGData={setStudents} />}
+            {addStudent && <NewStudent setAddStudent={setAddStudent} setGData={setFetchData} />}
             {editStudent && (
                 <EditStudent
                     setEditStudent={setEditStudent}
-                    setGData={setStudents}
+                    setGData={setFetchData}
                     studentData={studentData}
                 />
             )}
@@ -70,15 +151,84 @@ export default function Students() {
                 <h1>Students</h1>
             </div>
 
-            <div className="mt-5">
-                <select className="p-2 rounded text-sm w-full max-w-xl">
-                    <option>
-                        All Class
-                    </option>
-                </select>
+            <div className="grid sm:grid-cols-2 gap-4 mt-4">
+                <div className="relative z-0 w-full group mb-5">
+                    <label
+                        htmlFor="dept"
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                        Class
+                    </label>
+                    <select
+                        id="class"
+                        name="class"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required
+                        value={classId}
+                        onChange={(e) => setClassId(e.target.value)}
+                    >
+                        <option value="">Select Class</option>
+                        <option value="0">All Classses</option>
+                        {classLoading ? (
+                            <option>
+                                {" "}
+                                <FontAwesomeIcon
+                                    icon={faSpinner}
+                                    color="red"
+                                    className="text-lg"
+                                    spin
+                                />{" "}
+                                Loading Classes...{" "}
+                            </option>
+                        ) : classes.length > 0 ? (
+                            classes.map((clas) => (
+                                <option value={clas.id}>{clas.className}</option>
+                            ))
+                        ) : (
+                            <option>No classes found.</option>
+                        )}
+                    </select>
+                </div>
+                <div className="relative z-0 w-full group mb-5">
+                    <label
+                        htmlFor="dept"
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                        Section
+                    </label>
+                    <select
+                        id="class"
+                        name="class"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required
+                        value={classSectionsId}
+                        onChange={(e) => setClassSectionId(e.target.value)}
+                    >
+                        <option value="">Select Section</option>
+                        <option value="0">All Sections</option>
+                        {classSectionsLoading ? (
+                            <option>
+                                {" "}
+                                <FontAwesomeIcon
+                                    icon={faSpinner}
+                                    color="red"
+                                    className="text-lg"
+                                    spin
+                                />{" "}
+                                Loading Sections...{" "}
+                            </option>
+                        ) : classSections.length > 0 ? (
+                            classSections.map((section) => (
+                                <option value={section.id}>{section.sectionName}</option>
+                            ))
+                        ) : (
+                            <option>No sections found.</option>
+                        )}
+                    </select>
+                </div>
             </div>
 
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
                 <div className="p-4 bg-gray-800 flex justify-between">
                     <div>
                         <label htmlFor="table-search" className="sr-only">
@@ -107,6 +257,8 @@ export default function Students() {
                                 id="table-search"
                                 className="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Search students"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
                     </div>
@@ -147,8 +299,8 @@ export default function Students() {
                                     <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                                 </td>
                             </tr>
-                        ) : students.length > 0 ? (
-                            students.map((student) => (
+                        ) : filteredStudents.length > 0 ? (
+                            filteredStudents.map((student) => (
                                 <tr key={student.id} className="bg-white border-b hover:bg-gray-50">
                                     <th
                                         scope="row"
