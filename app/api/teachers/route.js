@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export async function POST(req) {
   try {
     // Parse request body for student data
-    const { firstName, lastName, email, address, phone } = await req.json();
+    const { firstName, lastName, email, address, phone, gender } = await req.json();
 
     // Check if required fields are provided
     if (!firstName || !lastName || !email || !phone) {
@@ -31,7 +31,8 @@ export async function POST(req) {
         email,
         address,
         phone,
-        password : 'ronsard_123'
+        password : 'ronsard@123',
+        gender
       },
     });
 
