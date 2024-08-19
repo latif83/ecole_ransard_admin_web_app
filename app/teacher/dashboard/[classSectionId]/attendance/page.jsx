@@ -11,6 +11,24 @@ export default function Attendance({ params }) {
     const [students, setStudents] = useState([])
     const [loading, setLoading] = useState(false)
 
+    const [selectedStudents, setSelectedStudents] = useState([]);
+    const [selectAll, setSelectAll] = useState(false);
+
+    const handleSelectStudent = (studentId) => {
+        setSelectedStudents(prev =>
+            prev.includes(studentId) ? prev.filter(id => id !== studentId) : [...prev, studentId]
+        );
+    };
+
+    const handleSelectAll = () => {
+        if (selectAll) {
+            setSelectedStudents([]);
+        } else {
+            setSelectedStudents(students?.map(student => student.studentId));
+        }
+        setSelectAll(!selectAll);
+    };
+
     useEffect(() => {
 
         const today = new Date()
@@ -84,6 +102,16 @@ export default function Attendance({ params }) {
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" className="px-6 py-3">
+                                <input
+                                    checked={selectAll}
+                                    onChange={handleSelectAll}
+                                    id={`checkbox-all`}
+                                    type="checkbox"
+                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+                                />
+                            </th>
+
+                            <th scope="col" className="px-6 py-3">
                                 Student
                             </th>
                             <th scope="col" className="px-6 py-3">
@@ -98,7 +126,7 @@ export default function Attendance({ params }) {
 
                         {loading ? (
                             <tr className="bg-white border-b hover:bg-gray-50">
-                                <td className="px-6 py-4 text-center" colSpan={3}>
+                                <td className="px-6 py-4 text-center" colSpan={4}>
                                     <FontAwesomeIcon
                                         icon={faSpinner}
                                         spin
@@ -110,6 +138,16 @@ export default function Attendance({ params }) {
                         ) : students.length > 0 ? (
                             students.map((student) => (
                                 <tr key={student.id} className="bg-white border-b hover:bg-gray-50">
+                                    <td className="px-6 py-4">
+                                        <input
+                                            checked={selectedStudents.includes(student.studentId)}
+                                            onChange={() => handleSelectStudent(student.studentId)}
+                                            id={`checkbox-${student.studentId}`}
+                                            type="checkbox"
+                                            value={student.studentId}
+                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+                                        />
+                                    </td>
                                     <th className="px-6 py-4">{student.studentName}</th>
                                     <td className="px-6 py-4"> {student.status == "present" ? <FontAwesomeIcon icon={faCheckCircle} color="green" /> : student.status == "absent" ? <FontAwesomeIcon icon={faXmarkCircle} color="red" /> : <FontAwesomeIcon icon={faExclamationCircle} color="gray" />} </td>
 
@@ -119,7 +157,7 @@ export default function Attendance({ params }) {
                             ))
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">
-                                <td className="px-6 py-4" colSpan={3}>
+                                <td className="px-6 py-4" colSpan={4}>
                                     No Students found
                                 </td>
                             </tr>
