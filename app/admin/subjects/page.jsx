@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import NewSubject from "./newSubject";
+import EditSubject from "./editSubject";
 
 export default function Subjects() {
     const [subjects, setSubjects] = useState([]);
@@ -37,8 +38,14 @@ export default function Subjects() {
 
     const [addSubject, setAddSubject] = useState(false)
 
+    const [editSubject,setEditSubject] = useState(false)
+
+    const [subjectData,setSubjectData] = useState(null)
+
     return (
         <div>
+
+            {editSubject && <EditSubject setEditSubject={setEditSubject} subjectData={subjectData} setGData={setGData} />}
 
             {addSubject && <NewSubject setAddSubject={setAddSubject} setGData={setGData} />}
 
@@ -119,6 +126,10 @@ export default function Subjects() {
                                     </th>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
                                         <span
+                                        onClick={()=>{
+                                            setSubjectData(subject)
+                                            setEditSubject(true)
+                                        }}
                                             className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
                                             Edit

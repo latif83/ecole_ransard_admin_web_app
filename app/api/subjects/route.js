@@ -7,7 +7,6 @@ import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-
 export async function POST(req) {
     try {
       // Parse the incoming JSON request body
@@ -38,6 +37,36 @@ export async function POST(req) {
       );
     }
   }
+
+  export async function PUT(req) {
+    try {
+        // Parse the incoming JSON request body
+        const { id, name } = await req.json();
+
+        // Validate required fields
+        if (!id || !name) {
+            return NextResponse.json(
+                { error: "id and name are required" },
+                { status: 400 }
+            );
+        }
+
+        // Update the subject details
+        const updatedSubject = await prisma.Subjects.update({
+            where: { id },
+            data: { name },
+        });
+
+        // Return the updated subject details
+        return NextResponse.json({ message: "Subject updated successfully!" }, { status: 200 });
+    } catch (error) {
+        console.error("Error updating subject:", error);
+        return NextResponse.json(
+            { error: "Internal Server Error" },
+            { status: 500 }
+        );
+    }
+}
 
   export async function GET(req) {
     try {
