@@ -3,6 +3,7 @@ import { faCheckCircle, faExclamation, faExclamationCircle, faSpinner, faXmarkCi
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import MarkAttendance from "./markAttendance"
 
 export default function Attendance({ params }) {
 
@@ -29,6 +30,8 @@ export default function Attendance({ params }) {
         setSelectAll(!selectAll);
     };
 
+    const [gData, setGData] = useState(true)
+
     useEffect(() => {
 
         const today = new Date()
@@ -36,7 +39,7 @@ export default function Attendance({ params }) {
         const getStudents = async () => {
             setLoading(true)
             try {
-                const response = await fetch(`/api/attendance?date=${today}`)
+                const response = await fetch(`/api/attendance?date=${today}&classSectionId=${classSectionId}`)
                 const responseData = await response.json()
 
                 if (!response.ok) {
@@ -55,9 +58,33 @@ export default function Attendance({ params }) {
             }
         }
 
-        getStudents()
+        if (gData) {
+            getStudents()
+            setGData(false)
+        }
 
-    }, [])
+    }, [gData])
+
+    const [status, setStatus] = useState("")
+    const [markAttendance, setMarkAttendance] = useState(false)
+
+    const present = () => {
+        if (selectedStudents.length < 1) {
+            toast.error("Please select at least one (1) or more students")
+            return
+        }
+        setStatus("present")
+        setMarkAttendance(true)
+    }
+
+    const absent = () => {
+        if (selectedStudents.length < 1) {
+            toast.error("Please select at least one (1) or more students")
+            return
+        }
+        setStatus("absent")
+        setMarkAttendance(true)
+    }
 
     return (
         <div>
@@ -65,8 +92,10 @@ export default function Attendance({ params }) {
                 Students
             </h1>
 
+            {markAttendance && <MarkAttendance setMarkAttendance={setMarkAttendance} setGData={setGData} selectedStudents={selectedStudents} status={status} classSectionId={classSectionId} />}
+
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-                <div className="p-4 bg-gray-800">
+                <div className="p-4 bg-gray-800 flex justify-between">
                     <div>
                         <label htmlFor="table-search" className="sr-only">
                             Search
@@ -96,6 +125,16 @@ export default function Attendance({ params }) {
                                 placeholder="Search students"
                             />
                         </div>
+                    </div>
+                    <div className="flex gap-2">
+                        <button onClick={absent} className="bg-red-700 text-white p-2 rounded-md flex items-center gap-2 text-sm">
+                            <FontAwesomeIcon icon={faXmarkCircle} />
+                            <span>Absent</span>
+                        </button>
+                        <button onClick={present} className="bg-lime-700 text-white p-2 rounded-md flex items-center gap-2 text-sm">
+                            <FontAwesomeIcon icon={faCheckCircle} />
+                            <span>Present</span>
+                        </button>
                     </div>
                 </div>
                 <table className="w-full text-sm text-center text-gray-500">
