@@ -1,10 +1,37 @@
 "use client";
-import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function ParentDashboard() {
 
+  const [summaryLoading,setSummaryLoading] = useState(false)
+  const [summary,setSummary] = useState({})
+
+  useEffect(()=>{
+    const getSummaryData = async () => {
+      setSummaryLoading(true)
+      try {
+          const response = await fetch(`/api/parents/${localStorage.getItem("identity")}/summary`)
+
+          const responseData = await response.json()
+
+          if (!response.ok) {
+              toast.error(responseData.message)
+              return
+          }
+
+          setSummary(responseData)
+      }
+      catch (e) {
+          console.log(e)
+      } finally {
+          setSummaryLoading(false)
+      }
+  }
+
+  getSummaryData()
+  },[])
 
   return (
     <div>
@@ -13,19 +40,19 @@ export default function ParentDashboard() {
       {/* Wards Overview */}
       <div className="bg-blue-100 p-4 rounded-lg shadow-md">
         <h4 className="text-blue-600 font-bold">Number of Wards</h4>
-        <p className="text-2xl font-semibold text-gray-800">3</p>
+        <p className="text-2xl font-semibold text-gray-800">{summaryLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : summary.totalWards }</p>
       </div>
 
       {/* Current Academic Year */}
       <div className="bg-indigo-100 p-4 rounded-lg shadow-md">
         <h4 className="text-indigo-600 font-bold">Current Academic Year</h4>
-        <p className="text-2xl font-semibold text-gray-800">2024 / 2025</p>
+        <p className="text-2xl font-semibold text-gray-800">{summaryLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : summary.currentAcademicYear }</p>
       </div>
 
       {/* Current Academic Term */}
       <div className="bg-purple-100 p-4 rounded-lg shadow-md">
         <h4 className="text-purple-600 font-bold">Current Academic Term</h4>
-        <p className="text-2xl font-semibold text-gray-800">Term 2</p>
+        <p className="text-2xl font-semibold text-gray-800">{summaryLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : summary.currentAcademicTerm }</p>
       </div>
     </div>
 

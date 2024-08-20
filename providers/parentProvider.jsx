@@ -23,7 +23,8 @@ export const ParentProvider = ({ children }) => {
 
     const [selectedTab, setSelectedTab] = useState("overview");
 
-    const [selectedWard, setSelectedWard] = useState("John Doe");
+    const [selectedWard, setSelectedWard] = useState("");
+    const [selectedWardId,setSelectedWardId] = useState("")
 
     const [parentName, setParentName] = useState("")
 
@@ -71,16 +72,16 @@ export const ParentProvider = ({ children }) => {
                                 <h2 className="text-2xl font-bold text-gray-800">
                                     Welcome, {parentName}
                                 </h2>
-                                <p className="text-gray-600">Parent / Guardian of {selectedWard}</p>
+                                <p className="text-gray-600">Parent / Guardian</p>
                             </div>
                         </div>
                         <select
-                            value={selectedWard}
-                            onChange={(e) => setSelectedWard(e.target.value)}
+                            value={selectedWardId}
+                            onChange={(e) => setSelectedWardId(e.target.value)}
                             className="border border-gray-300 rounded-md p-2 bg-white"
                         >
                             <option value={''}>Select Ward</option>
-                            {wardsLoading ? <option value="">Loading Wards...</option> : wards.length > 0 ? wards.map((ward)=><option>
+                            {wardsLoading ? <option value="">Loading Wards...</option> : wards.length > 0 ? wards.map((ward,index)=><option value={ward.id} selected={index == 0}>
                                 {ward.firstName} {ward.lastName}
                             </option>) : <option value="">No Wards Found</option>}
                         </select>
