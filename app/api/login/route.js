@@ -28,6 +28,9 @@ export async function POST(req) {
     } else if (role === "teacher") {
       tableName = "Teachers";
       roleIs = "teacher";
+    } else if (role === "parent") {
+      tableName = "Parents";
+      roleIs = "parents";
     } else {
       // Invalid role
       return NextResponse.json({ error: "Invalid role" }, { status: 401 });
