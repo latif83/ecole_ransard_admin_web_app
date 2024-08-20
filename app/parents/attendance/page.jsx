@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes, faExclamation } from "@fortawesome/free-solid-svg-icons";
+import 'react-calendar/dist/Calendar.css';  // Import calendar styles
 
 export default function AttendanceTab() {
   const [date, setDate] = useState(new Date());
