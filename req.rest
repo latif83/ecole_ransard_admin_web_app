@@ -62,7 +62,7 @@ http://localhost:3001/api/teachers/clzk38ueq0001xtsz8zjpfotg
 http://localhost:3001/api/teachers/clzk38ueq0001xtsz8zjpfotg/assigned/subject?teacherId=clzk38ueq0001xtsz8zjpfotg&classSectionId=clzk4ct0t0007xtsz8md99ift
 
 ###
-http://localhost:3001/api/classes/sections
+http://localhost:3000/api/classes/sections
 
 ###
 http://localhost:3001/api/subjects

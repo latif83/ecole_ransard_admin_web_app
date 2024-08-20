@@ -46,6 +46,32 @@ export default function Attendance() {
 
     }, [gData])
 
+    const [classSectionsLoading, setClassSectionsLoading] = useState(false)
+    const [classSections, setClassSections] = useState([])
+
+    useEffect(() => {
+        const fetchClassSections = async () => {
+            try {
+                setClassSectionsLoading(true);
+                const response = await fetch(`/api/classes/sections`);
+                const responseData = await response.json();
+                if (!response.ok) {
+                    toast.error(responseData.message);
+                    return;
+                }
+                setClassSections(responseData);
+            } catch (err) {
+                console.log(err);
+                toast.error("Error retrieving data, please try again!");
+            } finally {
+                setClassSectionsLoading(false)
+            }
+        }
+
+            fetchClassSections()
+
+    }, [])
+
     return (
         <div>
             <h1 className="text-2xl">
@@ -86,7 +112,42 @@ export default function Attendance() {
                             />
                         </div>
                     </div>
-
+                    <div className="relative z-0 group">
+                            {/* <label
+                                htmlFor="dept"
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                            >
+                                Class Section
+                            </label> */}
+                            <select
+                                id="class"
+                                name="class"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 w-80 focus:border-blue-500 block p-2.5"
+                                required
+                                value={classSectionId}
+                                onChange={(e) => {setClassSectionId(e.target.value); setGData(true)}}
+                            >
+                                <option value="">All Classes</option>
+                                {classSectionsLoading ? (
+                                    <option>
+                                        {" "}
+                                        <FontAwesomeIcon
+                                            icon={faSpinner}
+                                            color="red"
+                                            className="text-lg"
+                                            spin
+                                        />{" "}
+                                        Loading Sections...{" "}
+                                    </option>
+                                ) : classSections.length > 0 ? (
+                                    classSections.map((section) => (
+                                        <option value={section.sectionId}>{section.className} ({section.sectionName})</option>
+                                    ))
+                                ) : (
+                                    <option>No classes found.</option>
+                                )}
+                            </select>
+                        </div>
                   
                 </div>
                 <table className="w-full text-sm text-center text-gray-500">
