@@ -65,39 +65,3 @@ export default function ParentDashboard() {
   </div>
   );
 }
-
-// Assessment Tab Component
-const AssessmentTab = () => {
-  return (
-    <div>
-      <h3 className="text-lg font-semibold mb-4 text-blue-600">Assessment</h3>
-      <div className="bg-white p-4 rounded-lg shadow-md">
-        <div className="text-center">Assessment Overview</div>
-      </div>
-    </div>
-  );
-};
-
-// Billing Tab Component
-const BillingTab = () => {
-  return (
-    <div>
-      <h3 className="text-lg font-semibold mb-4 text-blue-600">Billing</h3>
-      <div className="bg-white p-4 rounded-lg shadow-md">
-        <div className="text-center">Current Billing Status</div>
-      </div>
-    </div>
-  );
-};
-
-// Events Tab Component
-const EventsTab = () => {
-  return (
-    <div>
-      <h3 className="text-lg font-semibold mb-4 text-blue-600">Events</h3>
-      <div className="bg-white p-4 rounded-lg shadow-md">
-        <div className="text-center">Upcoming Events</div>
-      </div>
-    </div>
-  );
-};
