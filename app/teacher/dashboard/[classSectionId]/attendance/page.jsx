@@ -32,14 +32,14 @@ export default function Attendance({ params }) {
 
     const [gData, setGData] = useState(true)
 
-    useEffect(() => {
+    const [dateFilter, setDateFilter] = useState(new Date().toISOString().split("T")[0])
 
-        const today = new Date()
+    useEffect(() => {
 
         const getStudents = async () => {
             setLoading(true)
             try {
-                const response = await fetch(`/api/attendance?date=${today}&classSectionId=${classSectionId}`)
+                const response = await fetch(`/api/attendance?date=${dateFilter}&classSectionId=${classSectionId}`)
                 const responseData = await response.json()
 
                 if (!response.ok) {
@@ -89,7 +89,7 @@ export default function Attendance({ params }) {
     return (
         <div>
             <h1 className="text-2xl">
-                Students
+                Attendance
             </h1>
 
             {markAttendance && <MarkAttendance setMarkAttendance={setMarkAttendance} setGData={setGData} selectedStudents={selectedStudents} status={status} classSectionId={classSectionId} />}
@@ -97,8 +97,8 @@ export default function Attendance({ params }) {
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
                 <div className="p-4 bg-gray-800 flex justify-between">
                     <div>
-                        <label htmlFor="table-search" className="sr-only">
-                            Search
+                        <label htmlFor="date-select" className="sr-only">
+                            Select Date
                         </label>
                         <div className="relative mt-1">
                             <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -114,18 +114,20 @@ export default function Attendance({ params }) {
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         strokeWidth="2"
-                                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                                        d="M4 10h12m-6 6V4"
                                     />
                                 </svg>
                             </div>
                             <input
-                                type="text"
-                                id="table-search"
+                                type="date"
+                                id="date-select"
                                 className="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Search students"
+                                value={dateFilter}
+                                onChange={(e) => { setDateFilter(e.target.value); setGData(true); }}
                             />
                         </div>
                     </div>
+
                     <div className="flex gap-2">
                         <button onClick={absent} className="bg-red-700 text-white p-2 rounded-md flex items-center gap-2 text-sm">
                             <FontAwesomeIcon icon={faXmarkCircle} />

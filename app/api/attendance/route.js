@@ -140,7 +140,7 @@ export async function POST(request) {
       }
     }));
 
-    return new Response(JSON.stringify({ message: 'Attendance records processed successfully' }), { status: 200 });
+    return new Response(JSON.stringify({ message: 'Attendance marked successfully!' }), { status: 200 });
   } catch (error) {
     console.error('Error creating or updating attendance:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
