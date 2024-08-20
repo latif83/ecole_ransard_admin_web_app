@@ -1,6 +1,9 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 const ParentContext = createContext();
 
