@@ -2,18 +2,24 @@
 import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faTimes, faExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTimes, faExclamation, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import 'react-calendar/dist/Calendar.css';  // Import calendar styles
+import { useParent } from "@/providers/parentProvider";
 
 export default function AttendanceTab() {
   const [date, setDate] = useState(new Date());
   const [attendanceData, setAttendanceData] = useState([]);
 
+  const [loading, setLoading] = useState(false)
+
+  const { selectedWardId } = useParent()
+
   useEffect(() => {
+
     const fetchAttendance = async () => {
       try {
-        const studentId = "clzqrws5s000110uuk06fnznp"; // Replace with the actual student ID
-        const response = await fetch(`/api/attendance/${studentId}`); // Adjust the API endpoint accordingly
+        setLoading(true)
+        const response = await fetch(`/api/attendance/${selectedWardId}`); // Adjust the API endpoint accordingly
         if (!response.ok) {
           // Error
           return
@@ -22,11 +28,13 @@ export default function AttendanceTab() {
         setAttendanceData(data);
       } catch (error) {
         console.error("Error fetching attendance data:", error);
+      } finally {
+        setLoading(false)
       }
     };
 
     fetchAttendance();
-  }, []);
+  }, [selectedWardId]);
 
   const getTileContent = ({ date }) => {
     const formattedDate = date.toISOString().split("T")[0]; // Format the date to YYYY-MM-DD
@@ -45,13 +53,13 @@ export default function AttendanceTab() {
   return (
     <div>
       <h3 className="text-lg font-semibold mb-4 text-blue-600">Attendance</h3>
-      <div className="bg-white p-4 rounded-lg shadow-md">
+      <div className="">
         <div className="text-center">
-          <Calendar
+          {loading ? <div className="mt-5 flex justify-center flex-col gap-4 items-center"> <FontAwesomeIcon icon={faSpinner} spin width={30} height={30} /> <span>Loading...</span> </div> : !selectedWardId ? <div className="mt-5 flex justify-center flex-col gap-4 items-center">  <span>No Ward Selected</span> </div> : <Calendar
             tileContent={getTileContent}
             value={date}
             onChange={setDate}
-          />
+          />}
         </div>
       </div>
     </div>

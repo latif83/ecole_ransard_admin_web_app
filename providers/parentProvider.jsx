@@ -24,7 +24,7 @@ export const ParentProvider = ({ children }) => {
     const [selectedTab, setSelectedTab] = useState("overview");
 
     const [selectedWard, setSelectedWard] = useState("");
-    const [selectedWardId,setSelectedWardId] = useState("")
+    const [selectedWardId, setSelectedWardId] = useState("")
 
     const [parentName, setParentName] = useState("")
 
@@ -60,7 +60,7 @@ export const ParentProvider = ({ children }) => {
     }, [])
 
     return (
-        <ParentContext.Provider
+        <ParentContext.Provider value={{selectedWardId}}
         >
             <div className="p-5 bg-gradient-to-r from-blue-50 to-blue-100 h-svh">
                 <div className="bg-white p-6 shadow-xl border rounded-lg h-full">
@@ -81,7 +81,7 @@ export const ParentProvider = ({ children }) => {
                             className="border border-gray-300 rounded-md p-2 bg-white"
                         >
                             <option value={''}>Select Ward</option>
-                            {wardsLoading ? <option value="">Loading Wards...</option> : wards.length > 0 ? wards.map((ward,index)=><option value={ward.id} selected={index == 0}>
+                            {wardsLoading ? <option value="">Loading Wards...</option> : wards.length > 0 ? wards.map((ward, index) => <option value={ward.id} selected={index == 0}>
                                 {ward.firstName} {ward.lastName}
                             </option>) : <option value="">No Wards Found</option>}
                         </select>
