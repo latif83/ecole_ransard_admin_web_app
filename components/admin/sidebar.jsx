@@ -86,12 +86,12 @@ export const AdminSidebar = () => {
                         </div>
                     </Link>
 
-                    <div className="text-gray-50 p-2 rounded-l text-sm flex justify-between">
+                    <Link href={'/admin/attendance'} className={`text-gray-50 hover:font-bold ${pathname.includes("/admin/attendance") && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
-                            <FontAwesomeIcon icon={faClipboard} width={20} height={20} />
+                        <FontAwesomeIcon icon={faClipboard} width={20} height={20} />
                             <span>Attendance</span>
                         </div>
-                    </div>
+                    </Link>
 
                     <Link href={'/admin/calendar'} className={`text-gray-50 hover:font-bold ${pathname.includes("/admin/calendar") && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
                         <div className="flex items-center justify-between gap-1.5">
