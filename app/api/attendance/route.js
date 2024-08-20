@@ -23,37 +23,59 @@ export async function GET(request) {
     const startOfDay = new Date(parsedDate.setHours(0, 0, 0, 0));
     const endOfDay = new Date(parsedDate.setHours(23, 59, 59, 999));
 
-    // Build query filter
-    const filters = {
+    // Fetch all students for the given class section
+    const students = await prisma.students.findMany({
+      where: {
+        ...(classSectionId && { classSectionsId: classSectionId }) // Conditional filter
+      }
+    });
+
+    // Fetch attendance records for the specified date
+    const attendanceRecords = await prisma.attendance.findMany({
       where: {
         clockIn: {
-          gte: startOfDay, // Start of the day
-          lt: endOfDay // End of the day
+          gte: startOfDay,
+          lt: endOfDay
         },
         ...(classSectionId && { student: { classSectionsId: classSectionId } }) // Conditional filter
       },
       include: {
-        student: {
-          include: {
-            class: true
-          }
-        }
+        student: true // Include student details in the result
       }
-    };
+    });
 
-    // Fetch attendance records
-    const attendanceRecords = await prisma.Attendance.findMany(filters);
+    // Create a map for quick lookup of attendance records by studentId
+    const attendanceMap = new Map(
+      attendanceRecords.map(record => [
+        record.studentId,
+        {
+          status: record.status,
+          clockIn: record.clockIn,
+          clockOut: record.clockOut,
+          remarks: record.remarks
+        }
+      ])
+    );
 
-    // Map attendance records to include student information and status
-    const result = attendanceRecords.map(record => ({
-      studentId: record.studentId,
-      studentName: `${record.student.firstName} ${record.student.lastName}`,
-      status: record.status,
-      clockIn: record.clockIn,
-      clockOut: record.clockOut,
-      remarks: record.remarks,
-      classSectionId: record.student.classSectionsId
-    }));
+    // Map students to include attendance information
+    const result = students.map(student => {
+      const attendance = attendanceMap.get(student.id) || {
+        status: 'unknown',
+        clockIn: null,
+        clockOut: null,
+        remarks: null
+      };
+
+      return {
+        studentId: student.id,
+        studentName: `${student.firstName} ${student.lastName}`,
+        status: attendance.status,
+        clockIn: attendance.clockIn,
+        clockOut: attendance.clockOut,
+        remarks: attendance.remarks,
+        classSectionId: student.classSectionsId
+      };
+    });
 
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
