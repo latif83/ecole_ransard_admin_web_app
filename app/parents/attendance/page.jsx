@@ -14,7 +14,8 @@ export default function AttendanceTab() {
         const studentId = "clzqrws5s000110uuk06fnznp"; // Replace with the actual student ID
         const response = await fetch(`/api/attendance/${studentId}`); // Adjust the API endpoint accordingly
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          // Error
+          return
         }
         const data = await response.json();
         setAttendanceData(data);
@@ -32,12 +33,12 @@ export default function AttendanceTab() {
 
     if (attendance) {
       if (attendance.status === "present") {
-        return <FontAwesomeIcon icon={faCheck} color="green" />;
+        return <div className="bg-gray-200 inline-flex ml-1 rounded-full w-8 h-8 text-lg -mt-2 items-center justify-center"><FontAwesomeIcon icon={faCheck} color="green" /></div>;
       } else if (attendance.status === "absent") {
-        return <FontAwesomeIcon icon={faTimes} color="red" />;
+        return <div className="bg-gray-200 inline-flex ml-1 rounded-full w-8 h-8 text-lg -mt-2 items-center justify-center"><FontAwesomeIcon icon={faTimes} color="red" /></div>;
       }
     }
-    return <FontAwesomeIcon icon={faExclamation} color="gray" />;
+    return <div className="inline-flex ml-1 rounded-lg w-8 h-8 text-lg -mt-2 items-center justify-center"><FontAwesomeIcon icon={faExclamation} color="gray" /></div>;
   };
 
   return (
