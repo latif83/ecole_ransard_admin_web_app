@@ -113,3 +113,6 @@ Content-Type: application/json
 {
 "studentIds" : ["clzqrws5s000110uuk06fnznp"], "classSectionId" : "clzk4ap0u0005xtszt0csbpym", "status": "present" 
 }
+
+###
+http://localhost:3000/api/parents/cm00sij81000a68wa1j9ld7nm/summary
