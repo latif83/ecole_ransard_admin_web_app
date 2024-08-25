@@ -60,10 +60,10 @@ export const ParentProvider = ({ children }) => {
     }, [])
 
     return (
-        <ParentContext.Provider value={{selectedWardId}}
+        <ParentContext.Provider value={{ selectedWardId }}
         >
             <div className="p-5 bg-gradient-to-r from-blue-50 to-blue-100 h-svh">
-                <div className="bg-white p-6 shadow-xl border rounded-lg h-full">
+                <div className="bg-white p-6 shadow-xl border flex flex-col rounded-lg h-full">
                     {/* Parent Profile and Ward Selection */}
                     <div className="flex justify-between items-center mb-6">
                         <div className="flex items-center">
@@ -80,11 +80,20 @@ export const ParentProvider = ({ children }) => {
                             onChange={(e) => setSelectedWardId(e.target.value)}
                             className="border border-gray-300 rounded-md p-2 bg-white"
                         >
-                            <option value={''}>Select Ward</option>
-                            {wardsLoading ? <option value="">Loading Wards...</option> : wards.length > 0 ? wards.map((ward, index) => <option value={ward.id} selected={index == 0}>
-                                {ward.firstName} {ward.lastName}
-                            </option>) : <option value="">No Wards Found</option>}
+                            <option value="">Select Ward</option>
+                            {wardsLoading ? (
+                                <option value="">Loading Wards...</option>
+                            ) : wards.length > 0 ? (
+                                wards.map((ward) => (
+                                    <option key={ward.id} value={ward.id}>
+                                        {ward.firstName} {ward.lastName}
+                                    </option>
+                                ))
+                            ) : (
+                                <option value="">No Wards Found</option>
+                            )}
                         </select>
+
                     </div>
 
                     {/* Tabs */}
@@ -140,7 +149,7 @@ export const ParentProvider = ({ children }) => {
                     </div>
 
                     {/* Tab Content */}
-                    <div>
+                    <div className="overflow-auto flex-1 px-2">
                         {children}
                     </div>
                 </div>
