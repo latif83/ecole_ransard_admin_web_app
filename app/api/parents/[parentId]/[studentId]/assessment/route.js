@@ -83,10 +83,7 @@ export async function GET(req, { params }) {
       })
     );
 
-    return NextResponse.json({
-      student: `${student.firstName} ${student.lastName}`,
-      results,
-    });
+    return NextResponse.json(results,{status:200});
   } catch (error) {
     return NextResponse.json(
       { message: "Error fetching results", error },

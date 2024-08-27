@@ -1,31 +1,14 @@
 "use client"
 
+import { useParent } from "@/providers/parentProvider";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 // Assessment Tab Component
 export default function AssessmentTab() {
 
-  const assessments = [
-    {
-      "subject": "Mathematics",
-      "marks": 85,
-      "grade": "A",
-      "remarks": "Excellent"
-    },
-    {
-      "subject": "English",
-      "marks": 78,
-      "grade": "B",
-      "remarks": "Good"
-    },
-    {
-      "subject": "Science",
-      "marks": 90,
-      "grade": "A+",
-      "remarks": "Outstanding"
-    }
-  ]
+  const [assessmentsLoading, setAssessmentsLoading] = useState(false)
+  const [assessments, setAssessments] = useState([])
 
   const [academicYrs, setAcademicYrs] = useState([])
   const [academicYrsLoading, setAcademicYrsLoading] = useState(false)
@@ -35,6 +18,8 @@ export default function AssessmentTab() {
 
   const [selectedAcademicYrId, setSelectedAcademicYrId] = useState("")
   const [selectedAcademicTermId, setSelectedAcademicTermId] = useState("")
+
+  const { selectedWardId } = useParent()
 
   useEffect(() => {
 
@@ -68,7 +53,33 @@ export default function AssessmentTab() {
       }
     }
 
+    const getAssessments = async () => {
+      setAssessmentsLoading(true)
+      try {
+        const response = await fetch(`/api/parents/${localStorage.getItem("identity")}/${selectedWardId}/assessment`)
+
+        const responseData = await response.json()
+
+        // console.log(responseData)
+
+        if (!response.ok) {
+          toast.error(responseData.message)
+          return
+        }
+
+        setAssessments(responseData)
+
+      }
+      catch (e) {
+        console.log(e)
+      }
+      finally {
+        setAssessmentsLoading(false)
+      }
+    }
+
     getAcademicYrs()
+    getAssessments()
 
   }, [])
 
@@ -179,7 +190,7 @@ export default function AssessmentTab() {
                     className="border-b border-gray-200 hover:bg-gray-50"
                   >
                     <td className="py-2 px-4">{assessment.subject}</td>
-                    <td className="py-2 px-4">{assessment.marks}</td>
+                    <td className="py-2 px-4">{assessment.marks}%</td>
                     <td className="py-2 px-4">{assessment.grade}</td>
                     <td className="py-2 px-4">{assessment.remarks || "N/A"}</td>
                   </tr>
