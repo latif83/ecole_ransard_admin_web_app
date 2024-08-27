@@ -1,3 +1,8 @@
+"use client"
+
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 // Assessment Tab Component
 export default function AssessmentTab() {
 
@@ -22,6 +27,85 @@ export default function AssessmentTab() {
     }
   ]
 
+  const [academicYrs, setAcademicYrs] = useState([])
+  const [academicYrsLoading, setAcademicYrsLoading] = useState(false)
+
+  const [academicTerms, setAcademicTerms] = useState([])
+  const [academicTermsLoading, setAcademicTermsLoading] = useState(false)
+
+  const [selectedAcademicYrId, setSelectedAcademicYrId] = useState("")
+  const [selectedAcademicTermId, setSelectedAcademicTermId] = useState("")
+
+  useEffect(() => {
+
+    const getAcademicYrs = async () => {
+      setAcademicYrsLoading(true)
+      try {
+        const response = await fetch(`/api/calendar/year`)
+        const responseData = await response.json()
+
+        if (!response.ok) {
+          toast.error(responseData.message)
+          return
+        }
+
+        setAcademicYrs(responseData.academicYears)
+
+        const checkActiveAcademicYr = responseData.academicYears.find((year) => year.status == "Active")
+
+        if (checkActiveAcademicYr) {
+          // console.log(checkActiveAcademicYr)
+          setSelectedAcademicYrId(checkActiveAcademicYr.id)
+        }
+
+        // console.log(responseData)
+
+      }
+      catch (e) {
+        console.log(e)
+      } finally {
+        setAcademicYrsLoading(false)
+      }
+    }
+
+    getAcademicYrs()
+
+  }, [])
+
+  const getAcademicTerms = async () => {
+    setAcademicTermsLoading(true)
+    try {
+      const response = await fetch(`/api/calendar/year/${selectedAcademicYrId}`)
+      const responseData = await response.json()
+
+      if (!response.ok) {
+        toast.error(responseData.message)
+        return
+      }
+
+      setAcademicTerms(responseData.academicYear.terms)
+
+      const checkActiveAcademicTerm = responseData.academicYear.terms.find((term) => term.status == "Active")
+
+      if (checkActiveAcademicTerm) {
+        // console.log(checkActiveAcademicTerm)
+        setSelectedAcademicTermId(checkActiveAcademicTerm.id)
+      }
+
+      // console.log(responseData)
+
+    }
+    catch (e) {
+      console.log(e)
+    } finally {
+      setAcademicTermsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    selectedAcademicYrId && getAcademicTerms()
+  }, [selectedAcademicYrId])
+
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -32,22 +116,22 @@ export default function AssessmentTab() {
               Academic Year
             </label>
             <select
-              // value={selectedWardId}
-              // onChange={(e) => setSelectedWardId(e.target.value)}
+              value={selectedAcademicYrId}
+              onChange={(e) => setSelectedAcademicYrId(e.target.value)}
               className="border border-gray-300 rounded-md p-2 bg-white"
             >
               <option value="">Select Academic Year</option>
-              {/* {wardsLoading ? (
-                                <option value="">Loading Wards...</option>
-                            ) : wards.length > 0 ? (
-                                wards.map((ward) => (
-                                    <option key={ward.id} value={ward.id}>
-                                        {ward.firstName} {ward.lastName}
-                                    </option>
-                                ))
-                            ) : (
-                                <option value="">No Wards Found</option>
-                            )} */}
+              {academicYrsLoading ? (
+                <option value="">Loading Academic Years...</option>
+              ) : academicYrs.length > 0 ? (
+                academicYrs.map((academicYr) => (
+                  <option key={academicYr.id} value={academicYr.id}>
+                    {academicYr.year}
+                  </option>
+                ))
+              ) : (
+                <option value="">No Academic Year Found</option>
+              )}
             </select>
           </div>
           <div className="text-sm flex flex-col">
@@ -55,22 +139,22 @@ export default function AssessmentTab() {
               Academic Term
             </label>
             <select
-              // value={selectedWardId}
-              // onChange={(e) => setSelectedWardId(e.target.value)}
+              value={selectedAcademicTermId}
+              onChange={(e) => setSelectedAcademicTermId(e.target.value)}
               className="border border-gray-300 rounded-md p-2 bg-white"
             >
               <option value="">Select Academic Term</option>
-              {/* {wardsLoading ? (
-                                <option value="">Loading Wards...</option>
-                            ) : wards.length > 0 ? (
-                                wards.map((ward) => (
-                                    <option key={ward.id} value={ward.id}>
-                                        {ward.firstName} {ward.lastName}
-                                    </option>
-                                ))
-                            ) : (
-                                <option value="">No Wards Found</option>
-                            )} */}
+              {academicTermsLoading ? (
+                <option value="">Loading Academic Terms...</option>
+              ) : academicTerms.length > 0 ? (
+                academicTerms.map((academicTerm) => (
+                  <option key={academicTerm.id} value={academicTerm.id}>
+                    {academicTerm.termName}
+                  </option>
+                ))
+              ) : (
+                <option value="">No Academic Terms Found</option>
+              )}
             </select>
           </div>
         </div>

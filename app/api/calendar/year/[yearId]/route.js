@@ -7,9 +7,9 @@ import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(req,{params}) {
+export async function POST(req, { params }) {
   try {
-    const { yearId : academicYearId } = params;
+    const { yearId: academicYearId } = params;
 
     if (!academicYearId) {
       return NextResponse.json(
@@ -72,7 +72,6 @@ export async function POST(req,{params}) {
   }
 }
 
-
 export async function DELETE(req, { params }) {
   try {
     const { yearId: academicYearId } = params;
@@ -107,7 +106,8 @@ export async function DELETE(req, { params }) {
     if (activeAcademicTerms.length > 0) {
       return NextResponse.json(
         {
-          error: "The academic year has active academic terms. Please end the active terms before ending the academic year.",
+          error:
+            "The academic year has active academic terms. Please end the active terms before ending the academic year.",
         },
         { status: 400 }
       );
@@ -143,8 +143,6 @@ export async function DELETE(req, { params }) {
   }
 }
 
-
-
 export async function GET(req, { params }) {
   try {
     const { yearId: academicYearId } = params;
@@ -162,7 +160,7 @@ export async function GET(req, { params }) {
       include: {
         terms: {
           orderBy: {
-            startDate: 'asc', // Order terms by start date, adjust as needed
+            startDate: "asc", // Order terms by start date, adjust as needed
           },
         },
       },
@@ -186,10 +184,9 @@ export async function GET(req, { params }) {
   }
 }
 
-export async function PUT(req,{params}) {
+export async function PUT(req, { params }) {
   try {
-
-    const {yearId:id} = params
+    const { yearId: id } = params;
 
     const { year, startDate, endDate } = await req.json();
 

@@ -90,3 +90,24 @@ export async function POST(req) {
     );
   }
 }
+
+
+export async function GET(req) {
+  try {
+    // Fetch all academic terms from the database
+    const academicTerms = await prisma.academicTerm.findMany({
+      orderBy: {
+        startDate: 'desc', // Order by start date, adjust as needed
+      },
+    });
+
+    // Return the list of academic years
+    return NextResponse.json({ academicTerms }, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching academic years:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
