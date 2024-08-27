@@ -43,7 +43,8 @@ export default function ({ params }) {
                 const responseData = await response.json()
                 if (!response.ok) {
                     // Error
-                    toast.error("error", responseData.message)
+                    toast.error(responseData.message)
+                    setSubject(responseData.subject.name)
                     return
                 }
 

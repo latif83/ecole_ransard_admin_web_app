@@ -112,7 +112,6 @@ model Students {
   parents Parents? @relation(fields: [parentId], name: "ParentStudents", references: [id])
 
   // Define relation to Attendance
-  attendance        attendance[]
   Notification      Notification[]
   ClassSections     ClassSections?      @relation(fields: [classSectionsId], references: [id])
   StudentFeeDetail  StudentFeeDetail[]
@@ -138,36 +137,6 @@ model Parents {
   students Students[] @relation(name: "ParentStudents")
 }
 
-// Attendance model
-model attendance {
-  id               String    @id @default(cuid())
-  studentId        String
-  clockIn          DateTime
-  clockOut         DateTime?
-  AttendanceCodeId String
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-
-  // Define relation to Students
-  student        Students       @relation(fields: [studentId], references: [id])
-  // Define relation to AttendanceCode
-  AttendanceCode attendanceCode @relation(fields: [AttendanceCodeId], references: [id])
-}
-
-// AttendanceCode model
-model attendanceCode {
-  id          String   @id @default(cuid())
-  code        String
-  createdAt   DateTime @default(now())
-  createdById String
-
-  // Define relation to Admins
-  createdBy admins @relation(fields: [createdById], references: [id])
-
-  // Define relation to Attendance
-  attendance attendance[]
-}
-
 // Admins model
 model admins {
   id        String   @id @default(cuid())
@@ -177,9 +146,6 @@ model admins {
   password  String   @default("ronsard@123")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // Define relation to AttendanceCode
-  attendanceCodes attendanceCode[]
 }
 
 model Notification {

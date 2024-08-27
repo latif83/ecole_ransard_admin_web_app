@@ -25,13 +25,13 @@ export async function GET(req,{params}) {
         },
       });
 
-    if (!currentAcademicYr) {
-      return new Response(JSON.stringify({ error: 'Current academic year not found!' }), { status: 404 });
-    }
+    // if (!currentAcademicYr) {
+    //   return new Response(JSON.stringify({ error: 'Current academic year not found!' }), { status: 404 });
+    // }
 
-    if (!currentAcademicTerm) {
-        return new Response(JSON.stringify({ error: 'Current academic term not found!' }), { status: 404 });
-      }
+    // if (!currentAcademicTerm) {
+    //     return new Response(JSON.stringify({ error: 'Current academic term not found!' }), { status: 404 });
+    //   }
 
     const totalWards = await prisma.Students.count({
       where: {
@@ -40,8 +40,8 @@ export async function GET(req,{params}) {
     });
 
     const summary = {
-      currentAcademicYear: currentAcademicYr.year,
-      currentAcademicTerm: currentAcademicTerm.termName,
+      currentAcademicYear: currentAcademicYr ? currentAcademicYr.year : 'N/A',
+      currentAcademicTerm: currentAcademicTerm ? currentAcademicTerm.termName : 'N/A',
       totalWards,
     };
 

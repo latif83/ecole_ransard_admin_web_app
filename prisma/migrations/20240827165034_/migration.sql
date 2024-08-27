@@ -89,29 +89,6 @@ CREATE TABLE "Parents" (
 );
 
 -- CreateTable
-CREATE TABLE "attendance" (
-    "id" TEXT NOT NULL,
-    "studentId" TEXT NOT NULL,
-    "clockIn" TIMESTAMP(3) NOT NULL,
-    "clockOut" TIMESTAMP(3),
-    "AttendanceCodeId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "attendance_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "attendanceCode" (
-    "id" TEXT NOT NULL,
-    "code" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "createdById" TEXT NOT NULL,
-
-    CONSTRAINT "attendanceCode_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "admins" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -263,6 +240,50 @@ CREATE TABLE "AssignedTeachers" (
     CONSTRAINT "AssignedTeachers_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Assessments" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "description" TEXT,
+    "academicTermId" TEXT NOT NULL,
+    "classSessionId" TEXT NOT NULL,
+    "subjectId" TEXT NOT NULL,
+    "weight" DOUBLE PRECISION,
+    "marks" DOUBLE PRECISION,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "teachersId" TEXT,
+
+    CONSTRAINT "Assessments_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Grades" (
+    "id" TEXT NOT NULL,
+    "studentId" TEXT NOT NULL,
+    "assessmentId" TEXT NOT NULL,
+    "score" DOUBLE PRECISION NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Grades_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Attendance" (
+    "id" TEXT NOT NULL,
+    "studentId" TEXT NOT NULL,
+    "classSectionId" TEXT,
+    "status" TEXT NOT NULL,
+    "clockIn" TIMESTAMP(3),
+    "clockOut" TIMESTAMP(3),
+    "remarks" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Attendance_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Teachers_email_key" ON "Teachers"("email");
 
@@ -292,15 +313,6 @@ ALTER TABLE "Students" ADD CONSTRAINT "Students_parentId_fkey" FOREIGN KEY ("par
 
 -- AddForeignKey
 ALTER TABLE "Students" ADD CONSTRAINT "Students_classSectionsId_fkey" FOREIGN KEY ("classSectionsId") REFERENCES "ClassSections"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "attendance" ADD CONSTRAINT "attendance_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "attendance" ADD CONSTRAINT "attendance_AttendanceCodeId_fkey" FOREIGN KEY ("AttendanceCodeId") REFERENCES "attendanceCode"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "attendanceCode" ADD CONSTRAINT "attendanceCode_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "admins"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Notification" ADD CONSTRAINT "Notification_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Students"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -343,3 +355,27 @@ ALTER TABLE "AssignedTeachers" ADD CONSTRAINT "AssignedTeachers_teacherId_fkey" 
 
 -- AddForeignKey
 ALTER TABLE "AssignedTeachers" ADD CONSTRAINT "AssignedTeachers_classId_fkey" FOREIGN KEY ("classId") REFERENCES "ClassSections"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Assessments" ADD CONSTRAINT "Assessments_academicTermId_fkey" FOREIGN KEY ("academicTermId") REFERENCES "AcademicTerm"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Assessments" ADD CONSTRAINT "Assessments_classSessionId_fkey" FOREIGN KEY ("classSessionId") REFERENCES "ClassSections"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Assessments" ADD CONSTRAINT "Assessments_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "Subjects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Assessments" ADD CONSTRAINT "Assessments_teachersId_fkey" FOREIGN KEY ("teachersId") REFERENCES "Teachers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Grades" ADD CONSTRAINT "Grades_assessmentId_fkey" FOREIGN KEY ("assessmentId") REFERENCES "Assessments"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Grades" ADD CONSTRAINT "Grades_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Attendance" ADD CONSTRAINT "Attendance_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Attendance" ADD CONSTRAINT "Attendance_classSectionId_fkey" FOREIGN KEY ("classSectionId") REFERENCES "ClassSections"("id") ON DELETE SET NULL ON UPDATE CASCADE;

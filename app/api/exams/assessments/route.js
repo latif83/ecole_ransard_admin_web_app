@@ -97,7 +97,7 @@ export async function GET(req) {
     if (!subjectId || !classSectionId) {
       return NextResponse.json(
         {
-          error:
+          message:
             "Missing required query parameters: subjectId or classSectionId",
         },
         { status: 400 }
@@ -110,9 +110,18 @@ export async function GET(req) {
       include: { terms: true },
     });
 
+    const subject = await prisma.Subjects.findUnique({
+      where: {
+        id: subjectId,
+      },
+    });
+
     if (!activeAcademicTerm || !activeAcademicTerm.terms.length) {
       return NextResponse.json(
-        { error: "No active academic term found" },
+        { message: "No active academic term found", subject: {
+          id: subject.id,
+          name: subject.name,
+        }, },
         { status: 404 }
       );
     }
@@ -123,7 +132,10 @@ export async function GET(req) {
 
     if (!activeTerm) {
       return NextResponse.json(
-        { error: "No active academic term found" },
+        { message: "No active academic term found",  subject: {
+          id: subject.id,
+          name: subject.name,
+        }, },
         { status: 404 }
       );
     }
@@ -134,12 +146,6 @@ export async function GET(req) {
         academicTermId: activeTerm.id,
         subjectId: subjectId,
         classSessionId: classSectionId,
-      },
-    });
-
-    const subject = await prisma.Subjects.findUnique({
-      where: {
-        id: subjectId,
       },
     });
 
@@ -163,7 +169,7 @@ export async function GET(req) {
   } catch (error) {
     console.error("Error retrieving assessments:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { message: "Internal Server Error" },
       { status: 500 }
     );
   }
