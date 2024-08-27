@@ -1,6 +1,8 @@
 "use client"
 
 import { useParent } from "@/providers/parentProvider";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -53,6 +55,12 @@ export default function AssessmentTab() {
       }
     }
 
+    getAcademicYrs()
+
+  }, [])
+
+  useEffect(() => {
+
     const getAssessments = async () => {
       setAssessmentsLoading(true)
       try {
@@ -78,10 +86,8 @@ export default function AssessmentTab() {
       }
     }
 
-    getAcademicYrs()
     getAssessments()
-
-  }, [])
+  }, [selectedWardId])
 
   const getAcademicTerms = async () => {
     setAcademicTermsLoading(true)
@@ -119,7 +125,7 @@ export default function AssessmentTab() {
 
   return (
     <div>
-      <div className="flex justify-between items-center">
+      {!selectedWardId ? <div className="mt-5 flex justify-center flex-col gap-4 items-center">  <span>No Ward Selected</span> </div> : <><div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold mb-4 text-blue-600">Assessment</h3>
         <div className="flex gap-6">
           <div className="text-sm flex flex-col">
@@ -171,41 +177,47 @@ export default function AssessmentTab() {
         </div>
       </div>
 
-      <div className="mt-7">
-        <div className="relative overflow-auto">
-          <table className="min-w-full text-sm text-left">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="py-3 px-4">Subject</th>
-                <th className="py-3 px-4">Marks</th>
-                <th className="py-3 px-4">Grade</th>
-                <th className="py-3 px-4">Remarks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {assessments.length > 0 ? (
-                assessments.map((assessment, index) => (
-                  <tr
-                    key={index}
-                    className="border-b border-gray-200 hover:bg-gray-50"
-                  >
-                    <td className="py-2 px-4">{assessment.subject}</td>
-                    <td className="py-2 px-4">{assessment.marks}%</td>
-                    <td className="py-2 px-4">{assessment.grade}</td>
-                    <td className="py-2 px-4">{assessment.remarks || "N/A"}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={4} className="text-center py-4">
-                    No assessments available for the selected term.
-                  </td>
+        <div className="mt-7">
+          <div className="relative overflow-auto">
+            <table className="min-w-full text-sm text-left">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="py-3 px-4">Subject</th>
+                  <th className="py-3 px-4">Marks</th>
+                  <th className="py-3 px-4">Grade</th>
+                  <th className="py-3 px-4">Remarks</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+              </thead>
+              <tbody>
+                {assessmentsLoading ? (
+                  <tr className="bg-white border-b hover:bg-gray-50">
+                    <td colSpan={4} className="px-6 py-4 text-center">
+                      <FontAwesomeIcon icon={faSpinner} spin /> Loading...
+                    </td>
+                  </tr>
+                ) : assessments.length > 0 ? (
+                  assessments.map((assessment, index) => (
+                    <tr
+                      key={index}
+                      className="border-b border-gray-200 hover:bg-gray-50"
+                    >
+                      <td className="py-2 px-4">{assessment.subject}</td>
+                      <td className="py-2 px-4">{assessment.marks}%</td>
+                      <td className="py-2 px-4">{assessment.grade}</td>
+                      <td className="py-2 px-4">{assessment.remarks || "N/A"}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="text-center py-4">
+                      No assessments available for the selected term.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div></>}
 
     </div>
   );
