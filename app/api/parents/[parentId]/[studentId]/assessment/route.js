@@ -1,6 +1,5 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/config/prisma';
-
+import { NextResponse } from "next/server";
+import prisma from "@/config/prisma";
 
 export async function GET(req, { params }) {
   const { parentId, studentId } = params;
@@ -27,56 +26,71 @@ export async function GET(req, { params }) {
       },
     });
 
-    console.log(student)
+    // console.log(student)
 
     if (!student) {
-      return NextResponse.json({ message: 'Student not found or not associated with the parent' }, { status: 404 });
+      return NextResponse.json(
+        { message: "Student not found or not associated with the parent" },
+        { status: 404 }
+      );
     }
 
     // Process each subject and assessments to calculate the total score
     const subjects = {};
-    student.grades.forEach((grade) => {
+
+    student.Grades.forEach((grade) => {
       const subjectName = grade.assessment.subject.name;
-      const weight = grade.assessment.weight || 0;
+
+      const subjectId = grade.assessment.subject.id;
+
+      const assessmentWeight = grade.assessment.weight || 0;
+      const assessmentScore = grade.assessment.marks || 0;
+
       const score = grade.score || 0;
 
       if (!subjects[subjectName]) {
-        subjects[subjectName] = { totalWeight: 0, totalScore: 0, grades: [] };
+        subjects[subjectName] = { marks: 0 };
       }
 
-      subjects[subjectName].totalWeight += weight;
-      subjects[subjectName].totalScore += (weight * score) / 100;
-      subjects[subjectName].grades.push({
-        score: grade.score,
-        assessment: grade.assessment.name,
-        academicTerm: grade.assessment.academicTerm.termName,
-      });
+      subjects[subjectName].marks +=
+        (assessmentWeight * score) / assessmentScore;
+
+      // subjects[subjectName].grades.push({
+      //   score: grade.score,
+      //   assessment: grade.assessment.name,
+      //   academicTerm: grade.assessment.academicTerm.termName,
+      // });
     });
 
     // Match the total score with the GradeSetting model for each subject
     const results = await Promise.all(
       Object.keys(subjects).map(async (subjectName) => {
-        const { totalScore } = subjects[subjectName];
+        const { marks } = subjects[subjectName];
 
         const gradeSetting = await prisma.gradeSetting.findFirst({
           where: {
-            minScore: { lte: totalScore },
-            maxScore: { gte: totalScore },
+            minScore: { lte: marks },
+            maxScore: { gte: marks },
           },
         });
 
         return {
           subject: subjectName,
-          totalScore,
-          grade: gradeSetting?.grade || 'N/A',
-          remarks: gradeSetting?.comment || 'No remarks',
-          details: subjects[subjectName].grades,
+          marks,
+          grade: gradeSetting?.grade || "N/A",
+          remarks: gradeSetting?.comment || "N/A",
         };
       })
     );
 
-    return NextResponse.json({ student: `${student.firstName} ${student.lastName}`, results });
+    return NextResponse.json({
+      student: `${student.firstName} ${student.lastName}`,
+      results,
+    });
   } catch (error) {
-    return NextResponse.json({ message: 'Error fetching results', error }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error fetching results", error },
+      { status: 500 }
+    );
   }
 }
