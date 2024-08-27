@@ -122,3 +122,6 @@ http://localhost:3000/api/attendance/clzqrws5s000110uuk06fnznp
 
 ###
 http://localhost:3000/api/parents/cm0cpo7u7000hxvdkxm3nx37p/cm0cplwo6000gxvdk0wo5222o/assessment
+
+###
+http://localhost:3000/api/parents/cm0cpo7u7000hxvdkxm3nx37p/cm0cplwo6000gxvdk0wo5222o/billing
