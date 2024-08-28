@@ -38,10 +38,12 @@ export async function GET(req, { params }) {
     const formattedResponse = students.map((student) => {
       const grade = student.Grades[0];
       const studentName = `${student.firstName} ${student.lastName}`;
-      const studentId= student.id
+      const studentId = student.id;
       const score = grade?.score ? grade?.score : "N/A";
       const weight =
-        score != "N/A" ? ((score / assessment.marks) * assessment.weight).toFixed(2) : "N/A";
+        score != "N/A"
+          ? ((score / assessment.marks) * assessment.weight).toFixed(2)
+          : "N/A";
 
       return {
         studentId,
@@ -73,16 +75,24 @@ export async function POST(req, { params }) {
   try {
     let { score, studentId } = await req.json();
 
-    score = parseFloat(score)
+    score = parseFloat(score);
 
     const { assessmentId } = params;
 
     if (!assessmentId || !studentId) {
-      return NextResponse.json({ message: "Assessment ID and student ID are required" }, { status: 400 });
+      return NextResponse.json(
+        {
+          message: "Assessment ID, student ID and academicTermId are required",
+        },
+        { status: 400 }
+      );
     }
 
     if (!score) {
-      return NextResponse.json({ message: "Score is required" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Score is required" },
+        { status: 400 }
+      );
     }
 
     const assessment = await prisma.Assessments.findUnique({
@@ -92,11 +102,19 @@ export async function POST(req, { params }) {
     });
 
     if (!assessment) {
-      return NextResponse.json({ message: "Assessment not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Assessment not found" },
+        { status: 404 }
+      );
     }
 
     if (score > assessment.marks) {
-      return NextResponse.json({ message: "Score cannot be greater than the assessment's total marks" }, { status: 400 });
+      return NextResponse.json(
+        {
+          message: "Score cannot be greater than the assessment's total marks",
+        },
+        { status: 400 }
+      );
     }
 
     const existingGrade = await prisma.Grades.findFirst({
@@ -116,18 +134,37 @@ export async function POST(req, { params }) {
         },
       });
     } else {
+      // Fetch the active academic term
+      const activeAcademicTerm = await prisma.academicTerm.findFirst({
+        where: { status: "Active" },
+      });
+
+      if (!activeAcademicTerm) {
+        return NextResponse.json(
+          { message: "No active academic term found" },
+          { status: 404 }
+        );
+      }
+
       await prisma.Grades.create({
         data: {
           assessmentId,
           studentId,
           score,
+          academicTermId: activeAcademicTerm.id,
         },
       });
     }
 
-    return NextResponse.json({ message: "Student scored successfully" }, { status: 201 });
+    return NextResponse.json(
+      { message: "Student scored successfully" },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Error scoring student:", error);
-    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

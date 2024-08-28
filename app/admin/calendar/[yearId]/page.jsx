@@ -185,8 +185,8 @@ export default function AcademicTermPage({ params }) {
                                     >
                                         {term.termName}
                                     </th>
-                                    <td className="px-6 py-4 text-center">{new Date().toDateString(term.startDate)}</td>
-                                    <td className="px-6 py-4 text-center">{new Date().toDateString(term.endDate)}</td>
+                                    <td className="px-6 py-4 text-center">{new Date(term.startDate).toDateString()}</td>
+                                    <td className="px-6 py-4 text-center">{new Date(term.endDate).toDateString()}</td>
                                     <td className="px-6 py-4 text-center">{term.status}</td>
                                     <td className="px-6 py-4 flex justify-center items-center gap-1.5">
                                         <Link

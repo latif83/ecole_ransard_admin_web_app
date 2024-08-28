@@ -198,6 +198,7 @@ model AcademicTerm {
   StudentFeeDetail  StudentFeeDetail[]
   StudentFeeSummary StudentFeeSummary[]
   Assessments       Assessments[]
+  Grades            Grades[]
 }
 
 // Event model
@@ -330,16 +331,18 @@ model Assessments {
 }
 
 model Grades {
-  id           String   @id @default(uuid())
-  studentId    String
-  assessmentId String
-  score        Float
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id             String   @id @default(uuid())
+  studentId      String
+  assessmentId   String
+  academicTermId String
+  score          Float
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   // Define relations
-  assessment Assessments @relation(fields: [assessmentId], references: [id])
-  student    Students    @relation(fields: [studentId], references: [id])
+  assessment   Assessments  @relation(fields: [assessmentId], references: [id])
+  student      Students     @relation(fields: [studentId], references: [id])
+  academicTerm AcademicTerm @relation(fields: [academicTermId], references: [id])
 }
 
 // Attendance model

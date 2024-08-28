@@ -4,6 +4,10 @@ import prisma from "@/config/prisma";
 export async function GET(req, { params }) {
   const { parentId, studentId } = params;
 
+  // Parse query parameters
+  const { searchParams } = new URL(req.url);
+  const academicTermId = searchParams.get("academicTermId");
+
   try {
     // Check if the parent is associated with the student
     const student = await prisma.students.findFirst({
@@ -14,6 +18,9 @@ export async function GET(req, { params }) {
       include: {
         class: true,
         Grades: {
+          where : {
+            academicTermId
+          },
           include: {
             assessment: {
               include: {
