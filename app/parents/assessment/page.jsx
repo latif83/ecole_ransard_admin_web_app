@@ -64,7 +64,7 @@ export default function AssessmentTab() {
     const getAssessments = async () => {
       setAssessmentsLoading(true)
       try {
-        const response = await fetch(`/api/parents/${localStorage.getItem("identity")}/${selectedWardId}/assessment`)
+        const response = await fetch(`/api/parents/${localStorage.getItem("identity")}/${selectedWardId}/assessment?academicTermId=${selectedAcademicTermId}`)
 
         const responseData = await response.json()
 
@@ -87,7 +87,7 @@ export default function AssessmentTab() {
     }
 
     getAssessments()
-  }, [selectedWardId])
+  }, [selectedWardId,selectedAcademicTermId])
 
   const getAcademicTerms = async () => {
     setAcademicTermsLoading(true)
