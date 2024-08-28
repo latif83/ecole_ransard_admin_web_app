@@ -87,7 +87,7 @@ export default function AssessmentTab() {
     }
 
     getAssessments()
-  }, [selectedWardId,selectedAcademicTermId])
+  }, [selectedWardId, selectedAcademicTermId])
 
   const getAcademicTerms = async () => {
     setAcademicTermsLoading(true)
