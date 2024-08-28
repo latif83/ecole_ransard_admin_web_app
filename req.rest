@@ -125,3 +125,6 @@ http://localhost:3000/api/parents/cm0cpo7u7000hxvdkxm3nx37p/cm0cplwo6000gxvdk0wo
 
 ###
 http://localhost:3000/api/parents/cm0cpo7u7000hxvdkxm3nx37p/cm0cplwo6000gxvdk0wo5222o/billing
+
+###
+http://localhost:3000/api/calendar/term/events/upcoming

@@ -16,7 +16,7 @@ export const ParentProvider = ({ children }) => {
         { id: "attendance", label: "Attendance" },
         { id: "assessment", label: "Assessment" },
         { id: "billing", label: "Billing" },
-        { id: "events", label: "Events" },
+        // { id: "events", label: "Events" },
     ];
 
     const pathName = usePathname()
@@ -137,7 +137,7 @@ export const ParentProvider = ({ children }) => {
                             Billing
                         </Link>
 
-                        <Link
+                        {/* <Link
                             href={'/parents/events'}
                             className={`py-2 px-4 focus:outline-none ${pathName === "/parents/events"
                                 ? "border-b-4 border-blue-500 text-blue-500"
@@ -145,7 +145,7 @@ export const ParentProvider = ({ children }) => {
                                 }`}
                         >
                             Events
-                        </Link>
+                        </Link> */}
                     </div>
 
                     {/* Tab Content */}
