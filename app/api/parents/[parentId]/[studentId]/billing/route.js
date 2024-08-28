@@ -41,11 +41,11 @@ export async function GET(req, { params }) {
 
     // Step 3: Separate previous billing (before current academic term)
     const previousBalance = unpaidFees.reduce(
-      (sum, item) => sum + item.totalAmountOwed,
+      (sum, item) => sum + (item.totalAmountOwed - item.totalAmountPaid),
       0
     );
 
-    const unpaidFeesCurrent = await prisma.studentFeeSummary.findMany({
+    const unpaidFeesCurrent = await prisma.studentFeeSummary.findFirst({
       where: {
         studentId,
         academicTermId: activeTerm.id,
@@ -68,15 +68,16 @@ export async function GET(req, { params }) {
     // Step 5: Prepare response with current billing and balance left
     const totalAmountPaid = unpaidFeesCurrent?.totalAmountPaid || 0;
     const totalAmountOwed = unpaidFeesCurrent?.totalAmountOwed || 0;
-    const balanceLeft = totalAmountOwed - totalAmountPaid;
+    const balanceLeft = (totalAmountOwed - totalAmountPaid) + previousBalance;
 
     return NextResponse.json(
       {
         previousBalance,
         currentBilling: {
-          currentFeeDetails,
+            currentFeeDetails : currentFeeDetails.map((fees)=>({amount:fees.amount,fee:fees.feeDetail.title})),
           totalAmountPaid,
           balanceLeft,
+          totalBill : totalAmountOwed
         },
       },
       { status: 200 }
