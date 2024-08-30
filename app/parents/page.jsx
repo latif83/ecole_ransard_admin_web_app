@@ -9,40 +9,65 @@ export default function ParentDashboard() {
   const [summaryLoading, setSummaryLoading] = useState(false)
   const [summary, setSummary] = useState({})
 
-  const events = [
-    {
-      id: 1,
-      date: "2024-06-08T00:00:00.000Z",
-      title: "P.T.A Meeting",
-      description: "A meeting for all parents and teachers to discuss the school's progress and future plans."
-    },
-    {
-      id: 2,
-      date: "2024-07-12T00:00:00.000Z",
-      title: "Science Fair",
-      description: "An exhibition of science projects by students across all grades, open for parents and students."
-    },
-    {
-      id: 3,
-      date: "2024-08-15T00:00:00.000Z",
-      title: "Sports Day",
-      description: "A fun-filled day with athletic events, games, and competitions between students and classes."
-    },
-    {
-      id: 4,
-      date: "2024-09-25T00:00:00.000Z",
-      title: "School Cultural Day",
-      description: "A celebration of various cultures, featuring performances and presentations from students."
-    },
-    {
-      id: 5,
-      date: "2024-10-05T00:00:00.000Z",
-      title: "Mid-Term Parent Teacher Conference",
-      description: "A one-on-one meeting between parents and teachers to discuss students' mid-term progress."
-    }
-  ];
+  // const events = [
+  //   {
+  //     id: 1,
+  //     date: "2024-06-08T00:00:00.000Z",
+  //     title: "P.T.A Meeting",
+  //     description: "A meeting for all parents and teachers to discuss the school's progress and future plans."
+  //   },
+  //   {
+  //     id: 2,
+  //     date: "2024-07-12T00:00:00.000Z",
+  //     title: "Science Fair",
+  //     description: "An exhibition of science projects by students across all grades, open for parents and students."
+  //   },
+  //   {
+  //     id: 3,
+  //     date: "2024-08-15T00:00:00.000Z",
+  //     title: "Sports Day",
+  //     description: "A fun-filled day with athletic events, games, and competitions between students and classes."
+  //   },
+  //   {
+  //     id: 4,
+  //     date: "2024-09-25T00:00:00.000Z",
+  //     title: "School Cultural Day",
+  //     description: "A celebration of various cultures, featuring performances and presentations from students."
+  //   },
+  //   {
+  //     id: 5,
+  //     date: "2024-10-05T00:00:00.000Z",
+  //     title: "Mid-Term Parent Teacher Conference",
+  //     description: "A one-on-one meeting between parents and teachers to discuss students' mid-term progress."
+  //   }
+  // ];
+
+  const [events,setEvents] = useState([])
+  const [eventsLoading,setEventsLoading] = useState(false)
+
 
   useEffect(() => {
+
+    const getEventsData = async () => {
+      setEventsLoading(true)
+      try{
+        const response = await fetch(`/api/calendar/term/events/upcoming`)
+
+        const responseData = await response.json()
+
+        if (!response.ok) {
+          toast.error(responseData.message)
+          return
+        }
+
+        setEvents(responseData)
+      } catch(e){
+        console.log(e)
+      } finally{
+        setEventsLoading(false)
+      }
+    }
+
     const getSummaryData = async () => {
       setSummaryLoading(true)
       try {
@@ -65,6 +90,7 @@ export default function ParentDashboard() {
     }
 
     getSummaryData()
+    getEventsData()
   }, [])
 
   return (

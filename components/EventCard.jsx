@@ -34,11 +34,11 @@ export const EventCard = ({ event }) => {
     };
 
     useEffect(() => {
-        const days = calculateDaysLeft(event.date);
+        const days = calculateDaysLeft(event.eventDate);
         setDaysLeft(days);
-    }, [event.date]);
+    }, [event.eventDate]);
 
-    const { day, month, year, dayName } = formatDate(event.date);
+    const { day, month, year, dayName } = formatDate(event.eventDate);
 
     return (
         <div className="shadow-lg border rounded-lg p-4 bg-gray-100">
