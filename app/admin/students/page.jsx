@@ -333,7 +333,7 @@ export default function Students() {
                                         </th>
                                         <td className="px-6 py-4 text-center">{calculateAge(student.birthDate)}</td>
                                         <td className="px-6 py-4 text-center">{student.class.className} ({student.ClassSections.sectionName})</td>
-                                        <td className="px-6 py-4 text-center">{student.address}</td>
+                                        <td className="px-6 py-4 text-center">{student.address ? student.address : 'N/A'}</td>
                                         <td className="px-6 py-4 print-hide text-center">
                                             <span
                                                 onClick={() => {

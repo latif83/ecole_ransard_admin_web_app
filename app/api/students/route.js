@@ -112,7 +112,7 @@ export async function GET(req) {
       },
     });
 
-    console.log(students)
+    // console.log(students)
 
     // Return the list of students
     return NextResponse.json({ students }, { status: 200 });
@@ -134,6 +134,7 @@ export async function PUT(req) {
       birthDate,
       address,
       classId,
+      passportImage,
       classSectionsId,
     } = await req.json();
 
@@ -167,6 +168,7 @@ export async function PUT(req) {
         birthDate: isoBirthDate,
         address,
         classId,
+        passportImage,
         classSectionsId,
       },
     });

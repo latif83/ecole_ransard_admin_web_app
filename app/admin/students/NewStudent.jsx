@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { faSpinner, faTimes, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faTimes, faTrash, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { uploadStudentImageToCloudinary } from "@/actions/actions";
@@ -75,20 +75,22 @@ export default function NewStudent({ setAddStudent, setGData }) {
 
         try {
 
+            if (!passportImage) {
+                toast.error("Please select a passport image!")
+                return
+            }
 
             let imageUrl = null
 
             const uploadImage = await uploadStudentImageToCloudinary(passportImage)
             imageUrl = uploadImage.url
 
-            console.log({uploadImage,imageUrl})
-
             const response = await fetch("/api/students", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ firstName, lastName, birthDate, address, classId, classSectionsId,passportImage : imageUrl }),
+                body: JSON.stringify({ firstName, lastName, birthDate, address, classId, classSectionsId, passportImage: imageUrl }),
             });
             const responseData = await response.json();
             if (!response.ok) {
@@ -103,6 +105,8 @@ export default function NewStudent({ setAddStudent, setGData }) {
             console.log(err);
             toast.error("Error adding student, please try again!");
             setLoading(false);
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -137,9 +141,13 @@ export default function NewStudent({ setAddStudent, setGData }) {
                 <form onSubmit={handleSubmit}>
                     <div className="flex gap-6">
                         <div className="w-[200px] shrink-0">
-                            {passportImage ? <div className="rounded-lg h-[200px] w-[200px] border-2 border-blue-500 text-blue-500 flex items-center justify-center flex-col cursor-pointer overflow-hidden p-0.5">
+                            {passportImage ? <div className="rounded-lg h-[200px] w-[200px] border-2 border-blue-500 text-blue-500 flex items-center justify-center flex-col cursor-pointer relative p-0.5">
                                 <Image width={500} height={500} src={passportImage} className="h-full w-full object-cover object-top" />
-
+                                <div className="absolute -bottom-2 w-full flex justify-center">
+                                    <button type="button" onClick={() => setPassportImage(null)} className="bg-white rounded p-2 px-3 text-black hover:text-red-600 transition duration-500 text-xs">
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </button>
+                                </div>
                             </div> : <label htmlFor="passport_pic" style={{ padding: '1.2px' }} className="rounded-lg h-[200px] w-[200px] border-2 border-blue-500 text-blue-500 flex items-center justify-center flex-col cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -152,24 +160,25 @@ export default function NewStudent({ setAddStudent, setGData }) {
                             </label>}
                             <input onChange={handlePassportImage} id="passport_pic" type="file" hidden />
                         </div>
-                        <div className="flex-1"> <div className="relative z-0 w-full group mb-5">
-                            <input
-                                type="text"
-                                name="firstName"
-                                id="firstName"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
-                                required
-                            />
-                            <label
-                                htmlFor="firstName"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                First Name
-                            </label>
-                        </div>
+                        <div className="flex-1">
+                            <div className="relative z-0 w-full group mb-5">
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    id="firstName"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    required
+                                />
+                                <label
+                                    htmlFor="firstName"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    First Name
+                                </label>
+                            </div>
                             <div className="relative z-0 w-full group mb-5">
                                 <input
                                     type="text"
@@ -307,7 +316,8 @@ export default function NewStudent({ setAddStudent, setGData }) {
                                 >
                                     {loading ? <> <FontAwesomeIcon icon={faSpinner} spin /> Add Student </> : "Add Student"}
                                 </button>
-                            </div></div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
