@@ -100,6 +100,7 @@ model Students {
   lastName        String
   birthDate       DateTime
   address         String?
+  passportImage   String?
   parentId        String?
   classId         String
   classSectionsId String?

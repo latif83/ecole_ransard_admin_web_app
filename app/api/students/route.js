@@ -16,6 +16,7 @@ export async function POST(req) {
       birthDate,
       address,
       classId,
+      passportImage,
       classSectionsId,
     } = await req.json();
 
@@ -40,6 +41,7 @@ export async function POST(req) {
         birthDate: isoBirthDate,
         address,
         classId,
+        passportImage,
         classSectionsId,
       },
     });
