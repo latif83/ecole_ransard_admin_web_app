@@ -73,7 +73,7 @@ export async function POST(req) {
           teacherId: teacherId,
           classId: classId,
         },
-      });
+      }); 
   
       // Return the created assignment
       return NextResponse.json({message:"Class assigned to teacher successfully!"}, { status: 201 });

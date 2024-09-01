@@ -107,3 +107,42 @@ body {
 .line-clamp-none {
   display: block;
 }
+
+.print-display{
+  display: none;
+}
+
+.print-hide{
+  display: flex;
+}
+
+@media print {
+  /* Hide everything when printing */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only the invoice content */
+  .printable-area,
+  .printable-area * {
+    visibility: visible;
+  }
+
+  /* Ensure the invoice is positioned correctly for printing */
+  .printable-area {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* height: 100%; */
+  }
+
+  .print-display{
+    display: block;
+  }
+
+  .print-hide{
+    display: none;
+  }
+
+}

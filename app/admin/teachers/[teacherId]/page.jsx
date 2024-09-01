@@ -19,6 +19,7 @@ import { EditTeacher } from "./editTeacher";
 // import { RemoveAssignedSubject } from "./removeAssignedSubject";
 // import { RemoveAssignedClass } from "./removeAssignedClass";
 import { toast } from "react-toastify";
+// import { RemoveAssignedClass } from "./removeAssignedClass";
 
 export default function Teacher({ params }) {
   const teacherId = params.teacherId;
@@ -39,14 +40,13 @@ export default function Teacher({ params }) {
 
   const [removeAssignedSubject, setRemoveAssignedSub] = useState(false);
   const [subId, setSubId] = useState(0);
-
   const [removeAssignedClass, setRemoveAssignedClass] = useState(false);
 
   const [teacherDetails, setTeacherDetails] = useState({});
   const [teacherDetailsLoading, setTeacherDetailsLoading] = useState(false);
   const [getTeacherDetails, setGetTeacherDetails] = useState(true);
 
-  const [classId,setClassId] = useState(0)
+  const [classId, setClassId] = useState(0)
 
   useEffect(() => {
     const accessToken = localStorage.getItem("SMSTOKEN");
@@ -113,7 +113,7 @@ export default function Teacher({ params }) {
 
   return (
     <div>
-      {assignClass && (
+      {/* {assignClass && (
         <AssignClass
           setAssignClass={setAssignClass}
           teacherId={teacherId}
@@ -137,7 +137,7 @@ export default function Teacher({ params }) {
           setGetTeacherDetails={setGetTeacherDetails}
         />
       )}
-      {/*
+      
       {delTeacher && (
         <DelTeacher setDelTeacher={setDelTeacher} teacherId={teacherId} />
       )}
@@ -149,9 +149,10 @@ export default function Teacher({ params }) {
           subjectId={subId}
           setFData={setFData}
         />
-      )}
+      )} */}
 
-      {removeAssignedClass && (
+
+      {/* {removeAssignedClass && (
         <RemoveAssignedClass
           setRemoveAssignedClass={setRemoveAssignedClass}
           assignedTeacherId={assignedTeacherId}
@@ -339,64 +340,67 @@ export default function Teacher({ params }) {
             Loading...{" "}
           </p>
         ) : data?.length > 0 ? (
-          data.map((d) => (
-            <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-              <div className="font-semibold p-2 bg-blue-700 text-white flex justify-between items-center">
-                <h3>
-                  {d.classSectionName}
-                </h3>
-                <FontAwesomeIcon
-                  onClick={() => {
-                    setAssignedTeacherId(d.assignedTeacherId); setRemoveAssignedClass(true);
-                  }}
-                  icon={faTrash}
-                  width={15}
-                  height={15}
-                  className="text-gray-200 hover:text-red-500 cursor-pointer"
-                />
-              </div>
-
-              <div className="p-2">
-                <div className="flex justify-between items-center">
-                  <h3 className="font-semibold">Subjects:</h3>
+          data.map((d) => {
+            console.log(d)
+            return (
+              <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+                <div className="font-semibold p-2 bg-blue-700 text-white flex justify-between items-center">
+                  <h3>
+                    {d.classSectionName}
+                  </h3>
                   <FontAwesomeIcon
                     onClick={() => {
-                      setClassId(d.classId)
-                      setAssignSub(true);
-                      setAssignedTeacherId(d.assignedTeacherId);
-                      setSubClassSection(d.classSectionName);
+                      setAssignedTeacherId(d.assignedTeacherId); setRemoveAssignedClass(true);
                     }}
-                    icon={faPlusCircle}
-                    width={20}
-                    height={20}
-                    className="text-lg hover:text-black cursor-pointer"
+                    icon={faTrash}
+                    width={15}
+                    height={15}
+                    className="text-gray-200 hover:text-red-500 cursor-pointer"
                   />
                 </div>
-                <div className="flex gap-2 text-xs mt-2 overflow-x-scroll">
-                  {d.subjects.length > 0 ? (
-                    d.subjects.map((subject) => (
-                      <span className="bg-black text-white p-1.5 rounded-lg flex flex-shrink-0 gap-1 items-center">
-                        {subject?.name}
-                        <FontAwesomeIcon
-                          onClick={() => {
-                            setSubId(subject?.Subject.id);
-                            setAssignedTeacherId(d.assignedTeacherId);
-                            setRemoveAssignedSub(true);
-                          }}
-                          icon={faXmarkCircle}
-                          width={20}
-                          height={20}
-                          className="text-sm text-red-600 hover:text-red-700 cursor-pointer"
-                        />
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-sm">No Subjects assigned.</span>
-                  )}
+
+                <div className="p-2">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-semibold">Subjects:</h3>
+                    <FontAwesomeIcon
+                      onClick={() => {
+                        setClassId(d.classId)
+                        setAssignSub(true);
+                        setAssignedTeacherId(d.assignedTeacherId);
+                        setSubClassSection(d.classSectionName);
+                      }}
+                      icon={faPlusCircle}
+                      width={20}
+                      height={20}
+                      className="text-lg hover:text-black cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex gap-2 text-xs mt-2 overflow-x-scroll">
+                    {d.subjects.length > 0 ? (
+                      d.subjects.map((subject) => (
+                        <span className="bg-black text-white p-1.5 rounded-lg flex flex-shrink-0 gap-1 items-center">
+                          {subject?.name}
+                          <FontAwesomeIcon
+                            onClick={() => {
+                              setSubId(subject?.Subject.id);
+                              setAssignedTeacherId(d.assignedTeacherId);
+                              setRemoveAssignedSub(true);
+                            }}
+                            icon={faXmarkCircle}
+                            width={20}
+                            height={20}
+                            className="text-sm text-red-600 hover:text-red-700 cursor-pointer"
+                          />
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-sm">No Subjects assigned.</span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            )
+          })
         ) : (
           <p className="text-red-600"> No Classes Assigned. </p>
         )}

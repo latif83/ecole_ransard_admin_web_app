@@ -1,5 +1,5 @@
 "use client"
-import { faPlusCircle, faSpinner, faUserTie, faTimes, faUsersBetweenLines, faUsersLine } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faSpinner, faUserTie, faTimes, faUsersBetweenLines, faUsersLine, faPrint } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -127,6 +127,11 @@ export default function Students() {
         );
         setFilteredStudents(filtered);
     }, [searchTerm,students]);
+
+    // Function to print the students list
+    const printList = () => {
+        window.print();
+    };
 
     return (
         <div>
@@ -262,7 +267,7 @@ export default function Students() {
                             />
                         </div>
                     </div>
-                    <div>
+                    <div className="flex gap-2">
                         <button
                             onClick={() => setAddStudent(true)}
                             className="p-2 rounded-lg bg-gray-50 flex gap-2 items-center hover:bg-gray-200 text-sm"
@@ -270,8 +275,22 @@ export default function Students() {
                             <FontAwesomeIcon icon={faPlusCircle} />
                             New Student
                         </button>
+                        <button
+                            onClick={() => printList()}
+                            className="p-2 rounded bg-blue-600 text-white flex gap-2 items-center hover:bg-blue-700 text-sm"
+                        >
+                            <FontAwesomeIcon icon={faPrint} />
+                            Print
+                        </button>
                     </div>
                 </div>
+                <div className="printable-area">
+                    <div className="mt-12 mb-5 text-center pb-2 border-b-2 border-red-600 print-display">
+                        <h1 className="font-bold text-xl">ECOLE RONSARD</h1>
+                        <h3 className="text-sm">
+                            Students List.
+                        </h3>
+                    </div>
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500">
                     <thead className="text-xs text-center text-gray-700 uppercase bg-gray-50">
                         <tr>
@@ -287,7 +306,7 @@ export default function Students() {
                             <th scope="col" className="px-6 py-3">
                                 Address
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className="px-6 py-3 print-hide">
                                 Actions
                             </th>
                         </tr>
@@ -311,7 +330,7 @@ export default function Students() {
                                     <td className="px-6 py-4 text-center">{calculateAge(student.birthDate)}</td>
                                     <td className="px-6 py-4 text-center">{student.class.className} ({student.ClassSections.sectionName})</td>
                                     <td className="px-6 py-4 text-center">{student.address}</td>
-                                    <td className="px-6 py-4 flex justify-center items-center gap-1.5">
+                                    <td className="px-6 py-4 print-hide justify-center items-center gap-1.5">
                                         <span
                                             onClick={() => {
                                                 setStudentData(student);
@@ -342,6 +361,7 @@ export default function Students() {
                         )}
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     );
