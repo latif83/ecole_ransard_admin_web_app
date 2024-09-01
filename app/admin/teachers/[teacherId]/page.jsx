@@ -113,7 +113,7 @@ export default function Teacher({ params }) {
 
   return (
     <div>
-      {/* {assignClass && (
+      {assignClass && (
         <AssignClass
           setAssignClass={setAssignClass}
           teacherId={teacherId}
@@ -138,11 +138,11 @@ export default function Teacher({ params }) {
         />
       )}
       
-      {delTeacher && (
+      {/* {delTeacher && (
         <DelTeacher setDelTeacher={setDelTeacher} teacherId={teacherId} />
-      )}
+      )} */}
 
-      {removeAssignedSubject && (
+      {/* {removeAssignedSubject && (
         <RemoveAssignedSubject
           setRemoveAssignedSub={setRemoveAssignedSub}
           assignedTeacherId={assignedTeacherId}
