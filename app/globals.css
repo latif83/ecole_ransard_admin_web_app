@@ -113,7 +113,7 @@ body {
 }
 
 .print-hide{
-  display: block;
+  display: table-cell;
 }
 
 @media print {
