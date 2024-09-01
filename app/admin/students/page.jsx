@@ -326,7 +326,7 @@ export default function Students() {
                                             scope="row"
                                             className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center flex items-center gap-2"
                                         >
-                                            <Image src={student.passportImage} className="w-12 h-12 object-cover p-0.5 border border-blue-600 rounded" width={500} height={500} />
+                                            <Image src={!student?.passportImage ? 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnpoc3AzZDFsZmRta2JyN2RkZDYxbWN4eWVrMWFqdG5yNWtibDVpZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/uIJBFZoOaifHf52MER/giphy.gif' : student?.passportImage} className="w-12 h-12 object-cover p-0.5 border border-blue-600 rounded" width={500} height={500} />
                                             <span>
                                                 {student.firstName} {student.lastName}
                                             </span>
@@ -334,13 +334,13 @@ export default function Students() {
                                         <td className="px-6 py-4 text-center">{calculateAge(student.birthDate)}</td>
                                         <td className="px-6 py-4 text-center">{student.class.className} ({student.ClassSections.sectionName})</td>
                                         <td className="px-6 py-4 text-center">{student.address}</td>
-                                        <td className="px-6 py-4 print-hide justify-center h-full items-center gap-1.5">
+                                        <td className="px-6 py-4 print-hide text-center">
                                             <span
                                                 onClick={() => {
                                                     setStudentData(student);
                                                     setEditStudent(true);
                                                 }}
-                                                className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                                className="font-medium text-blue-600 hover:underline cursor-pointer mr-2"
                                             >
                                                 Edit
                                             </span>

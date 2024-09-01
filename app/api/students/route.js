@@ -61,7 +61,6 @@ export async function POST(req) {
 
 export async function GET(req) {
   try {
-    
     // Parse query parameters
     const { searchParams } = new URL(req.url);
     const classId = searchParams.get("classId");
@@ -70,7 +69,12 @@ export async function GET(req) {
     // Build the where clause dynamically
     let whereClause = {};
 
-    if (classId && classSectionsId && classId !== "0" && classSectionsId !== "0") {
+    if (
+      classId &&
+      classSectionsId &&
+      classId !== "0" &&
+      classSectionsId !== "0"
+    ) {
       // Fetch students for a specific class and class section
       whereClause = {
         classId,
@@ -91,7 +95,7 @@ export async function GET(req) {
         firstName: true,
         lastName: true,
         birthDate: true,
-        passportImage : true,
+        passportImage: true,
         address: true,
         classId: true,
         classSectionsId: true,
@@ -108,6 +112,8 @@ export async function GET(req) {
       },
     });
 
+    console.log(students)
+
     // Return the list of students
     return NextResponse.json({ students }, { status: 200 });
   } catch (error) {
@@ -118,7 +124,6 @@ export async function GET(req) {
     );
   }
 }
-
 
 export async function PUT(req) {
   try {
