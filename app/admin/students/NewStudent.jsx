@@ -78,15 +78,10 @@ export default function NewStudent({ setAddStudent, setGData }) {
 
             let imageUrl = null
 
-            uploadStudentImageToCloudinary(passportImage)
-                .then(async (result) => {
-                    console.log("Image uploaded successfully:", result);
-                    imageUrl = result.url
-                })
-                .catch((error) => {
-                    console.error("Error uploading image:", error);
-                });
+            const uploadImage = await uploadStudentImageToCloudinary(passportImage)
+            imageUrl = uploadImage.url
 
+            console.log({uploadImage,imageUrl})
 
             const response = await fetch("/api/students", {
                 method: "POST",

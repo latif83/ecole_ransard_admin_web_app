@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import NewStudent from "./NewStudent"; // Assume you have a NewStudent component
 import EditStudent from "./EditStudent"; // Assume you have an EditStudent component
 import DeleteStudent from "./DeleteStudent"; // Assume you have a DeleteStudent component
+import Image from "next/image";
 
 function calculateAge(birthDate) {
     const birth = new Date(birthDate);
@@ -126,7 +127,7 @@ export default function Students() {
             `${student.firstName} ${student.lastName}`.toLowerCase().includes(lowerCaseSearchTerm)
         );
         setFilteredStudents(filtered);
-    }, [searchTerm,students]);
+    }, [searchTerm, students]);
 
     // Function to print the students list
     const printList = () => {
@@ -291,76 +292,79 @@ export default function Students() {
                             Students List.
                         </h3>
                     </div>
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                    <thead className="text-xs text-center text-gray-700 uppercase bg-gray-50">
-                        <tr>
-                            <th scope="col" className="px-6 py-3">
-                                Name
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Age
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Class
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Address
-                            </th>
-                            <th scope="col" className="px-6 py-3 print-hide">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
-                            <tr className="bg-white border-b hover:bg-gray-50">
-                                <td colSpan={5} className="px-6 py-4 text-center">
-                                    <FontAwesomeIcon icon={faSpinner} spin /> Loading...
-                                </td>
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <thead className="text-xs text-center text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" className="px-6 py-3 text-left">
+                                    Name
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Age
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Class
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Address
+                                </th>
+                                <th scope="col" className="px-6 py-3 print-hide">
+                                    Actions
+                                </th>
                             </tr>
-                        ) : filteredStudents.length > 0 ? (
-                            filteredStudents.map((student) => (
-                                <tr key={student.id} className="bg-white border-b hover:bg-gray-50">
-                                    <th
-                                        scope="row"
-                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                                    >
-                                        {student.firstName} {student.lastName}
-                                    </th>
-                                    <td className="px-6 py-4 text-center">{calculateAge(student.birthDate)}</td>
-                                    <td className="px-6 py-4 text-center">{student.class.className} ({student.ClassSections.sectionName})</td>
-                                    <td className="px-6 py-4 text-center">{student.address}</td>
-                                    <td className="px-6 py-4 print-hide justify-center items-center gap-1.5">
-                                        <span
-                                            onClick={() => {
-                                                setStudentData(student);
-                                                setEditStudent(true);
-                                            }}
-                                            className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                        >
-                                            Edit
-                                        </span>
-                                        <span
-                                            onClick={() => {
-                                                setStudentId(student.id);
-                                                setDeleteStudent(true);
-                                            }}
-                                            className="font-medium hover:underline text-red-600 hover:underline cursor-pointer"
-                                        >
-                                            Delete
-                                        </span>
+                        </thead>
+                        <tbody>
+                            {loading ? (
+                                <tr className="bg-white border-b hover:bg-gray-50">
+                                    <td colSpan={5} className="px-6 py-4 text-center">
+                                        <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr className="bg-white border-b hover:bg-gray-50">
-                                <td colSpan={5} className="px-6 py-4 text-center">
-                                    No students found
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                            ) : filteredStudents.length > 0 ? (
+                                filteredStudents.map((student) => (
+                                    <tr key={student.id} className="bg-white border-b hover:bg-gray-50">
+                                        <th
+                                            scope="row"
+                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center flex items-center gap-2"
+                                        >
+                                            <Image src={student.passportImage} className="w-12 h-12 object-cover p-0.5 border border-blue-600 rounded" width={500} height={500} />
+                                            <span>
+                                                {student.firstName} {student.lastName}
+                                            </span>
+                                        </th>
+                                        <td className="px-6 py-4 text-center">{calculateAge(student.birthDate)}</td>
+                                        <td className="px-6 py-4 text-center">{student.class.className} ({student.ClassSections.sectionName})</td>
+                                        <td className="px-6 py-4 text-center">{student.address}</td>
+                                        <td className="px-6 py-4 print-hide justify-center h-full items-center gap-1.5">
+                                            <span
+                                                onClick={() => {
+                                                    setStudentData(student);
+                                                    setEditStudent(true);
+                                                }}
+                                                className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                            >
+                                                Edit
+                                            </span>
+                                            <span
+                                                onClick={() => {
+                                                    setStudentId(student.id);
+                                                    setDeleteStudent(true);
+                                                }}
+                                                className="font-medium hover:underline text-red-600 hover:underline cursor-pointer"
+                                            >
+                                                Delete
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr className="bg-white border-b hover:bg-gray-50">
+                                    <td colSpan={5} className="px-6 py-4 text-center">
+                                        No students found
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -91,6 +91,7 @@ export async function GET(req) {
         firstName: true,
         lastName: true,
         birthDate: true,
+        passportImage : true,
         address: true,
         classId: true,
         classSectionsId: true,
