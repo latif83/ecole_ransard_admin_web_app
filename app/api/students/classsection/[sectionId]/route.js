@@ -39,8 +39,6 @@ export async function GET(req, params) {
       },
     });
 
-    console.log(students);
-
     return NextResponse.json({ students }, { status: 200 });
   } catch (error) {
     console.error("Error fetching students by class:", error);

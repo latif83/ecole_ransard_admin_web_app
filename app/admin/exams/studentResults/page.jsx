@@ -110,7 +110,7 @@ export default function StudentResults() {
                             {'>'}
                         </span>
                         <span className="text-blue-600">
-                            Students Results
+                            Student Results
                         </span>
                     </p>
                 </div>
@@ -131,6 +131,8 @@ export default function StudentResults() {
                         required
                         value={classId}
                         onChange={(e) => {
+                            setSectionId("")
+                            setStudentId("")
                             setClassId(e.target.value);
                             fetchClassSections(e.target.value)
                         }}
@@ -170,6 +172,7 @@ export default function StudentResults() {
                         required
                         value={sectionId}
                         onChange={(e) => {
+                            setStudentId("");
                             setSectionId(e.target.value);
                             fetchStudents(e.target.value)
                         }}
@@ -238,7 +241,15 @@ export default function StudentResults() {
                     Select a student above to view results
                 </h3>
 
-                <button className="bg-blue-600 rounded p-3 text-sm text-white">
+                <button type="button" onClick={() => {
+                    if (!studentId) {
+                        toast.error("Please select a student!")
+                        return
+                    }
+
+                    router.push(`/admin/exams/studentResults/${studentId}`)
+
+                }} className="bg-blue-600 rounded p-3 text-sm text-white">
                     View Results
                 </button>
             </div>
