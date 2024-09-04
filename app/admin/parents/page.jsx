@@ -141,7 +141,7 @@ export default function Parents() {
                                     >
                                         {parent.firstName} {parent.lastName}
                                     </th>
-                                    <td className="px-6 py-4 text-center">{parent.students.length}</td>
+                                    <td className="px-6 py-4 text-center"><button type="button" className="text-blue-600 hover:underline">{parent.students.length}</button></td>
                                     <td className="px-6 py-4 text-center">{parent.address}</td>
                                     <td className="px-6 py-4 text-center">{parent.email}</td>
                                     <td className="px-6 py-4 text-center">{parent.phone}</td>

@@ -55,7 +55,7 @@ export async function POST(req) {
           data: {
             email: lowercaseEmail,
             password: password, // In a real application, make sure to hash the password
-            name: "admin",
+            name: "School Administrator",
             phone: "0249994440",
           },
         });
