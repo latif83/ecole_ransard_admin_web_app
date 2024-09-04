@@ -1,5 +1,6 @@
 "use client"
 import { AdminSidebar } from "@/components/admin/sidebar"
+import LogOut from "@/components/logout"
 import { faBars, faUserCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
@@ -8,12 +9,16 @@ export default function RootLayout({ children }) {
 
     const [adminUser, setAdminUser] = useState("")
 
+    const [logOut, setLogOut] = useState(false)
+
     useEffect(() => {
         setAdminUser(localStorage.getItem("userIdentity"))
     }, [])
 
     return (
         <div className="flex gap-0.5 h-svh overflow-hidden">
+
+            {logOut && <LogOut setLogOut={setLogOut} />}
 
             <AdminSidebar />
 
@@ -35,7 +40,7 @@ export default function RootLayout({ children }) {
                         </div>
 
                         <div className="absolute -bottom-8 right-0">
-                            <button className="text-red-600 flex p-2 bg-gray-100 hover:bg-red-600 hover:text-white transition duration-500 border border-red-600 rounded-lg justify-center items-center gap-2 w-full group text-sm">
+                            <button type="button" onClick={() => setLogOut(true)} className="text-red-600 flex p-2 bg-gray-100 hover:bg-red-600 hover:text-white transition duration-500 border border-red-600 rounded-lg justify-center items-center gap-2 w-full group text-sm">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
