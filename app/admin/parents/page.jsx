@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import NewParent from "./NewParent";
 import EditParent from "./EditParent";
 import DeleteParent from "./DeleteParent";
+import { ViewWards } from "./viewWards";
 
 export default function Parents() {
     const [parents, setParents] = useState([]);
@@ -37,6 +38,9 @@ export default function Parents() {
         fetchParents();
     }, [addParent, editParent, deleteParent]); // Refetch data when adding, editing, or deleting
 
+    const [viewWards, setViewWards] = useState(false)
+    const [wardsData, setWardsData] = useState([])
+
     return (
         <div>
             {addParent && <NewParent setAddParent={setAddParent} setGData={setParents} />}
@@ -54,6 +58,8 @@ export default function Parents() {
                     parentId={parentId}
                 />
             )}
+
+            {viewWards && <ViewWards setViewWards={setViewWards} students={wardsData} />}
 
             <div className="flex items-center gap-2">
                 <FontAwesomeIcon icon={faUserTie} width={15} height={15} />
@@ -141,7 +147,11 @@ export default function Parents() {
                                     >
                                         {parent.firstName} {parent.lastName}
                                     </th>
-                                    <td className="px-6 py-4 text-center"><button type="button" className="text-blue-600 hover:underline">{parent.students.length}</button></td>
+                                    <td className="px-6 py-4 text-center">
+                                        <button type="button" onClick={() => {
+                                            setWardsData(parent.students); setViewWards(true);
+                                        }} className="text-blue-600 hover:underline">{parent.students.length}</button>
+                                    </td>
                                     <td className="px-6 py-4 text-center">{parent.address}</td>
                                     <td className="px-6 py-4 text-center">{parent.email}</td>
                                     <td className="px-6 py-4 text-center">{parent.phone}</td>
