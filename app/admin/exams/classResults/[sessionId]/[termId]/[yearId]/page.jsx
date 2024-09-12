@@ -1,48 +1,46 @@
 "use client"
-import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeftLong, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-// Dummy Data
-const classResults = [
-    {
-        subjectName: 'Mathematics',
-        highestScore: 95,
-        lowestScore: 65,
-        averageScore: 80,
-        totalStudents: 25,
-        bestStudent: 'John Doe', // Best scoring student
-    },
-    {
-        subjectName: 'English',
-        highestScore: 88,
-        lowestScore: 60,
-        averageScore: 75,
-        totalStudents: 25,
-        bestStudent: 'Jane Smith',
-    },
-    {
-        subjectName: 'Science',
-        highestScore: 92,
-        lowestScore: 70,
-        averageScore: 78,
-        totalStudents: 25,
-        bestStudent: 'Michael Johnson',
-    },
-    {
-        subjectName: 'History',
-        highestScore: 85,
-        lowestScore: 55,
-        averageScore: 70,
-        totalStudents: 25,
-        bestStudent: 'Emily Brown',
-    },
-];
 
-export default function ClassResults() {
+export default function ClassResults({params}) {
 
     const router = useRouter()
+
+    const {sessionId,termId} = params
+
+    const [dataLoading,setDataLoading] = useState(false)
+    const [resultsData,setResultsData] = useState([])
+
+    useEffect(()=>{
+
+        const getResultsData = async ()=>{
+            try{
+                setDataLoading(true)
+                const response = await fetch(`/api/exams/assessments/classResults?termId=${termId}&sectionId=${sessionId}`)
+
+                const responseData = await response.json()
+
+                if(!response.ok){
+                    toast.error("Error fetching data")
+                }
+
+                console.log(responseData)
+                setResultsData(responseData)
+            }
+            catch(e){
+                console.log(e)
+            } finally{
+                setDataLoading(false)
+            }
+        }
+
+        getResultsData()
+
+    },[])
 
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
@@ -86,61 +84,36 @@ export default function ClassResults() {
                             <th scope="col" className="px-6 py-3">Highest Score</th>
                             <th scope="col" className="px-6 py-3">Lowest Score</th>
                             <th scope="col" className="px-6 py-3">Average Score</th>
-                            <th scope="col" className="px-6 py-3">Best Scoring Student</th>
+                            <th scope="col" className="px-6 py-3">Best Student</th>
                         </tr>
                     </thead>
                     <tbody>
 
-                        {classResults.map((subject, index) => (
-                            <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                <th scope="row"
-                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center">{subject.subjectName}</th>
-                                <td className="px-6 py-4">{subject.highestScore}%</td>
-                                <td className="px-6 py-4">{subject.lowestScore}%</td>
-                                <td className="px-6 py-4">{subject.averageScore}%</td>
-                                <td className="px-6 py-4">{subject.bestStudent}</td>
-                            </tr>
-                        ))}
 
-
-                        {/* {loadingClassSections ? (
+                        {dataLoading ? (
                             <tr className="bg-white border-b hover:bg-gray-50">
-                                <td colSpan={3} className="px-6 py-4 text-center">
+                                <td colSpan={5} className="px-6 py-4 text-center">
                                     <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                                 </td>
                             </tr>
-                        ) : classSections?.length > 0 ? (
-                            classSections?.map((section) => (
-                                <tr key={section.sectionId} className="bg-white border-b hover:bg-gray-50">
-                                    <th
-                                        scope="row"
-                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                                    >
-                                        {section.className} ( {section.sectionName} )
-                                    </th>
-                                    <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                        <span
-                                            onClick={() => {
-                                                if (!termId) {
-                                                    toast.error("Please select an academic term!")
-                                                    return
-                                                }
-
-                                                router.push(`/admin/exams/classResults/${section.sectionId}/${termId}/${yearId}`)
-                                            }} className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                        >
-                                            Select
-                                        </span>
-                                    </td>
-                                </tr>
+                        ) : resultsData?.data?.length > 0 ? (
+                            resultsData?.data?.map((subject,index) => (
+                                <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                                <th scope="row"
+                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center">{subject.subjectName}</th>
+                                <td className="px-6 py-4">{(subject.highestScore).toFixed(2)}%</td>
+                                <td className="px-6 py-4">{(subject.lowestScore).toFixed(2)}%</td>
+                                <td className="px-6 py-4">{(subject.averageScore).toFixed(2)}%</td>
+                                <td className="px-6 py-4">{subject.bestStudent}</td>
+                            </tr>
                             ))
                         ) : (
                             <tr className="bg-white border-b hover:bg-gray-50">
-                                <td colSpan={3} className="px-6 py-4 text-center">
-                                    No classes found
+                                <td colSpan={5} className="px-6 py-4 text-center">
+                                    No results found
                                 </td>
                             </tr>
-                        )} */}
+                        )}
                     </tbody>
                 </table>
             </div>
