@@ -128,3 +128,6 @@ http://localhost:3000/api/parents/cm0cpo7u7000hxvdkxm3nx37p/cm0cplwo6000gxvdk0wo
 
 ###
 http://localhost:3000/api/calendar/term/events/upcoming
+
+###
+http://localhost:3000/api/exams/assessments/classResults?termId=cm0e5lei40001qn45n7yp655k&sectionId=cm0cphq25000bxvdky6o6vbw8
