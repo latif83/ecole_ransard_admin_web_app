@@ -51,8 +51,14 @@ export default function Home() {
 
         localStorage.setItem("identity",responseData.identity)
         localStorage.setItem("userIdentity",responseData.user)
+        localStorage.setItem("loggedInRole",responseData.roleIs)
 
         toast.success(responseData.message);
+
+        if(responseData.resetPasswordRequired){
+          router.replace('/reset')
+          return
+        }
 
         router.push(responseData.roleIs);
       } catch (err) {

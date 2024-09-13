@@ -77,6 +77,12 @@ export async function POST(req) {
         secure: process.env.NODE_ENV === "production", // Enable for HTTPS in production
       });
 
+      let resetPasswordRequired = false
+
+      if(password == "ronsard@123"){
+        resetPasswordRequired = true
+      }
+
       // Successful login
       return NextResponse.json(
         {
@@ -85,6 +91,7 @@ export async function POST(req) {
           roleIs,
           identity: user.id,
           user: user?.name ? user?.name : `${user.firstName} ${user.lastName}`,
+          resetPasswordRequired
         },
         { status: 200 }
       );

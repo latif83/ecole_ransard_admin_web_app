@@ -131,3 +131,13 @@ http://localhost:3000/api/calendar/term/events/upcoming
 
 ###
 http://localhost:3000/api/exams/assessments/classResults?termId=cm0e5lei40001qn45n7yp655k&sectionId=cm0cphq25000bxvdky6o6vbw8
+
+###
+POST http://localhost:3000/api/reset
+Content-Type: application/json
+
+{
+    "userIdentity" : "cm0cp8zad0000xvdkh3p8xuwl",
+    "password" : "newpass",
+    "role" : "admin"
+}
