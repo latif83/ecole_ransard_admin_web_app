@@ -75,15 +75,13 @@ export default function NewStudent({ setAddStudent, setGData }) {
 
         try {
 
-            if (!passportImage) {
-                toast.error("Please select a passport image!")
-                return
-            }
-
             let imageUrl = null
 
-            const uploadImage = await uploadStudentImageToCloudinary(passportImage)
-            imageUrl = uploadImage.url
+            if (passportImage) {
+
+                const uploadImage = await uploadStudentImageToCloudinary(passportImage)
+                imageUrl = uploadImage.url
+            }
 
             const response = await fetch("/api/students", {
                 method: "POST",
@@ -148,7 +146,7 @@ export default function NewStudent({ setAddStudent, setGData }) {
                                         <FontAwesomeIcon icon={faTrash} />
                                     </button>
                                 </div>
-                            </div> : <label htmlFor="passport_pic" style={{ padding: '1.2px' }} className="rounded-lg h-[200px] w-[200px] border-2 border-blue-500 text-blue-500 flex items-center justify-center flex-col cursor-pointer">
+                            </div> : <><label htmlFor="passport_pic" style={{ padding: '1.2px' }} className="rounded-lg h-[200px] w-[200px] border-2 border-blue-500 text-blue-500 flex items-center justify-center flex-col cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                 </svg>
@@ -157,7 +155,7 @@ export default function NewStudent({ setAddStudent, setGData }) {
                                     Click to add a passport sized photograph.
                                 </p>
 
-                            </label>}
+                            </label> <p className="text-center text-xs mt-1 text-blue-600 font-semibold">**Optional</p> </>}
                             <input onChange={handlePassportImage} id="passport_pic" type="file" hidden />
                         </div>
                         <div className="flex-1">
@@ -176,7 +174,7 @@ export default function NewStudent({ setAddStudent, setGData }) {
                                     htmlFor="firstName"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                 >
-                                    First Name
+                                    <span>First Name</span> <span className="text-xs text-red-700 ml-2 font-semibold">**Required</span>
                                 </label>
                             </div>
                             <div className="relative z-0 w-full group mb-5">
@@ -194,7 +192,7 @@ export default function NewStudent({ setAddStudent, setGData }) {
                                     htmlFor="lastName"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                 >
-                                    Last Name
+                                    <span>Last Name</span> <span className="text-xs text-red-700 ml-2 font-semibold">**Required</span>
                                 </label>
                             </div>
                             <div className="relative z-0 w-full group mb-5">
@@ -212,7 +210,7 @@ export default function NewStudent({ setAddStudent, setGData }) {
                                     htmlFor="birthDate"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                 >
-                                    Birth Date
+                                    <span>Birth Date</span> <span className="text-xs text-red-700 ml-2 font-semibold">**Required</span>
                                 </label>
                             </div>
                             <div className="relative z-0 w-full group mb-5">
@@ -229,7 +227,7 @@ export default function NewStudent({ setAddStudent, setGData }) {
                                     htmlFor="birthDate"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                 >
-                                    Address
+                                    <span>Address</span> <span className="text-xs text-blue-700 ml-2 font-semibold">**Optional</span>
                                 </label>
                             </div>
 
@@ -239,7 +237,7 @@ export default function NewStudent({ setAddStudent, setGData }) {
                                         htmlFor="dept"
                                         className="block mb-2 text-sm font-medium text-gray-900"
                                     >
-                                        Class
+                                                                                <span>Class</span> <span className="text-xs text-red-700 ml-2 font-semibold">**Required</span>
                                     </label>
                                     <select
                                         id="class"
@@ -275,7 +273,7 @@ export default function NewStudent({ setAddStudent, setGData }) {
                                         htmlFor="dept"
                                         className="block mb-2 text-sm font-medium text-gray-900"
                                     >
-                                        Section
+                                        <span>Section</span> <span className="text-xs text-red-700 ml-2 font-semibold">**Required</span>
                                     </label>
                                     <select
                                         id="class"
