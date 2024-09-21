@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { NewGrade } from "./newGrade";
 import { useEffect, useState } from "react";
+import { EditGrade } from "./editGrade";
 
 export default function GradeSettings() {
 
@@ -37,7 +38,7 @@ export default function GradeSettings() {
             }
         }
 
-        if(fetchData){
+        if (fetchData) {
             getGradeSettings()
             setFetchData(false)
         }
@@ -46,10 +47,16 @@ export default function GradeSettings() {
 
     const [createGrade, setCreateGrade] = useState(false)
 
+    const [editGrade, setEditGrade] = useState(false)
+
+    const [gradeData, setGradeData] = useState()
+
     return (
         <div>
 
             {createGrade && <NewGrade setCreateGrade={setCreateGrade} setFetchData={setFetchData} />}
+
+            {editGrade && <EditGrade setEditGrade={setEditGrade} gradeData={gradeData} setFetchData={setFetchData} />}
 
             <div className="flex gap-2 items-center">
                 <div>
@@ -115,55 +122,58 @@ export default function GradeSettings() {
                     <tbody>
 
                         {loading ? (
-            <tr className="bg-white border-b hover:bg-gray-50">
-                <td colSpan={5} className="px-6 py-4 text-center">
-                    <FontAwesomeIcon icon={faSpinner} spin /> Loading...
-                </td>
-            </tr>
-        ) : gradeSettings?.length > 0 ? (
-            gradeSettings?.map((setting) => (
-                <tr className="bg-white border-b hover:bg-gray-50">
-                            <th
-                                scope="row"
-                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                            >
-                                {setting.minScore}
-                            </th>
-                            <th
-                                scope="row"
-                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
-                            >
-                                {setting.maxScore}
-                            </th>
-                            <td
-                                className="px-6 py-4 text-center"
-                            >
-                                {setting.grade}
-                            </td>
-                            <td
-                                className="px-6 py-4 text-center"
-                            >
-                                {setting.comment}
-                            </td>
-                            <td className="px-6 py-4 flex justify-center items-center gap-1.5">
-                                <span className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                >
-                                    Edit
-                                </span>
-                                <span className="font-medium text-red-600 hover:underline cursor-pointer"
-                                >
-                                    Delete
-                                </span>
-                            </td>
-                        </tr>
-            ))
-        ) : (
-            <tr className="bg-white border-b hover:bg-gray-50">
-                <td colSpan={5} className="px-6 py-4 text-center">
-                    No settings found
-                </td>
-            </tr>
-        )}
+                            <tr className="bg-white border-b hover:bg-gray-50">
+                                <td colSpan={5} className="px-6 py-4 text-center">
+                                    <FontAwesomeIcon icon={faSpinner} spin /> Loading...
+                                </td>
+                            </tr>
+                        ) : gradeSettings?.length > 0 ? (
+                            gradeSettings?.map((setting) => (
+                                <tr className="bg-white border-b hover:bg-gray-50">
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
+                                    >
+                                        {setting.minScore}
+                                    </th>
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center"
+                                    >
+                                        {setting.maxScore}
+                                    </th>
+                                    <td
+                                        className="px-6 py-4 text-center"
+                                    >
+                                        {setting.grade}
+                                    </td>
+                                    <td
+                                        className="px-6 py-4 text-center"
+                                    >
+                                        {setting.comment}
+                                    </td>
+                                    <td className="px-6 py-4 flex justify-center items-center gap-1.5">
+                                        <button type="button" onClick={() => {
+                                            setGradeData(setting)
+                                            setEditGrade(true)
+                                        }} className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                        >
+                                            Edit
+                                        </button>
+                                        <span className="font-medium text-red-600 hover:underline cursor-pointer"
+                                        >
+                                            Delete
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr className="bg-white border-b hover:bg-gray-50">
+                                <td colSpan={5} className="px-6 py-4 text-center">
+                                    No settings found
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
