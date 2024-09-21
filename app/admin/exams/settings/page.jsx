@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { NewGrade } from "./newGrade";
 import { useEffect, useState } from "react";
 import { EditGrade } from "./editGrade";
+import DeleteGrade from "./deleteGrade";
 
 export default function GradeSettings() {
 
@@ -49,7 +50,11 @@ export default function GradeSettings() {
 
     const [editGrade, setEditGrade] = useState(false)
 
-    const [gradeData, setGradeData] = useState()
+    const [gradeData, setGradeData] = useState(null)
+
+    const [delGrade, setDelGrade] = useState(false)
+
+    const [gradeId, setGradeId] = useState(null)
 
     return (
         <div>
@@ -57,6 +62,8 @@ export default function GradeSettings() {
             {createGrade && <NewGrade setCreateGrade={setCreateGrade} setFetchData={setFetchData} />}
 
             {editGrade && <EditGrade setEditGrade={setEditGrade} gradeData={gradeData} setFetchData={setFetchData} />}
+
+            {delGrade && <DeleteGrade setDelGrade={setDelGrade} setGData={setFetchData} gradeId={gradeId} />}
 
             <div className="flex gap-2 items-center">
                 <div>
@@ -160,10 +167,13 @@ export default function GradeSettings() {
                                         >
                                             Edit
                                         </button>
-                                        <span className="font-medium text-red-600 hover:underline cursor-pointer"
+                                        <button type="button" onClick={() => {
+                                            setGradeId(setting.id)
+                                            setDelGrade(true)
+                                        }} className="font-medium text-red-600 hover:underline cursor-pointer"
                                         >
                                             Delete
-                                        </span>
+                                        </button>
                                     </td>
                                 </tr>
                             ))
