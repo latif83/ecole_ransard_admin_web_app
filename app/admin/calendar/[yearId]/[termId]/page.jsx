@@ -8,6 +8,7 @@ import EditTerm from "./editTerm"
 import { EndAcademicTerm } from "./endAcademicTerm"
 import { ActivateAcademicTerm } from "./activateAcademicTerm"
 import EditEvent from "./editEvent"
+import DeleteEvent from "./deleteEvent"
 
 export default function AcademicEvents({ params }) {
 
@@ -17,7 +18,7 @@ export default function AcademicEvents({ params }) {
 
     const [data, setData] = useState([])
 
-    const [selectedEventData,setSelectedEventData] = useState()
+    const [selectedEventData, setSelectedEventData] = useState()
 
     const router = useRouter()
 
@@ -78,9 +79,13 @@ export default function AcademicEvents({ params }) {
 
     const [endAcademicTerm, setEndAcademicTerm] = useState(false)
 
-    const [startAcademicTerm,setStartAcademicTerm] = useState(false)
+    const [startAcademicTerm, setStartAcademicTerm] = useState(false)
 
-    const [editEvent,setEditEvent] = useState(false)
+    const [editEvent, setEditEvent] = useState(false)
+
+    const [delEvent, setDelEvent] = useState(false)
+
+    const [eventId, setEventId] = useState(null)
 
     return (
         <div>
@@ -92,6 +97,8 @@ export default function AcademicEvents({ params }) {
             {startAcademicTerm && <ActivateAcademicTerm setStartAcademicTerm={setStartAcademicTerm} setFetchData={setFetchData} termId={termId} />}
 
             {editEvent && <EditEvent setEditEvent={setEditEvent} data={selectedEventData} setFetchData={setFetchData} termId={termId} />}
+
+            {delEvent && <DeleteEvent setDelEvent={setDelEvent} setGData={setFetchData} eventId={eventId} />}
 
             <div className="flex items-center gap-1.5">
                 <button onClick={() => router.back()} className="bg-red-200 text-gray-800 hover:bg-red-600 hover:text-white rounded-md p-2">
@@ -211,17 +218,21 @@ export default function AcademicEvents({ params }) {
                                     <td className="px-6 py-4 text-center">{event.description}</td>
                                     <td className="px-6 py-4 text-center">{getEventStatus(event.eventDate)}</td>
                                     <td className="px-6 py-4 flex justify-center items-center gap-2">
-                                        <span
-                                        onClick={()=>{setSelectedEventData(event); setEditEvent(true)}}
+                                        <button type="button"
+                                            onClick={() => { setSelectedEventData(event); setEditEvent(true) }}
                                             className="font-medium text-blue-600 hover:underline cursor-pointer"
                                         >
                                             Edit
-                                        </span>
-                                        <span
+                                        </button>
+                                        <button type="button"
+                                            onClick={() => {
+                                                setEventId(event.id)
+                                                setDelEvent(true)
+                                            }}
                                             className="font-medium text-red-600 hover:underline cursor-pointer"
                                         >
                                             Delete
-                                        </span>
+                                        </button>
                                     </td>
                                 </tr>
                             ))
