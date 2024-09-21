@@ -1,13 +1,13 @@
 "use client"
-import { faArrowLeftLong, faSpinner } from "@fortawesome/free-solid-svg-icons"
+import { faArrowLeftLong, faPrint, faSpinner } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
-export default function Results({params}) {
+export default function Results({ params }) {
 
-    const {studentId} = params
+    const { studentId } = params
 
     const router = useRouter()
 
@@ -124,6 +124,11 @@ export default function Results({params}) {
         getAssessments()
     }, [selectedAcademicTermId])
 
+    // Function to print the student results
+    const printList = () => {
+        window.print();
+    };
+
     return (
         <div>
 
@@ -208,7 +213,13 @@ export default function Results({params}) {
             </div>
 
             <div className="mt-10">
-                <div className="relative overflow-auto">
+                <div className="relative printable-area overflow-auto">
+                <div className="mt-12 mb-5 text-center pb-2 border-b-2 border-red-600 print-display">
+                        <h1 className="font-bold text-xl">ECOLE RONSARD</h1>
+                        <h3 className="text-sm">
+                            Student Results.
+                        </h3>
+                    </div>
                     <table className="min-w-full text-sm text-left">
                         <thead>
                             <tr className="border-b border-gray-200">
@@ -246,6 +257,15 @@ export default function Results({params}) {
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                <div className="mt-10 flex justify-center items-center">
+                    <button type="button" onClick={printList} className="bg-lime-700 text-white flex items-center justify-center gap-2 px-8 py-3 rounded">
+                        <FontAwesomeIcon icon={faPrint} />
+                        <span>
+                            Print Results
+                        </span>
+                    </button>
                 </div>
             </div>
 
