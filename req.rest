@@ -141,3 +141,14 @@ Content-Type: application/json
     "password" : "newpass",
     "role" : "admin"
 }
+
+###
+
+POST http://localhost:3000/api/mail/sendbill
+Content-Type: application/json
+
+{ 
+"studentIds" : ["cm0cplwo6000gxvdk0wo5222o"], 
+"academicTermId":"cm0e5lei40001qn45n7yp655k", 
+"academicYrId" : "cm0cqop4v000ixvdkmkf3klzp" 
+}

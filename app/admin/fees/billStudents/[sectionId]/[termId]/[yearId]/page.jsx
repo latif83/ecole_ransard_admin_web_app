@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { BillStudent } from "./billStudent"
+import SendBill from "./sendBill"
 
 export default function BillStudents({ params }) {
 
     const router = useRouter()
 
-    const { sectionId, termId } = params
+    const { sectionId, termId,yearId } = params
 
     const [data, setData] = useState([])
 
@@ -67,10 +68,14 @@ export default function BillStudents({ params }) {
 
     const [billStudent, setBillStudent] = useState(false)
 
+    const [sendBill,setSendBill] = useState(false)
+
     return (
         <div>
 
             {billStudent && <BillStudent setBillStudent={setBillStudent} studentIds={selectedStudents} academicTermId={termId} setFetchData={setFetchData} />}
+
+            {sendBill && <SendBill setSendBill={setSendBill} studentIds={selectedStudents} academicTermId={termId} academicYrId={yearId} />}
 
             <div className="flex gap-2 items-center">
                 <div>
@@ -147,13 +152,13 @@ export default function BillStudents({ params }) {
                             <span>Bill</span>
                         </button>
                         <button
-                            // onClick={() => {
-                            //     if (selectedStudents.length < 1) {
-                            //         toast.error("Please select at leat one(1) student to bill!")
-                            //         return
-                            //     }
-                            //     setBillStudent(true)
-                            // }} 
+                            onClick={() => {
+                                if (selectedStudents.length < 1) {
+                                    toast.error("Please select at leat one(1) student to send bill!")
+                                    return
+                                }
+                                setSendBill(true)
+                            }} 
                             className="flex items-center gap-1.5 bg-green-600 hover:bg-green-800 text-white p-2 px-4 rounded">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844a2.25 2.25 0 0 1 1.183-1.981l7.5-4.039a2.25 2.25 0 0 1 2.134 0l7.5 4.039a2.25 2.25 0 0 1 1.183 1.98V19.5Z" />
