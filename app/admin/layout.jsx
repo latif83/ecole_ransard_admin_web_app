@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
                 <AdminSidebar />
 
                 <div className="flex-1 flex flex-col">
-                    <AdminHeader adminUser={adminUser} />
+                    <AdminHeader adminUser={adminUser} setLogOut={setLogOut} />
 
                     <div className="p-3 flex-1 overflow-auto">
                         {children}

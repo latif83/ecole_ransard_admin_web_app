@@ -3,7 +3,7 @@ import { useSidebar } from "@/providers/sidebarProvider"
 import { faBars, faUserCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-export const AdminHeader = ({ adminUser }) => {
+export const AdminHeader = ({ adminUser,setLogOut }) => {
 
     const {openSidebar,setOpenSidebar} = useSidebar()
 
