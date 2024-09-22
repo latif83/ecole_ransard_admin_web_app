@@ -2,9 +2,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faSignOut, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import LogOut from "@/components/logout";
 
 const ParentContext = createContext();
 
@@ -59,20 +60,38 @@ export const ParentProvider = ({ children }) => {
 
     }, [])
 
+    const [logout, setLogout] = useState(false)
+
     return (
         <ParentContext.Provider value={{ selectedWardId }}
         >
+
+            {logout && <LogOut setLogOut={setLogout} />}
+
+            <button
+                onClick={() => setLogout(true)}
+                className="flex items-center justify-center block gap-2 text-red-200 text-sm rounded shrink-0 grow-0 absolute bottom-0 right-3 bottom-3 bg-gray-900 p-2"
+            >
+                <FontAwesomeIcon icon={faSignOut} />
+                <span>Log Out</span>
+            </button>
             <div className="p-5 bg-gradient-to-r from-blue-50 to-blue-100 h-svh">
                 <div className="bg-white p-6 shadow-xl border flex flex-col rounded-lg h-full">
                     {/* Parent Profile and Ward Selection */}
                     <div className="flex justify-between items-center mb-6">
                         <div className="flex items-center">
                             <FontAwesomeIcon className="w-16 h-16 rounded-full border border-blue-500 p-0.5" icon={faUserCircle} width={30} height={30} />
-                            <div className="ml-4">
+                            <div className="ml-4 relative">
                                 <h2 className="text-2xl font-bold text-gray-800">
                                     Welcome, {parentName}
                                 </h2>
-                                <p className="text-gray-600">Parent / Guardian</p>
+
+
+                                <div className="flex gap-1.5 items-center">
+                                    <p className="text-gray-600 shrink-0 grow-0">Parent / Guardian</p>
+
+                                </div>
+
                             </div>
                         </div>
                         <select
