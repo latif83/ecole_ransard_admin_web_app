@@ -134,50 +134,6 @@ export const AdminSidebar = () => {
                             <span>Academic Calendar</span>
                         </div>
                     </Link>
-
-                    {/* hhd */}
-
-                    <Link href={'/admin/subjects'} className={`text-gray-50 hover:font-bold ${pathname == "/admin/subjects" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
-                        <div className="flex items-center justify-between gap-1.5">
-                            <FontAwesomeIcon icon={faBookOpen} width={20} height={20} />
-                            <span>Subjects</span>
-                        </div>
-                    </Link>
-
-                    <Link href={'/admin/fees'} className={`text-gray-50 hover:font-bold ${pathname.includes("/admin/fees") && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
-                        <div className="flex items-center justify-between gap-1.5">
-                            <FontAwesomeIcon icon={faCircleDollarToSlot} width={20} height={20} />
-                            <span>Fees</span>
-                        </div>
-                    </Link>
-
-                    <Link href={'/admin/teachers'} className={`text-gray-50 hover:font-bold ${pathname.includes("/admin/teachers") && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
-                        <div className="flex items-center justify-between gap-1.5">
-                            <FontAwesomeIcon icon={faChalkboardTeacher} width={20} height={20} />
-                            <span>Teachers</span>
-                        </div>
-                    </Link>
-
-                    <Link href={'/admin/parents'} className={`text-gray-50 hover:font-bold ${pathname == "/admin/parents" && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
-                        <div className="flex items-center justify-between gap-1.5">
-                            <FontAwesomeIcon icon={faUsersBetweenLines} width={20} height={20} />
-                            <span>Parents</span>
-                        </div>
-                    </Link>
-
-                    <Link href={'/admin/fees'} className={`text-gray-50 hover:font-bold ${pathname.includes("/admin/fees") && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
-                        <div className="flex items-center justify-between gap-1.5">
-                            <FontAwesomeIcon icon={faCircleDollarToSlot} width={20} height={20} />
-                            <span>Fees</span>
-                        </div>
-                    </Link>
-
-                    <Link href={'/admin/teachers'} className={`text-gray-50 hover:font-bold ${pathname.includes("/admin/teachers") && 'bg-gray-600'} rounded p-2 text-sm flex justify-between`}>
-                        <div className="flex items-center justify-between gap-1.5">
-                            <FontAwesomeIcon icon={faChalkboardTeacher} width={20} height={20} />
-                            <span>Teachers</span>
-                        </div>
-                    </Link>
           
         </div>
       </div>
