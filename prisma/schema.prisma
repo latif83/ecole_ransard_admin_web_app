@@ -130,6 +130,7 @@ model Parents {
   email     String   @unique
   phone     String
   address   String?
+  occupation   String?
   password  String   @default("ronsard@123")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

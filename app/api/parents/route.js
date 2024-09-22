@@ -32,7 +32,7 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    const { firstName, lastName, email, phone, address, students } =
+    const { firstName, lastName, email, phone, address, students,occupation } =
       await req.json();
 
     if (!firstName || !lastName || !email || !phone) {
@@ -50,6 +50,7 @@ export async function POST(req) {
         email,
         phone,
         address,
+        occupation
       },
     });
 
