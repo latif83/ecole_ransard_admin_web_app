@@ -152,3 +152,10 @@ Content-Type: application/json
 "academicTermId":"cm0e5lei40001qn45n7yp655k", 
 "academicYrId" : "cm0cqop4v000ixvdkmkf3klzp" 
 }
+
+###
+
+POST http://localhost:3000/api/mail/sendMessage
+Content-Type: application/json
+
+{ "message" : "Hello Sir", "parentEmail" : "mohammedanatu497@gmail.com", "parentName" : "Daniel Agyie" }

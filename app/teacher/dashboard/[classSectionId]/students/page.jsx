@@ -3,6 +3,7 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import { ParentDetails } from "./parentDetails"
 
 function calculateAge(birthDate) {
     const birth = new Date(birthDate);
@@ -48,14 +49,20 @@ export default function Students({ params }) {
 
     }, [])
 
+    const [viewParentDetails,setViewParentDetails] = useState(false)
+    const [parentInfo,setParentInfo] = useState({})
+
     return (
         <div>
+
+            {viewParentDetails && <ParentDetails setViewParentDetails={setViewParentDetails} parentInfo={parentInfo} />}
+
             <h1 className="text-2xl">
                 Students
             </h1>
 
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-            <div className="p-4 bg-gray-800">
+                <div className="p-4 bg-gray-800">
                     <div>
                         <label htmlFor="table-search" className="sr-only">
                             Search
@@ -126,12 +133,15 @@ export default function Students({ params }) {
                                     <th className="px-6 py-4">{student.firstName}</th>
                                     <th className="px-6 py-4">{student.lastName}</th>
                                     <td className="px-6 py-4"> {calculateAge(student.birthDate)} years </td>
-                                    <td className="px-6 py-4"> {student.address} </td>
+                                    <td className="px-6 py-4"> {student.address ? student.address : 'N/A'} </td>
                                     <td className="px-6 py-4 flex gap-4 justify-center items-center">
-                                        <span className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                        >
-                                            {student.parents ? `${student.parents.lastName} ${student.parents.firstName}` : 'N/A'}
-                                        </span>
+
+                                        {student.parents ? <button type="button" onClick={()=>{
+                                            setParentInfo(student.parents)
+                                            setViewParentDetails(true)
+                                        }} className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                        >{student.parents.lastName} {student.parents.firstName} </button> : 'N/A'}
+
                                     </td>
                                 </tr>
                             ))
