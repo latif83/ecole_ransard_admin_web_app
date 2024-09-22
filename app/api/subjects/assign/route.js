@@ -44,7 +44,7 @@ export async function POST(req) {
       }
   
       // Check if the subject is already assigned to the class
-      const existingAssignment = await prisma.assignedSubjects.findFirst({
+      const existingAssignment = await prisma.ClassSubjects.findFirst({
         where: { 
           classId,
           subjectId
@@ -59,7 +59,7 @@ export async function POST(req) {
       }
   
       // Create an assignment of the subject to the class
-      const newAssignment = await prisma.assignedSubjects.create({
+      const newAssignment = await prisma.ClassSubjects.create({
         data: {
           classId,
           subjectId,
@@ -67,7 +67,7 @@ export async function POST(req) {
       });
   
       // Return a success message
-      return NextResponse.json({ message: "Subject assigned successfully!" }, { status: 201 });
+      return NextResponse.json({ message: "Subject assigned to this class successfully!" }, { status: 201 });
     } catch (error) {
       console.error("Error assigning subject to class:", error);
       return NextResponse.json(
