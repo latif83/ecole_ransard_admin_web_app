@@ -83,10 +83,10 @@ export default function Home() {
       )} */}
       <div
         className={`bg-blue-700 absolute top-0 left-0 w-full ${styles.banner}`}
-        style={{ height: "50%" }}
+        style={{ height: "100%" }}
       ></div>
       <div className="relative z-50 flex justify-center items-center w-full h-full">
-        <div className={`w-full bg-white overflow-hidden rounded-lg border-2 border-blue-700 shadow md:mt-0 sm:max-w-md xl:p-0 sm:mx-0 mx-3`}>
+        <div className={`w-full bg-white/40 overflow-hidden rounded-lg border-2 border-blue-700 shadow md:mt-0 sm:max-w-md xl:p-0 sm:mx-0 mx-3`}>
           <a
             href="#"
             className={`flex items-center justify-center mt-3 font-semibold text-gray-700 gap-2`}

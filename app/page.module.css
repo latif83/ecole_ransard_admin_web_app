@@ -15,11 +15,12 @@
 }
 
 .banner{
-    background-image: url("https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp");
+    background-image: url("/bg.png");
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
+    background-position: center;
+    /* background-blend-mode: soft-light; */
     /* background-position: center; */
-    background-blend-mode: soft-light;
 }
 
 .banner::after{
@@ -27,15 +28,9 @@
     content: "";
     top: 0;
     right: 0;
-    width: 50%;
+    width: 100%;
     height: 100%;
-    background-color: #1d4ed8;
-    background-image: url("https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: right;
-    background-blend-mode: soft-light;
-    /* z-index: 999; */
+    background-color: #1d4fd852;
 }
 
 .marquee {
